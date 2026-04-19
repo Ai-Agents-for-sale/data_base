@@ -500,11 +500,11 @@ function togglePlatform(ri, field) {
   if (!generalData || !generalData.platforms) return;
   if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
   var row = generalData.platforms[ri];
-  var key = 'platform_'+ri+'_'+field;
-  var cur = generalChanges[key] !== undefined ? generalChanges[key]
+  var cell = row.cells && row.cells[field] ? row.cells[field] : null;
+  var cur = generalChanges[cell] !== undefined ? generalChanges[cell]
     : ((row[field] === 'כן' || (row[field] && row[field].indexOf('כן') === 0)) ? 'כן' : 'לא');
   var newVal = cur === 'כן' ? 'לא' : 'כן';
-  generalChanges[key] = newVal;
+  if (cell) generalChanges[cell] = newVal;
   var btn = document.querySelector('[data-ri="'+ri+'"][data-key="'+field+'"]');
   if (btn) btn.className = 'plat-toggle ' + (newVal === 'כן' ? 'on' : 'off');
   updateSaveBtn();
@@ -512,7 +512,9 @@ function togglePlatform(ri, field) {
 
 function changeTiktok(ri, val) {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
-  generalChanges['platform_'+ri+'_tiktok'] = val;
+  var row = generalData.platforms[ri];
+  var cell = row.cells && row.cells.tiktok ? row.cells.tiktok : null;
+  if (cell) generalChanges[cell] = val;
   updateSaveBtn();
 }
 
@@ -537,6 +539,11 @@ function selectModel(mi) {
       if (badge) badge.remove();
     }
   });
+  // שמור את ה-cell של המודל הנבחר ואת זה שבוטל
+  generalData.models.forEach(function(m, i) {
+    if (i === mi) generalChanges[m.cell + '_activate'] = { cell: m.cell, value: 'פעיל' };
+    else generalChanges[m.cell + '_deactivate'] = { cell: m.cell, value: 'לא פעיל' };
+  });
   generalChanges['selectedModel'] = generalData.models[mi].id;
   updateSaveBtn();
 }
@@ -547,12 +554,16 @@ function toggleCarousel(field) {
   if (!tog) return;
   var wasOn = tog.classList.contains('on');
   tog.className = 'toggle-switch ' + (wasOn ? 'off' : 'on');
-  generalChanges['carousel_'+field] = wasOn ? 'לא' : 'כן';
+  var cell = generalData.carousel && generalData.carousel.cells && generalData.carousel.cells[field];
+  if (cell) generalChanges[cell] = wasOn ? 'לא' : 'כן';
+  else generalChanges['carousel_'+field] = wasOn ? 'לא' : 'כן';
   updateSaveBtn();
 }
 
 function changeCarousel(field, val) {
-  generalChanges['carousel_'+field] = val;
+  var cell = generalData.carousel && generalData.carousel.cells && generalData.carousel.cells[field];
+  if (cell) generalChanges[cell] = val;
+  else generalChanges['carousel_'+field] = val;
   updateSaveBtn();
 }
 
