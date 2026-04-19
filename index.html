@@ -8,104 +8,177 @@
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:           #0d1117;
-    --bg2:          #161b22;
-    --bg3:          #1c2230;
-    --border:       rgba(255,255,255,0.07);
-    --border-hover: rgba(255,255,255,0.15);
-    --text:         #e6edf3;
-    --text-dim:     #8b949e;
-    --text-dimmer:  #484f58;
-    --accent:       #2563eb;
-    --accent-glow:  rgba(37,99,235,0.25);
-    --accent-soft:  rgba(37,99,235,0.12);
-    --green:        #16a34a;
-    --green-soft:   rgba(22,163,74,0.12);
-    --purple:       #7c3aed;
-    --purple-soft:  rgba(124,58,237,0.12);
-    --gold:         #d97706;
-    --gold-soft:    rgba(217,119,6,0.12);
-    --teal:         #0891b2;
-    --teal-soft:    rgba(8,145,178,0.12);
-    --pink:         #db2777;
-    --pink-soft:    rgba(219,39,119,0.12);
-    --orange:       #ea580c;
-    --orange-soft:  rgba(234,88,12,0.12);
-    --radius:       16px;
-    --radius-sm:    10px;
+    --bg:          #0d1117;
+    --bg2:         #161b22;
+    --bg3:         #1c2230;
+    --border:      rgba(255,255,255,0.07);
+    --border-h:    rgba(255,255,255,0.15);
+    --text:        #e6edf3;
+    --text-dim:    #8b949e;
+    --text-dimmer: #484f58;
+    --accent:      #2563eb;
+    --accent-g:    rgba(37,99,235,0.25);
+    --accent-s:    rgba(37,99,235,0.12);
+    --green:       #16a34a;
+    --green-s:     rgba(22,163,74,0.12);
+    --purple:      #7c3aed;
+    --purple-s:    rgba(124,58,237,0.12);
+    --gold:        #d97706;
+    --gold-s:      rgba(217,119,6,0.12);
+    --teal:        #0891b2;
+    --teal-s:      rgba(8,145,178,0.12);
+    --pink:        #db2777;
+    --pink-s:      rgba(219,39,119,0.12);
+    --orange:      #ea580c;
+    --orange-s:    rgba(234,88,12,0.12);
+    --red:         #dc2626;
+    --red-s:       rgba(220,38,38,0.12);
+    --radius:      16px;
+    --radius-sm:   10px;
   }
 
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  html, body { font-family: 'Heebo', sans-serif; background: var(--bg); color: var(--text); min-height: 100dvh; overscroll-behavior: none; }
-  #app { min-height: 100dvh; display: flex; flex-direction: column; padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+  html, body { font-family:'Heebo',sans-serif; background:var(--bg); color:var(--text); min-height:100dvh; overscroll-behavior:none; }
+  #app { min-height:100dvh; display:flex; flex-direction:column; padding-bottom:calc(24px + env(safe-area-inset-bottom)); }
 
-  .header { padding: 20px 20px 0; }
-  .header-label { font-size: 11px; font-weight: 600; color: var(--text-dimmer); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px; }
-  .header-title { font-size: 24px; font-weight: 900; color: var(--text); line-height: 1.1; margin-bottom: 4px; }
-  .header-title span { background: linear-gradient(135deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .header-sub { font-size: 12px; color: var(--text-dim); margin-bottom: 20px; }
+  /* ── HEADER ── */
+  .header { padding:20px 20px 0; }
+  .header-label { font-size:11px; font-weight:600; color:var(--text-dimmer); letter-spacing:.12em; text-transform:uppercase; margin-bottom:4px; }
+  .header-title { font-size:24px; font-weight:900; color:var(--text); line-height:1.1; margin-bottom:4px; }
+  .header-title span { background:linear-gradient(135deg,#60a5fa,#a78bfa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .header-sub { font-size:12px; color:var(--text-dim); margin-bottom:20px; }
+  .status-bar { display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap; }
+  .status-chip { display:flex; align-items:center; gap:5px; padding:5px 10px; border-radius:20px; font-size:11px; font-weight:600; border:1px solid var(--border); background:var(--bg2); color:var(--text-dim); }
+  .status-chip .dot { width:6px; height:6px; border-radius:50%; background:var(--green); box-shadow:0 0 6px var(--green); animation:pulse-dot 2s ease-in-out infinite; }
+  @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.4} }
 
-  .status-bar { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
-  .status-chip { display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; border: 1px solid var(--border); background: var(--bg2); color: var(--text-dim); }
-  .status-chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse-dot 2s ease-in-out infinite; }
-  @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  /* ── NAV CARDS ── */
+  .sections { padding:0 16px; display:flex; flex-direction:column; gap:10px; }
+  .section-group-label { font-size:10px; font-weight:700; color:var(--text-dimmer); letter-spacing:.1em; text-transform:uppercase; padding:0 4px; margin-top:6px; margin-bottom:2px; }
+  .nav-card { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); padding:16px; cursor:pointer; display:flex; align-items:center; gap:14px; transition:border-color .18s,transform .12s; -webkit-user-select:none; user-select:none; position:relative; overflow:hidden; }
+  .nav-card::before { content:''; position:absolute; inset:0; opacity:0; transition:opacity .18s; border-radius:inherit; background:var(--cs,transparent); }
+  .nav-card:active { transform:scale(.985); border-color:var(--c); box-shadow:0 0 0 1px var(--c),inset 0 0 20px var(--cg,transparent); }
+  .nav-card:active::before { opacity:1; }
+  .nav-card.blue   { --c:var(--accent); --cs:var(--accent-s); --cg:var(--accent-g); }
+  .nav-card.green  { --c:var(--green);  --cs:var(--green-s);  --cg:rgba(22,163,74,.2); }
+  .nav-card.purple { --c:var(--purple); --cs:var(--purple-s); --cg:rgba(124,58,237,.2); }
+  .nav-card.gold   { --c:var(--gold);   --cs:var(--gold-s);   --cg:rgba(217,119,6,.2); }
+  .nav-card.teal   { --c:var(--teal);   --cs:var(--teal-s);   --cg:rgba(8,145,178,.2); }
+  .nav-card.pink   { --c:var(--pink);   --cs:var(--pink-s);   --cg:rgba(219,39,119,.2); }
+  .nav-card.orange { --c:var(--orange); --cs:var(--orange-s); --cg:rgba(234,88,12,.2); }
+  .nav-card-icon { width:46px; height:46px; border-radius:12px; background:var(--cs); border:1px solid var(--c); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+  .nav-card-body { flex:1; min-width:0; }
+  .nav-card-title { font-size:14px; font-weight:800; color:var(--text); margin-bottom:3px; }
+  .nav-card-desc { font-size:11px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .nav-card-arrow { font-size:20px; color:var(--text-dimmer); flex-shrink:0; }
+  .nav-card:active .nav-card-arrow { color:var(--c); transform:translateX(-3px); }
+  .divider { height:1px; background:var(--border); margin:6px 16px; }
+  .bottom-credit { text-align:center; font-size:10px; color:var(--text-dimmer); padding:20px 16px 0; }
+  .bottom-credit span { color:var(--accent); font-weight:700; }
 
-  .sections { padding: 0 16px; display: flex; flex-direction: column; gap: 10px; }
-  .section-group-label { font-size: 10px; font-weight: 700; color: var(--text-dimmer); letter-spacing: 0.1em; text-transform: uppercase; padding: 0 4px; margin-top: 6px; margin-bottom: 2px; }
+  @keyframes fadeSlideIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .header { animation:fadeSlideIn .35s ease both; }
+  .status-bar { animation:fadeSlideIn .35s .05s ease both; }
+  .nav-card:nth-child(1){animation:fadeSlideIn .3s .08s ease both}
+  .nav-card:nth-child(2){animation:fadeSlideIn .3s .12s ease both}
+  .nav-card:nth-child(3){animation:fadeSlideIn .3s .16s ease both}
+  .nav-card:nth-child(4){animation:fadeSlideIn .3s .20s ease both}
+  .nav-card:nth-child(5){animation:fadeSlideIn .3s .24s ease both}
+  .nav-card:nth-child(6){animation:fadeSlideIn .3s .28s ease both}
+  .nav-card:nth-child(7){animation:fadeSlideIn .3s .32s ease both}
 
-  .nav-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; cursor: pointer; display: flex; align-items: center; gap: 14px; transition: border-color 0.18s, background 0.18s, transform 0.12s; -webkit-user-select: none; user-select: none; position: relative; overflow: hidden; }
-  .nav-card::before { content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.18s; border-radius: inherit; background: var(--cs, transparent); }
-  .nav-card:active { transform: scale(0.985); border-color: var(--c); box-shadow: 0 0 0 1px var(--c), inset 0 0 20px var(--cg, transparent); }
-  .nav-card:active::before { opacity: 1; }
+  /* ── SCREENS ── */
+  .screen { display:none; position:fixed; inset:0; background:var(--bg); z-index:100; flex-direction:column; overflow-y:auto; }
+  .screen.visible { display:flex; }
+  .screen-topbar { flex-shrink:0; display:flex; align-items:center; gap:12px; padding:16px 20px 14px; background:var(--bg2); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:10; }
+  .screen-back { width:34px; height:34px; border-radius:50%; background:var(--bg3); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; color:var(--text-dim); flex-shrink:0; }
+  .screen-back:active { border-color:var(--border-h); color:var(--text); }
+  .screen-topbar-title { font-size:15px; font-weight:800; color:var(--text); }
+  .screen-topbar-icon { font-size:18px; }
+  .screen-body { flex:1; padding:20px 16px calc(80px + env(safe-area-inset-bottom)); display:flex; flex-direction:column; gap:20px; }
 
-  .nav-card.blue   { --c: var(--accent);  --cs: var(--accent-soft);  --cg: var(--accent-glow); }
-  .nav-card.green  { --c: var(--green);   --cs: var(--green-soft);   --cg: rgba(22,163,74,0.2); }
-  .nav-card.purple { --c: var(--purple);  --cs: var(--purple-soft);  --cg: rgba(124,58,237,0.2); }
-  .nav-card.gold   { --c: var(--gold);    --cs: var(--gold-soft);    --cg: rgba(217,119,6,0.2); }
-  .nav-card.teal   { --c: var(--teal);    --cs: var(--teal-soft);    --cg: rgba(8,145,178,0.2); }
-  .nav-card.pink   { --c: var(--pink);    --cs: var(--pink-soft);    --cg: rgba(219,39,119,0.2); }
-  .nav-card.orange { --c: var(--orange);  --cs: var(--orange-soft);  --cg: rgba(234,88,12,0.2); }
+  /* ── SECTION BLOCKS ── */
+  .settings-section { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+  .settings-section-header { padding:14px 16px 12px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+  .settings-section-icon { font-size:16px; }
+  .settings-section-title { font-size:13px; font-weight:800; color:var(--text); }
+  .settings-section-sub { font-size:11px; color:var(--text-dim); margin-top:2px; }
 
-  .nav-card-icon { width: 46px; height: 46px; border-radius: 12px; background: var(--cs); border: 1px solid var(--c); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; position: relative; }
-  .nav-card-icon::after { content: ''; position: absolute; inset: -1px; border-radius: inherit; box-shadow: 0 0 12px var(--cg, transparent); pointer-events: none; }
-  .nav-card-body { flex: 1; min-width: 0; }
-  .nav-card-title { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 3px; line-height: 1.3; }
-  .nav-card-desc { font-size: 11px; color: var(--text-dim); line-height: 1.5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .nav-card-arrow { font-size: 20px; color: var(--text-dimmer); flex-shrink: 0; font-weight: 300; transition: color 0.15s, transform 0.15s; }
-  .nav-card:active .nav-card-arrow { color: var(--c); transform: translateX(-3px); }
+  /* ── LOADING STATE ── */
+  .screen-loading { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; min-height:60vh; color:var(--text-dim); font-size:13px; }
+  .spinner { width:32px; height:32px; border:3px solid rgba(37,99,235,.15); border-top-color:var(--accent); border-radius:50%; animation:spin .75s linear infinite; }
+  @keyframes spin { to{transform:rotate(360deg)} }
 
-  .divider { height: 1px; background: var(--border); margin: 6px 16px; }
-  .bottom-credit { text-align: center; font-size: 10px; color: var(--text-dimmer); padding: 20px 16px 0; letter-spacing: 0.05em; }
-  .bottom-credit span { color: var(--accent); font-weight: 700; }
+  /* ── PLATFORMS TABLE ── */
+  .platforms-table { width:100%; border-collapse:collapse; }
+  .platforms-table th { font-size:10px; font-weight:700; color:var(--text-dimmer); text-align:center; padding:10px 6px 8px; border-bottom:1px solid var(--border); letter-spacing:.05em; }
+  .platforms-table th:first-child { text-align:right; }
+  .platforms-table td { padding:10px 6px; border-bottom:1px solid var(--border); text-align:center; vertical-align:middle; }
+  .platforms-table td:first-child { text-align:right; font-size:12px; font-weight:700; color:var(--text); padding-right:16px; }
+  .platforms-table tr:last-child td { border-bottom:none; }
 
-  @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-  .header { animation: fadeSlideIn 0.35s ease both; }
-  .status-bar { animation: fadeSlideIn 0.35s 0.05s ease both; }
-  .nav-card:nth-child(1) { animation: fadeSlideIn 0.3s 0.08s ease both; }
-  .nav-card:nth-child(2) { animation: fadeSlideIn 0.3s 0.12s ease both; }
-  .nav-card:nth-child(3) { animation: fadeSlideIn 0.3s 0.16s ease both; }
-  .nav-card:nth-child(4) { animation: fadeSlideIn 0.3s 0.20s ease both; }
-  .nav-card:nth-child(5) { animation: fadeSlideIn 0.3s 0.24s ease both; }
-  .nav-card:nth-child(6) { animation: fadeSlideIn 0.3s 0.28s ease both; }
-  .nav-card:nth-child(7) { animation: fadeSlideIn 0.3s 0.32s ease both; }
-  .nav-card:nth-child(8) { animation: fadeSlideIn 0.3s 0.36s ease both; }
+  /* platform toggle */
+  .plat-toggle { display:inline-flex; align-items:center; justify-content:center; width:36px; height:22px; border-radius:11px; border:none; cursor:pointer; transition:background .2s; position:relative; flex-shrink:0; }
+  .plat-toggle::after { content:''; position:absolute; width:16px; height:16px; border-radius:50%; background:#fff; transition:transform .2s; }
+  .plat-toggle.on  { background:var(--green); }
+  .plat-toggle.on::after  { transform:translateX(-7px); }
+  .plat-toggle.off { background:var(--bg3); border:1px solid var(--border); }
+  .plat-toggle.off::after { transform:translateX(7px); }
+  .plat-toggle.locked { background:var(--bg3); border:1px solid var(--border); cursor:not-allowed; opacity:.35; }
+  .plat-toggle.locked::after { transform:translateX(7px); }
 
-  .screen { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 100; flex-direction: column; overflow-y: auto; }
-  .screen.visible { display: flex; }
-  .screen-topbar { flex-shrink: 0; display: flex; align-items: center; gap: 12px; padding: 16px 20px 14px; background: var(--bg2); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10; }
-  .screen-back { width: 34px; height: 34px; border-radius: 50%; background: var(--bg3); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; color: var(--text-dim); flex-shrink: 0; }
-  .screen-back:active { border-color: var(--border-hover); color: var(--text); }
-  .screen-topbar-title { font-size: 15px; font-weight: 800; color: var(--text); }
-  .screen-topbar-icon { font-size: 18px; }
-  .screen-body { flex: 1; padding: 20px 20px calc(24px + env(safe-area-inset-bottom)); }
-  .coming-soon { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: 12px; text-align: center; }
-  .coming-soon-icon { font-size: 48px; }
-  .coming-soon-title { font-size: 18px; font-weight: 800; color: var(--text); }
-  .coming-soon-sub { font-size: 13px; color: var(--text-dim); line-height: 1.6; max-width: 240px; }
+  /* ── MODEL CARDS ── */
+  .models-list { display:flex; flex-direction:column; gap:0; }
+  .model-row { display:flex; align-items:center; gap:12px; padding:12px 16px; border-bottom:1px solid var(--border); cursor:pointer; transition:background .15s; -webkit-user-select:none; user-select:none; }
+  .model-row:last-child { border-bottom:none; }
+  .model-row:active { background:var(--accent-s); }
+  .model-radio { width:20px; height:20px; border-radius:50%; border:2px solid var(--border-h); flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:border-color .15s; }
+  .model-radio.active { border-color:var(--accent); background:var(--accent); }
+  .model-radio.active::after { content:''; width:8px; height:8px; border-radius:50%; background:#fff; }
+  .model-info { flex:1; min-width:0; }
+  .model-name { font-size:13px; font-weight:700; color:var(--text); margin-bottom:2px; }
+  .model-price { font-size:10px; color:var(--text-dim); }
+  .model-active-badge { font-size:9px; font-weight:800; background:var(--green); color:#fff; padding:2px 8px; border-radius:20px; flex-shrink:0; }
+
+  /* ── SETTINGS ROWS ── */
+  .setting-row { display:flex; align-items:center; justify-content:space-between; padding:13px 16px; border-bottom:1px solid var(--border); gap:12px; }
+  .setting-row:last-child { border-bottom:none; }
+  .setting-row-label { font-size:12px; font-weight:600; color:var(--text); flex:1; line-height:1.4; }
+  .setting-row-sub { font-size:10px; color:var(--text-dim); margin-top:2px; }
+
+  /* toggle switch */
+  .toggle-switch { width:44px; height:26px; border-radius:13px; border:none; cursor:pointer; position:relative; flex-shrink:0; transition:background .2s; }
+  .toggle-switch::after { content:''; position:absolute; top:3px; width:20px; height:20px; border-radius:50%; background:#fff; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.3); }
+  .toggle-switch.on  { background:var(--green); }
+  .toggle-switch.on::after  { transform:translateX(21px); }
+  .toggle-switch.off { background:var(--bg3); border:1px solid var(--border); }
+  .toggle-switch.off::after { transform:translateX(3px); }
+
+  /* select dropdown */
+  .setting-select { background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius-sm); color:var(--text); font-family:'Heebo',sans-serif; font-size:12px; font-weight:600; padding:7px 10px; outline:none; cursor:pointer; max-width:160px; direction:rtl; }
+  .setting-select:focus { border-color:var(--accent); }
+
+  /* ── SAVE BUTTON ── */
+  .save-bar { position:fixed; bottom:0; left:0; right:0; padding:12px 16px calc(12px + env(safe-area-inset-bottom)); background:var(--bg2); border-top:1px solid var(--border); z-index:50; }
+  .save-btn { width:100%; background:linear-gradient(135deg,#1a3a8f,#2d5fc4); color:#fff; border:none; border-radius:var(--radius-sm); padding:13px; font-family:'Heebo',sans-serif; font-size:15px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 15px rgba(26,58,143,.3); transition:opacity .2s,transform .15s; }
+  .save-btn:disabled { opacity:.35; cursor:default; box-shadow:none; }
+  .save-btn:not(:disabled):active { opacity:.88; transform:scale(.98); }
+  .save-btn.saving { opacity:.7; cursor:default; }
+
+  /* toast */
+  .toast { position:fixed; bottom:calc(80px + env(safe-area-inset-bottom)); left:50%; transform:translateX(-50%) translateY(20px); background:#1a2540; border:1px solid var(--accent); color:var(--text); font-size:13px; font-weight:600; padding:10px 20px; border-radius:20px; z-index:200; opacity:0; transition:opacity .25s,transform .25s; white-space:nowrap; pointer-events:none; }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+  /* coming soon */
+  .coming-soon { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:60vh; gap:12px; text-align:center; }
+  .coming-soon-icon { font-size:48px; }
+  .coming-soon-title { font-size:18px; font-weight:800; color:var(--text); }
+  .coming-soon-sub { font-size:13px; color:var(--text-dim); line-height:1.6; max-width:240px; }
 </style>
 </head>
 <body>
 
+<!-- MAIN -->
 <div id="app">
   <div class="header">
     <div class="header-label">Zero Work AI</div>
@@ -113,105 +186,83 @@
     <div class="header-sub">כל ההגדרות שלך במקום אחד</div>
     <div class="status-bar">
       <div class="status-chip"><div class="dot"></div>הסוכן פעיל</div>
-      <div class="status-chip">⚡ Claude 3.7 Sonnet</div>
+      <div class="status-chip" id="activeModelChip">⚡ טוען...</div>
     </div>
   </div>
 
   <div class="sections">
     <div class="section-group-label">הגדרות כלליות</div>
-
     <div class="nav-card blue" onclick="openScreen('screen-general','הגדרות כלליות')">
       <div class="nav-card-icon">⚙️</div>
-      <div class="nav-card-body">
-        <div class="nav-card-title">הגדרות כלליות</div>
-        <div class="nav-card-desc">מודל, פלטפורמות, אישורים, נתוני לקוח</div>
-      </div>
+      <div class="nav-card-body"><div class="nav-card-title">הגדרות כלליות</div><div class="nav-card-desc">מודל, פלטפורמות, אישורים, נתוני לקוח</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
-
     <div class="nav-card green" onclick="openScreen('screen-materials','חומרים אישיים')">
       <div class="nav-card-icon">🖼️</div>
-      <div class="nav-card-body">
-        <div class="nav-card-title">חומרים אישיים</div>
-        <div class="nav-card-desc">תמונות רקע, תמונת פרופיל, אפיון עסק</div>
-      </div>
+      <div class="nav-card-body"><div class="nav-card-title">חומרים אישיים</div><div class="nav-card-desc">תמונות רקע, תמונת פרופיל, אפיון עסק</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
-
     <div class="divider"></div>
     <div class="section-group-label">תוכן ופוסטים</div>
-
     <div class="nav-card purple" onclick="openScreen('screen-carousel','הגדרות כלליות')">
       <div class="nav-card-icon">🎨</div>
-      <div class="nav-card-body">
-        <div class="nav-card-title">הגדרות פוסט קרוסלה</div>
-        <div class="nav-card-desc">פרומפט כתיבה, כמות סליידים</div>
-      </div>
+      <div class="nav-card-body"><div class="nav-card-title">הגדרות פוסט קרוסלה</div><div class="nav-card-desc">פרומפט כתיבה, כמות סליידים</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
-
     <div class="nav-card teal" onclick="openScreen('screen-writing','פרומפטים')">
       <div class="nav-card-icon">✍️</div>
-      <div class="nav-card-body">
-        <div class="nav-card-title">הוראות כתיבת תוכן</div>
-        <div class="nav-card-desc">פרומפטים לקרוסלה, סטורי, פוסט רגיל</div>
-      </div>
+      <div class="nav-card-body"><div class="nav-card-title">הוראות כתיבת תוכן</div><div class="nav-card-desc">פרומפטים לקרוסלה, סטורי, פוסט רגיל</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
-
     <div class="nav-card gold" onclick="openScreen('screen-scheduled','פינות קבועות')">
       <div class="nav-card-icon">📅</div>
-      <div class="nav-card-body">
-        <div class="nav-card-title">תכנים מתוזמנים</div>
-        <div class="nav-card-desc">פינות קבועות לפוסטים, סטורים וסרטונים</div>
-      </div>
+      <div class="nav-card-body"><div class="nav-card-title">תכנים מתוזמנים</div><div class="nav-card-desc">פינות קבועות לפוסטים, סטורים וסרטונים</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
-
     <div class="divider"></div>
     <div class="section-group-label">סרטונים</div>
-
     <div class="nav-card orange" onclick="openScreen('screen-videos','הגדרות לסגנון עריכה')">
       <div class="nav-card-icon">🎬</div>
-      <div class="nav-card-body">
-        <div class="nav-card-title">הגדרות סרטונים</div>
-        <div class="nav-card-desc">סגנון עריכה, תיקיות, סרטונים ארוכים</div>
-      </div>
+      <div class="nav-card-body"><div class="nav-card-title">הגדרות סרטונים</div><div class="nav-card-desc">סגנון עריכה, תיקיות, סרטונים ארוכים</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
-
     <div class="divider"></div>
     <div class="section-group-label">ניתוח ודוחות</div>
-
     <div class="nav-card pink" onclick="openScreen('screen-competitors','עמודים לנתח')">
       <div class="nav-card-icon">📊</div>
-      <div class="nav-card-body">
-        <div class="nav-card-title">מתחרים ודוחות</div>
-        <div class="nav-card-desc">עמודים לניתוח, דוחות שבועיים</div>
-      </div>
+      <div class="nav-card-body"><div class="nav-card-title">מתחרים ודוחות</div><div class="nav-card-desc">עמודים לניתוח, דוחות שבועיים</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
   </div>
-
   <div class="bottom-credit">מופעל ע"י <span>Zero Work AI</span></div>
 </div>
 
-<!-- SCREENS -->
+<!-- ══════════════════════════════════════
+     SCREEN — הגדרות כלליות
+══════════════════════════════════════ -->
 <div class="screen" id="screen-general">
   <div class="screen-topbar">
     <div class="screen-back" onclick="closeScreen('screen-general')">›</div>
     <div class="screen-topbar-icon">⚙️</div>
     <div class="screen-topbar-title">הגדרות כלליות</div>
   </div>
-  <div class="screen-body">
-    <div class="coming-soon">
-      <div class="coming-soon-icon">🚧</div>
-      <div class="coming-soon-title">בקרוב</div>
-      <div class="coming-soon-sub">מסך זה יבנה בשלב הבא</div>
+
+  <div class="screen-body" id="general-body">
+    <!-- loading -->
+    <div class="screen-loading" id="general-loading">
+      <div class="spinner"></div>
+      <div>טוען הגדרות...</div>
     </div>
+  </div>
+
+  <div class="save-bar">
+    <button class="save-btn" id="general-save-btn" onclick="saveGeneral()" disabled>
+      💾 שמור שינויים
+    </button>
   </div>
 </div>
 
+<!-- שאר המסכים -->
 <div class="screen" id="screen-materials">
   <div class="screen-topbar"><div class="screen-back" onclick="closeScreen('screen-materials')">›</div><div class="screen-topbar-icon">🖼️</div><div class="screen-topbar-title">חומרים אישיים</div></div>
   <div class="screen-body"><div class="coming-soon"><div class="coming-soon-icon">🚧</div><div class="coming-soon-title">בקרוב</div></div></div>
@@ -237,41 +288,50 @@
   <div class="screen-body"><div class="coming-soon"><div class="coming-soon-icon">🚧</div><div class="coming-soon-title">בקרוב</div></div></div>
 </div>
 
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
 <script>
 var tg = window.Telegram && window.Telegram.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
-// ── קבועים ──────────────────────────────────────────────
+/* ══════════════════════════════════════
+   קבועים
+══════════════════════════════════════ */
 var GET_URL  = 'https://aiagentsforsale.app.n8n.cloud/webhook/0bb2242d-4be2-43f5-8f66-984d6efc5a19';
 var SAVE_URL = ''; // יתווסף בשלב הבא
 
-// טווחים לכל גיליון
 var SHEET_RANGES = {
   'הגדרות כלליות': {
-    platforms:   'A2:G6',
-    models:      'I2:N10',
-    carousel:    'AE2:AJ5',
-    regularPost: 'AQ2:AR4',
-    story:       'BB2:BC4',
-    videos:      'BG2:BH3'
+    platforms:'A2:G6', models:'I2:N10',
+    carousel:'AE2:AJ5', regularPost:'AQ2:AR4',
+    story:'BB2:BC4', videos:'BG2:BH3'
   }
 };
 
-// ── URL Params ──────────────────────────────────────────
+// פלטפורמות שלא ניתן לשנות (מוגבלות מהשיטס)
+var LOCKED_VALUES = ['לא לגעת! כרגע לא קיימת אופציה בכלל', 'לא לגעת! כרגע לא קיימת אופציה בכלל'];
+function isLocked(val) { return val && val.indexOf('לא לגעת') !== -1; }
+
 var params    = new URLSearchParams(window.location.search);
 var sheetsUrl = params.get('sheetsUrl') || '';
 
-// ── Navigation ──────────────────────────────────────────
+/* ══════════════════════════════════════
+   STATE
+══════════════════════════════════════ */
+var generalData    = null;  // נתונים מקוריים
+var generalChanges = {};    // שינויים שהלקוח עשה
+
+/* ══════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════ */
 function openScreen(id, sheetName) {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
   var el = document.getElementById(id);
   if (!el) return;
   el.classList.add('visible');
   el.scrollTop = 0;
-  if (tg) {
-    tg.BackButton.show();
-    tg.BackButton.onClick(function() { closeScreen(id); });
-  }
+  if (tg) { tg.BackButton.show(); tg.BackButton.onClick(function(){ closeScreen(id); }); }
   if (sheetName) fetchSettings(sheetName, id);
 }
 
@@ -279,10 +339,17 @@ function closeScreen(id) {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
   var el = document.getElementById(id);
   if (el) el.classList.remove('visible');
+  // reset general state
+  if (id === 'screen-general') {
+    generalChanges = {};
+    updateSaveBtn();
+  }
   if (!document.querySelector('.screen.visible') && tg) tg.BackButton.hide();
 }
 
-// ── Fetch settings ──────────────────────────────────────
+/* ══════════════════════════════════════
+   FETCH
+══════════════════════════════════════ */
 function fetchSettings(sheetName, screenId) {
   var ranges = SHEET_RANGES[sheetName] || {};
   var url = GET_URL
@@ -290,20 +357,262 @@ function fetchSettings(sheetName, screenId) {
     + '&sheet='     + encodeURIComponent(sheetName)
     + '&ranges='    + encodeURIComponent(JSON.stringify(ranges));
 
-  console.log('→ fetchSettings:', sheetName, ranges);
-
   fetch(url)
-    .then(function(res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
-    .then(function(data) {
-      console.log('← data:', data);
-      if (typeof window['onSettings_' + screenId] === 'function') {
-        window['onSettings_' + screenId](data);
+    .then(function(res){ if(!res.ok) throw new Error('HTTP '+res.status); return res.json(); })
+    .then(function(data){
+      if (typeof window['onSettings_'+screenId] === 'function') {
+        window['onSettings_'+screenId](data);
       }
     })
-    .catch(function(err) { console.error('fetchSettings error:', err); });
+    .catch(function(err){ console.error('fetchSettings error:', err); });
 }
 
-// ── Save settings ───────────────────────────────────────
+/* ══════════════════════════════════════
+   GENERAL SETTINGS — RENDER
+══════════════════════════════════════ */
+window['onSettings_screen-general'] = function(data) {
+  generalData    = data;
+  generalChanges = {};
+
+  // עדכן chip ראשי
+  var activeChip = document.getElementById('activeModelChip');
+  if (activeChip && data.models) {
+    var active = data.models.find(function(m){ return m.isActive; });
+    if (active) activeChip.textContent = '⚡ ' + active.name;
+  }
+
+  var body    = document.getElementById('general-body');
+  var loading = document.getElementById('general-loading');
+  if (loading) loading.style.display = 'none';
+
+  var html = '';
+
+  /* ── פלטפורמות ── */
+  if (data.platforms && data.platforms.length) {
+    html += '<div class="settings-section">';
+    html += '<div class="settings-section-header"><div class="settings-section-icon">🌐</div><div><div class="settings-section-title">פלטפורמות פרסום</div><div class="settings-section-sub">לאיזה רשתות כל סוג תוכן יעלה</div></div></div>';
+    html += '<div style="overflow-x:auto;padding:4px 0"><table class="platforms-table"><thead><tr>';
+    html += '<th>סוג תוכן</th><th>📸<br>אינסטגרם</th><th>👥<br>פייסבוק</th><th>▶️<br>יוטיוב</th><th>🎵<br>טיקטוק</th><th>💼<br>לינקדאין</th>';
+    html += '</tr></thead><tbody>';
+
+    data.platforms.forEach(function(row, ri) {
+      html += '<tr><td>' + row.type + '</td>';
+      var fields = [
+        {key:'instagram', val:row.instagram},
+        {key:'facebook',  val:row.facebook},
+        {key:'youtube',   val:row.youtube},
+        {key:'tiktok',    val:row.tiktok},
+        {key:'linkedin',  val:row.linkedin}
+      ];
+      fields.forEach(function(f) {
+        var locked = isLocked(f.val);
+        var isOn   = !locked && (f.val === 'כן' || (f.val && f.val.indexOf('כן') === 0));
+        var cls    = locked ? 'locked' : (isOn ? 'on' : 'off');
+        var onclick= locked ? '' : 'onclick="togglePlatform('+ri+',\''+f.key+'\')"';
+        html += '<td><button class="plat-toggle '+cls+'" '+onclick+' data-ri="'+ri+'" data-key="'+f.key+'"></button></td>';
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table></div></div>';
+  }
+
+  /* ── מודל ── */
+  if (data.models && data.models.length) {
+    html += '<div class="settings-section">';
+    html += '<div class="settings-section-header"><div class="settings-section-icon">🧠</div><div><div class="settings-section-title">מודל כתיבה</div><div class="settings-section-sub">המוח שכותב את התוכן שלך</div></div></div>';
+    html += '<div class="models-list">';
+    data.models.forEach(function(m, mi) {
+      var radioCls = m.isActive ? 'active' : '';
+      html += '<div class="model-row" onclick="selectModel('+mi+')" id="model-row-'+mi+'">';
+      html += '<div class="model-radio '+radioCls+'" id="model-radio-'+mi+'"></div>';
+      html += '<div class="model-info"><div class="model-name">'+m.name+'</div>';
+      if (m.price) html += '<div class="model-price">'+m.price+'</div>';
+      html += '</div>';
+      if (m.isActive) html += '<div class="model-active-badge">פעיל</div>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+  }
+
+  /* ── הגדרות קרוסלה ── */
+  if (data.carousel) {
+    var c = data.carousel;
+    html += '<div class="settings-section">';
+    html += '<div class="settings-section-header"><div class="settings-section-icon">🎨</div><div><div class="settings-section-title">הגדרות קרוסלה</div><div class="settings-section-sub">אישורים ואופן בחירת תמונות</div></div></div>';
+
+    // אופן בחירת תמונות רקע
+    html += '<div class="setting-row">';
+    html += '<div class="setting-row-label">אופן בחירת תמונות רקע</div>';
+    html += '<select class="setting-select" id="sel-bgMode" onchange="changeCarousel(\'bgMode\',this.value)">';
+    var bgOptions = ['כל התמונות מהתיקיית תמונות רקע הראשית','תמונות רקע לפי נושאים'];
+    bgOptions.forEach(function(opt) {
+      var sel = c.bgMode === opt ? 'selected' : '';
+      html += '<option value="'+opt+'" '+sel+'>'+opt+'</option>';
+    });
+    html += '</select></div>';
+
+    // אישור תוכן
+    html += '<div class="setting-row">';
+    html += '<div class="setting-row-label"><div>אישור תוכן כתוב</div><div class="setting-row-sub">האם לשלוח לאישורך לפני עיצוב?</div></div>';
+    var onContent = c.approvalContent === 'כן';
+    html += '<button class="toggle-switch '+(onContent?'on':'off')+'" id="tog-approvalContent" onclick="toggleCarousel(\'approvalContent\')"></button>';
+    html += '</div>';
+
+    // אישור עיצוב
+    html += '<div class="setting-row">';
+    html += '<div class="setting-row-label"><div>אישור עיצוב סופי</div><div class="setting-row-sub">האם לשלוח לאישורך לפני העלאה?</div></div>';
+    var onDesign = c.approvalDesign === 'כן';
+    html += '<button class="toggle-switch '+(onDesign?'on':'off')+'" id="tog-approvalDesign" onclick="toggleCarousel(\'approvalDesign\')"></button>';
+    html += '</div>';
+
+    // אופן בחירת טמפלייט
+    html += '<div class="setting-row">';
+    html += '<div class="setting-row-label">בחירת טמפלייט</div>';
+    html += '<select class="setting-select" id="sel-templateMode" onchange="changeCarousel(\'templateMode\',this.value)">';
+    var tmplOptions = ['לבחור רנדומלית בעצמו','להציע לי לבחור'];
+    tmplOptions.forEach(function(opt) {
+      var sel = c.templateMode === opt ? 'selected' : '';
+      html += '<option value="'+opt+'" '+sel+'>'+opt+'</option>';
+    });
+    html += '</select></div>';
+
+    html += '</div>'; // end section
+  }
+
+  body.insertAdjacentHTML('beforeend', html);
+  updateSaveBtn();
+};
+
+/* ══════════════════════════════════════
+   INTERACTIONS
+══════════════════════════════════════ */
+function togglePlatform(rowIndex, field) {
+  if (!generalData || !generalData.platforms) return;
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+
+  var row = generalData.platforms[rowIndex];
+  var cur = generalChanges['platform_'+rowIndex+'_'+field];
+  if (cur === undefined) {
+    // קח מהנתון המקורי
+    var origVal = row[field];
+    cur = (origVal === 'כן' || (origVal && origVal.indexOf('כן') === 0)) ? 'כן' : 'לא';
+  }
+  var newVal = cur === 'כן' ? 'לא' : 'כן';
+  generalChanges['platform_'+rowIndex+'_'+field] = newVal;
+
+  // עדכן UI
+  var btn = document.querySelector('[data-ri="'+rowIndex+'"][data-key="'+field+'"]');
+  if (btn) {
+    btn.className = 'plat-toggle ' + (newVal === 'כן' ? 'on' : 'off');
+    btn.setAttribute('onclick', 'togglePlatform('+rowIndex+',\''+field+'\')');
+  }
+  updateSaveBtn();
+}
+
+var selectedModelIndex = null;
+function selectModel(mi) {
+  if (!generalData || !generalData.models) return;
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+  selectedModelIndex = mi;
+
+  // עדכן UI רדיו
+  generalData.models.forEach(function(m, i) {
+    var radio = document.getElementById('model-radio-'+i);
+    var row   = document.getElementById('model-row-'+i);
+    if (!radio) return;
+    if (i === mi) {
+      radio.className = 'model-radio active';
+      // הוסף badge אם לא קיים
+      var badge = row.querySelector('.model-active-badge');
+      if (!badge) {
+        var b = document.createElement('div');
+        b.className = 'model-active-badge';
+        b.textContent = 'פעיל';
+        row.appendChild(b);
+      }
+    } else {
+      radio.className = 'model-radio';
+      var badge = row.querySelector('.model-active-badge');
+      if (badge) badge.remove();
+    }
+  });
+
+  generalChanges['selectedModel'] = generalData.models[mi].id;
+  updateSaveBtn();
+}
+
+function toggleCarousel(field) {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+  var tog = document.getElementById('tog-'+field);
+  if (!tog) return;
+  var isOn = tog.classList.contains('on');
+  var newVal = isOn ? 'לא' : 'כן';
+  tog.className = 'toggle-switch ' + (isOn ? 'off' : 'on');
+  generalChanges['carousel_'+field] = newVal;
+  updateSaveBtn();
+}
+
+function changeCarousel(field, val) {
+  generalChanges['carousel_'+field] = val;
+  updateSaveBtn();
+}
+
+/* ══════════════════════════════════════
+   SAVE
+══════════════════════════════════════ */
+function updateSaveBtn() {
+  var btn = document.getElementById('general-save-btn');
+  if (!btn) return;
+  btn.disabled = Object.keys(generalChanges).length === 0;
+}
+
+function saveGeneral() {
+  if (!SAVE_URL) { showToast('⚠️ SAVE_URL לא מוגדר עדיין'); return; }
+  var btn = document.getElementById('general-save-btn');
+  btn.disabled = true;
+  btn.classList.add('saving');
+  btn.textContent = 'שומר...';
+
+  fetch(SAVE_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      sheetsUrl: sheetsUrl,
+      sheet: 'הגדרות כלליות',
+      changes: generalChanges
+    })
+  })
+  .then(function(res){ if(!res.ok) throw new Error('HTTP '+res.status); return res.json(); })
+  .then(function(){
+    showToast('✅ השינויים נשמרו בהצלחה!');
+    generalChanges = {};
+    btn.classList.remove('saving');
+    btn.innerHTML = '💾 שמור שינויים';
+    updateSaveBtn();
+    if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+  })
+  .catch(function(err){
+    console.error('save error:', err);
+    showToast('❌ שגיאה בשמירה, נסה שוב');
+    btn.disabled = false;
+    btn.classList.remove('saving');
+    btn.innerHTML = '💾 שמור שינויים';
+  });
+}
+
+/* ══════════════════════════════════════
+   UTILS
+══════════════════════════════════════ */
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3000);
+}
+
+/* ══════════════════════════════════════
+   SAVE (generic)
+══════════════════════════════════════ */
 function saveSettings(sheetName, changes, onSuccess, onError) {
   if (!SAVE_URL) { if (onError) onError('saveUrl חסר'); return; }
   fetch(SAVE_URL, {
@@ -311,9 +620,9 @@ function saveSettings(sheetName, changes, onSuccess, onError) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ sheetsUrl: sheetsUrl, sheet: sheetName, changes: changes })
   })
-  .then(function(res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
-  .then(function(data) { if (onSuccess) onSuccess(data); })
-  .catch(function(err) { if (onError) onError(err); });
+  .then(function(res){ if(!res.ok) throw new Error('HTTP '+res.status); return res.json(); })
+  .then(function(data){ if(onSuccess) onSuccess(data); })
+  .catch(function(err){ if(onError) onError(err); });
 }
 </script>
 </body>
