@@ -274,7 +274,7 @@ var tg = window.Telegram && window.Telegram.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
 var GET_URL  = 'https://aiagentsforsale.app.n8n.cloud/webhook/0bb2242d-4be2-43f5-8f66-984d6efc5a19';
-var SAVE_URL = '';
+var SAVE_URL = 'https://aiagentsforsale.app.n8n.cloud/webhook/02052baf-98b8-4808-8d93-23470deabc5e';
 
 var SHEET_RANGES = {
   'הגדרות כלליות': {
@@ -459,8 +459,8 @@ window['onSettings_screen-general'] = function(data) {
     html += '<div class="setting-row-sub">תיקייה כללית = הסוכן בוחר רנדומלית מכל התמונות שלך.<br>לפי נושאים = הסוכן ישאל אותך מאיזה תיקיית נושא לבחור את התמונות.</div>';
     html += '</div>';
     html += '<select class="setting-select" id="sel-bgMode" onchange="changeCarousel(\'bgMode\',this.value)">';
-    [['כל התמונות מהתיקיית תמונות רקע הראשית','כל התמונות מהתיקיית תמונות הראשית'],
-     ['תמונות רקע לפי נושאים','לשאול אותי מאיזה לבחור מתוך תיקיות לפי נושאים']].forEach(function(pair) {
+    [['כל התמונות מהתיקיית תמונות רקע הראשית','כל התמונות מהתיקיית תמונות רקע הראשית'],
+     ['לשאול אותי מאיזה תיקייה לבחור את התמונות בהתאם לנושא הפוסט','לשאול אותי מאיזה תיקייה לבחור את התמונות בהתאם לנושא הפוסט']].forEach(function(pair) {
       var sel = c.bgMode === pair[0] ? 'selected' : '';
       html += '<option value="'+pair[0]+'" '+sel+'>'+pair[1]+'</option>';
     });
