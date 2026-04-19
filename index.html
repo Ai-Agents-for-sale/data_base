@@ -572,30 +572,33 @@ function updateSaveBtn() {
   if (btn) btn.disabled = Object.keys(generalChanges).length === 0;
 }
 
+/* ══ SAVE — GET request (no CORS preflight) ══ */
 function saveGeneral() {
   if (!SAVE_URL) { showToast('⚠️ SAVE_URL לא מוגדר עדיין'); return; }
   var btn = document.getElementById('general-save-btn');
   btn.disabled = true;
   btn.textContent = 'שומר...';
-  fetch(SAVE_URL, {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ sheetsUrl:sheetsUrl, sheet:'הגדרות כלליות', changes:generalChanges })
-  })
-  .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
-  .then(function(){
-    showToast('✅ השינויים נשמרו בהצלחה!');
-    generalChanges = {};
-    btn.innerHTML = '💾 שמור שינויים';
-    updateSaveBtn();
-    if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-  })
-  .catch(function(err){
-    console.error('save error:',err);
-    showToast('❌ שגיאה בשמירה, נסה שוב');
-    btn.disabled = false;
-    btn.innerHTML = '💾 שמור שינויים';
-  });
+
+  var url = SAVE_URL
+    + '?sheetsUrl=' + encodeURIComponent(sheetsUrl)
+    + '&sheet='     + encodeURIComponent('הגדרות כלליות')
+    + '&changes='   + encodeURIComponent(JSON.stringify(generalChanges));
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(){
+      showToast('✅ השינויים נשמרו בהצלחה!');
+      generalChanges = {};
+      btn.innerHTML = '💾 שמור שינויים';
+      updateSaveBtn();
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    })
+    .catch(function(err){
+      console.error('save error:',err);
+      showToast('❌ שגיאה בשמירה, נסה שוב');
+      btn.disabled = false;
+      btn.innerHTML = '💾 שמור שינויים';
+    });
 }
 
 function showToast(msg) {
