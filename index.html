@@ -452,15 +452,15 @@ window['onSettings_screen-general'] = function(data) {
     var c = data.carousel;
     html += '<div class="settings-section">';
     html += '<div class="settings-section-header"><div class="settings-section-icon">🖼️</div><div>';
-    html += '<div class="settings-section-title">תמונות רקע לקרוסלה</div></div></div>';
+    html += '<div class="settings-section-title">אופן בחירת תמונות רקע לפוסטים/סטורים</div></div></div>';
     html += '<div class="setting-row">';
     html += '<div class="setting-label-wrap">';
     html += '<div class="setting-row-label">אופן בחירת תמונות רקע</div>';
-    html += '<div class="setting-row-sub">תיקייה כללית = הסוכן בוחר רנדומלית מכל התמונות שלך.<br>לפי נושאים = הסוכן ישאל אותך מאיזה תיקיית נושא לבחור.</div>';
+    html += '<div class="setting-row-sub">תיקייה כללית = הסוכן בוחר רנדומלית מכל התמונות שלך.<br>לפי נושאים = הסוכן ישאל אותך מאיזה תיקיית נושא לבחור את התמונות.</div>';
     html += '</div>';
     html += '<select class="setting-select" id="sel-bgMode" onchange="changeCarousel(\'bgMode\',this.value)">';
-    [['כל התמונות מהתיקיית תמונות רקע הראשית','תיקייה כללית'],
-     ['תמונות רקע לפי נושאים','לפי נושאים']].forEach(function(pair) {
+    [['כל התמונות מהתיקיית תמונות רקע הראשית','כל התמונות מהתיקיית תמונות הראשית'],
+     ['תמונות רקע לפי נושאים','לשאול אותי מאיזה לבחור מתוך תיקיות לפי נושאים']].forEach(function(pair) {
       var sel = c.bgMode === pair[0] ? 'selected' : '';
       html += '<option value="'+pair[0]+'" '+sel+'>'+pair[1]+'</option>';
     });
@@ -486,16 +486,7 @@ window['onSettings_screen-general'] = function(data) {
     html += '<button class="toggle-switch '+(onDesign?'on':'off')+'" id="tog-approvalDesign" onclick="toggleCarousel(\'approvalDesign\')"></button>';
     html += '</div>';
 
-    // בחירת טמפלייט
-    html += '<div class="setting-row">';
-    html += '<div class="setting-label-wrap"><div class="setting-row-label">בחירת טמפלייט עיצוב</div><div class="setting-row-sub">האם הסוכן בוחר לבד או מציע לך לבחור?</div></div>';
-    html += '<select class="setting-select" id="sel-templateMode" onchange="changeCarousel(\'templateMode\',this.value)">';
-    [['לבחור רנדומלית בעצמו','בוחר לבד'],
-     ['להציע לי לבחור','אני בוחר']].forEach(function(pair) {
-      var sel = c.templateMode === pair[0] ? 'selected' : '';
-      html += '<option value="'+pair[0]+'" '+sel+'>'+pair[1]+'</option>';
-    });
-    html += '</select></div>';
+
 
     html += '</div>'; // end section
   }
