@@ -136,6 +136,12 @@
   .setting-row-label{font-size:12px;font-weight:700;color:var(--text);line-height:1.4}
   .setting-row-sub{font-size:10px;color:var(--text-dim);margin-top:3px;line-height:1.5}
 
+  /* stacked row — label on top, control full width below */
+  .setting-row-stacked{display:flex;flex-direction:column;gap:10px;padding:13px 16px;border-bottom:1px solid var(--border)}
+  .setting-row-stacked:last-child{border-bottom:none}
+  .setting-select-full{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Heebo',sans-serif;font-size:12px;font-weight:600;padding:10px 12px;outline:none;cursor:pointer;direction:rtl}
+  .setting-select-full:focus{border-color:var(--accent)}
+
   /* toggle */
   .toggle-switch{width:44px;height:26px;border-radius:13px;border:none;cursor:pointer;position:relative;flex-shrink:0;transition:background .2s}
   .toggle-switch::after{content:'';position:absolute;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
@@ -144,7 +150,7 @@
   .toggle-switch.off{background:var(--bg3);border:1px solid var(--border)}
   .toggle-switch.off::after{transform:translateX(3px)}
 
-  /* select */
+  /* select (inline, for short values) */
   .setting-select{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Heebo',sans-serif;font-size:11px;font-weight:600;padding:7px 10px;outline:none;cursor:pointer;direction:rtl;flex-shrink:0}
   .setting-select:focus{border-color:var(--accent)}
 
@@ -294,7 +300,7 @@ var sheetsUrl = params.get('sheetsUrl') || '';
 /* ══ STATE ══ */
 var generalData    = null;
 var generalChanges = {};
-var generalRendered = false; // ← guard מניעת כפול
+var generalRendered = false;
 
 /* ══ NAVIGATION ══ */
 function openScreen(id, sheetName) {
@@ -303,10 +309,9 @@ function openScreen(id, sheetName) {
   if (!el) return;
   el.classList.add('visible');
   el.scrollTop = 0;
-  // BackButton — מגדירים פעם אחת בלבד
   if (tg) {
     tg.BackButton.show();
-    tg.BackButton.offClick(); // מנקה handlers ישנים
+    tg.BackButton.offClick();
     tg.BackButton.onClick(function(){ closeScreen(id); });
   }
   if (sheetName && !generalRendered) fetchSettings(sheetName, id);
@@ -317,11 +322,9 @@ function closeScreen(id) {
   var el = document.getElementById(id);
   if (el) el.classList.remove('visible');
   if (id === 'screen-general') {
-    // reset לפתיחה הבאה
     generalRendered = false;
     generalChanges  = {};
     generalData     = null;
-    // החזר loading
     var body = document.getElementById('general-body');
     var loading = document.getElementById('general-loading');
     if (body && loading) {
@@ -354,12 +357,11 @@ function fetchSettings(sheetName, screenId) {
 
 /* ══ RENDER: הגדרות כלליות ══ */
 window['onSettings_screen-general'] = function(data) {
-  if (generalRendered) return; // ← חוסם כפול
+  if (generalRendered) return;
   generalRendered = true;
   generalData     = data;
   generalChanges  = {};
 
-  // chip
   var chip = document.getElementById('activeModelChip');
   if (chip && data.models) {
     var active = data.models.find(function(m){ return m.isActive; });
@@ -385,7 +387,6 @@ window['onSettings_screen-general'] = function(data) {
     data.platforms.forEach(function(row, ri) {
       html += '<tr><td>' + row.type + '</td>';
 
-      // אינסטגרם, פייסבוק, יוטיוב, לינקדאין — toggle רגיל
       var simpleFields = [
         {key:'instagram', val:row.instagram},
         {key:'facebook',  val:row.facebook},
@@ -399,7 +400,6 @@ window['onSettings_screen-general'] = function(data) {
         html += '<td><button class="plat-toggle '+cls+'" '+oc+' data-ri="'+ri+'" data-key="'+f.key+'"></button></td>';
       });
 
-      // טיקטוק — dropdown 3 אפשרויות
       var tikVal = row.tiktok || 'לא';
       var tikLocked = isLocked(tikVal);
       html += '<td>';
@@ -415,7 +415,6 @@ window['onSettings_screen-general'] = function(data) {
       }
       html += '</td>';
 
-      // לינקדאין
       var li = row.linkedin;
       var liLocked = isLocked(li);
       var liOn = !liLocked && (li === 'כן' || (li && li.indexOf('כן') === 0));
@@ -447,20 +446,23 @@ window['onSettings_screen-general'] = function(data) {
     html += '</div></div>';
   }
 
-  /* ── 3. אופן בחירת תמונות רקע ── */
+  /* ── 3. אופן בחירת תמונות רקע (stacked layout) ── */
   if (data.carousel) {
     var c = data.carousel;
     html += '<div class="settings-section">';
     html += '<div class="settings-section-header"><div class="settings-section-icon">🖼️</div><div>';
     html += '<div class="settings-section-title">אופן בחירת תמונות רקע לפוסטים/סטורים</div></div></div>';
-    html += '<div class="setting-row">';
+    html += '<div class="setting-row-stacked">';
     html += '<div class="setting-label-wrap">';
     html += '<div class="setting-row-label">אופן בחירת תמונות רקע</div>';
     html += '<div class="setting-row-sub">תיקייה כללית = הסוכן בוחר רנדומלית מכל התמונות שלך.<br>לפי נושאים = הסוכן ישאל אותך מאיזה תיקיית נושא לבחור את התמונות.</div>';
     html += '</div>';
-    html += '<select class="setting-select" id="sel-bgMode" onchange="changeCarousel(\'bgMode\',this.value)">';
-    [['כל התמונות מהתיקיית תמונות רקע הראשית','כל התמונות מהתיקיית תמונות רקע הראשית'],
-     ['לשאול אותי מאיזה תיקייה לבחור את התמונות בהתאם לנושא הפוסט','לשאול אותי מאיזה תיקייה לבחור את התמונות בהתאם לנושא הפוסט']].forEach(function(pair) {
+    html += '<select class="setting-select-full" id="sel-bgMode" onchange="changeCarousel(\'bgMode\',this.value)">';
+    var bgOptions = [
+      ['כל התמונות מהתיקיית תמונות רקע הראשית', '📁 תיקייה כללית'],
+      ['לשאול אותי מאיזה תיקייה לבחור את התמונות בהתאם לנושא הפוסט', '🗂️ לפי נושאים']
+    ];
+    bgOptions.forEach(function(pair) {
       var sel = c.bgMode === pair[0] ? 'selected' : '';
       html += '<option value="'+pair[0]+'" '+sel+'>'+pair[1]+'</option>';
     });
@@ -472,23 +474,19 @@ window['onSettings_screen-general'] = function(data) {
     html += '<div class="settings-section-title">הגדרות אישורים</div>';
     html += '<div class="settings-section-sub">על אילו שלבים תרצה לאשר לפני העלאה?</div></div></div>';
 
-    // אישור תוכן
     var onContent = c.approvalContent === 'כן';
     html += '<div class="setting-row">';
     html += '<div class="setting-label-wrap"><div class="setting-row-label">אישור תוכן כתוב</div><div class="setting-row-sub">הסוכן ישלח לאישורך לפני שממשיך לעיצוב</div></div>';
     html += '<button class="toggle-switch '+(onContent?'on':'off')+'" id="tog-approvalContent" onclick="toggleCarousel(\'approvalContent\')"></button>';
     html += '</div>';
 
-    // אישור עיצוב
     var onDesign = c.approvalDesign === 'כן';
     html += '<div class="setting-row">';
     html += '<div class="setting-label-wrap"><div class="setting-row-label">אישור עיצוב סופי</div><div class="setting-row-sub">הסוכן ישלח לאישורך לפני שמעלה לרשתות</div></div>';
     html += '<button class="toggle-switch '+(onDesign?'on':'off')+'" id="tog-approvalDesign" onclick="toggleCarousel(\'approvalDesign\')"></button>';
     html += '</div>';
 
-
-
-    html += '</div>'; // end section
+    html += '</div>';
   }
 
   body.insertAdjacentHTML('beforeend', html);
@@ -539,7 +537,6 @@ function selectModel(mi) {
       if (badge) badge.remove();
     }
   });
-  // שמור את ה-cell של המודל הנבחר ואת זה שבוטל
   generalData.models.forEach(function(m, i) {
     if (i === mi) generalChanges[m.cell + '_activate'] = { cell: m.cell, value: 'פעיל' };
     else generalChanges[m.cell + '_deactivate'] = { cell: m.cell, value: 'לא פעיל' };
