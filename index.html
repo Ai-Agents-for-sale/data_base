@@ -186,7 +186,7 @@
     <div class="section-group-label">הגדרות כלליות</div>
     <div class="nav-card blue" onclick="openScreen('screen-general','הגדרות כלליות')">
       <div class="nav-card-icon">⚙️</div>
-      <div class="nav-card-body"><div class="nav-card-title">הגדרות כלליות</div><div class="nav-card-desc">מודל, פלטפורמות, אישורים, נתוני לקוח</div></div>
+      <div class="nav-card-body"><div class="nav-card-title">הגדרות כלליות</div><div class="nav-card-desc">מודל שכותב את התוכן, פלטפורמות, אישורים לפני פרסום, פרטים אישיים</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
     <div class="nav-card green" onclick="openScreen('screen-materials','')">
@@ -208,14 +208,14 @@
     </div>
     <div class="nav-card gold" onclick="openScreen('screen-scheduled','')">
       <div class="nav-card-icon">📅</div>
-      <div class="nav-card-body"><div class="nav-card-title">תכנים מתוזמנים</div><div class="nav-card-desc">פינות קבועות לפוסטים, סטורים וסרטונים</div></div>
+      <div class="nav-card-body"><div class="nav-card-title">תכנים מתוזמנים</div><div class="nav-card-desc">תכנים שנוצרו ותוזמנו, פינות קבועות לפוסטים/סטורים</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
     <div class="divider"></div>
     <div class="section-group-label">סרטונים</div>
     <div class="nav-card orange" onclick="openScreen('screen-videos','')">
       <div class="nav-card-icon">🎬</div>
-      <div class="nav-card-body"><div class="nav-card-title">הגדרות סרטונים</div><div class="nav-card-desc">סגנון עריכה, תיקיות, סרטונים ארוכים</div></div>
+      <div class="nav-card-body"><div class="nav-card-title">הגדרות סרטונים</div><div class="nav-card-desc">הגדרות לסגנון עריכה, תיקיות גלם/מוכנים, סרטונים לערוך לקליפים</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
     <div class="divider"></div>
@@ -387,6 +387,7 @@ window['onSettings_screen-general'] = function(data) {
     data.platforms.forEach(function(row, ri) {
       html += '<tr><td>' + row.type + '</td>';
 
+      // אינסטגרם, פייסבוק, יוטיוב — toggle רגיל
       var simpleFields = [
         {key:'instagram', val:row.instagram},
         {key:'facebook',  val:row.facebook},
@@ -400,21 +401,35 @@ window['onSettings_screen-general'] = function(data) {
         html += '<td><button class="plat-toggle '+cls+'" '+oc+' data-ri="'+ri+'" data-key="'+f.key+'"></button></td>';
       });
 
+      // טיקטוק — dropdown רק בפוסט קרוסלה, toggle בכל השאר
       var tikVal = row.tiktok || 'לא';
       var tikLocked = isLocked(tikVal);
+      var isCarousel = row.type && row.type.indexOf('קרוסלה') !== -1;
+
       html += '<td>';
       if (tikLocked) {
-        html += '<select class="tiktok-select locked" disabled><option>לא זמין</option></select>';
-      } else {
+        if (isCarousel) {
+          html += '<select class="tiktok-select locked" disabled><option>לא זמין</option></select>';
+        } else {
+          html += '<button class="plat-toggle locked" disabled></button>';
+        }
+      } else if (isCarousel) {
+        // dropdown עם 3 אפשרויות (שומר את הערך המלא לשיטס)
         html += '<select class="tiktok-select" id="tik-'+ri+'" onchange="changeTiktok('+ri+',this.value)">';
         TIKTOK_OPTIONS.forEach(function(opt) {
           var sel = tikVal === opt ? 'selected' : '';
           html += '<option value="'+opt+'" '+sel+'>'+opt+'</option>';
         });
         html += '</select>';
+      } else {
+        // toggle רגיל - ON = "כן בלי מוזיקה", OFF = "לא"
+        var isOn = tikVal === 'כן' || (tikVal && tikVal.indexOf('כן') === 0);
+        var cls = isOn ? 'on' : 'off';
+        html += '<button class="plat-toggle '+cls+'" onclick="togglePlatform('+ri+',\'tiktok\')" data-ri="'+ri+'" data-key="tiktok"></button>';
       }
       html += '</td>';
 
+      // לינקדאין
       var li = row.linkedin;
       var liLocked = isLocked(li);
       var liOn = !liLocked && (li === 'כן' || (li && li.indexOf('כן') === 0));
@@ -499,12 +514,24 @@ function togglePlatform(ri, field) {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
   var row = generalData.platforms[ri];
   var cell = row.cells && row.cells[field] ? row.cells[field] : null;
-  var cur = generalChanges[cell] !== undefined ? generalChanges[cell]
-    : ((row[field] === 'כן' || (row[field] && row[field].indexOf('כן') === 0)) ? 'כן' : 'לא');
-  var newVal = cur === 'כן' ? 'לא' : 'כן';
+  var curStored = generalChanges[cell];
+  var origOn = (row[field] === 'כן' || (row[field] && row[field].indexOf('כן') === 0));
+  var curOn;
+  if (curStored !== undefined) {
+    curOn = (curStored === 'כן' || (typeof curStored === 'string' && curStored.indexOf('כן') === 0));
+  } else {
+    curOn = origOn;
+  }
+  // ערך חדש — לטיקטוק ב-ON שומרים "כן בלי מוזיקה" (ברירת מחדל הגיונית)
+  var newVal;
+  if (field === 'tiktok') {
+    newVal = curOn ? 'לא' : 'כן בלי מוזיקה';
+  } else {
+    newVal = curOn ? 'לא' : 'כן';
+  }
   if (cell) generalChanges[cell] = newVal;
   var btn = document.querySelector('[data-ri="'+ri+'"][data-key="'+field+'"]');
-  if (btn) btn.className = 'plat-toggle ' + (newVal === 'כן' ? 'on' : 'off');
+  if (btn) btn.className = 'plat-toggle ' + (curOn ? 'off' : 'on');
   updateSaveBtn();
 }
 
