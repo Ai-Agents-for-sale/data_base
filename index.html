@@ -183,15 +183,15 @@
   .slide-counter-display{display:flex;align-items:center;justify-content:space-between;gap:16px}
   .slide-counter-label{flex:1}
   .slide-counter-value{background:var(--accent-s);border:1px solid var(--accent);color:var(--text);font-size:24px;font-weight:900;min-width:56px;height:56px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-  .slide-counter-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:4px}
+  .slide-counter-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:4px}
   .slide-counter-btn{
     background:var(--bg3);
     border:1px solid var(--border);
     color:var(--text-dim);
     font-family:'Heebo',sans-serif;
-    font-size:14px;
+    font-size:18px;
     font-weight:800;
-    padding:10px 0;
+    padding:16px 0;
     border-radius:var(--radius-sm);
     cursor:pointer;
     transition:all .15s;
@@ -428,7 +428,7 @@ var SHEET_RANGES = {
 var LOG_SHEET_TAB = "ID'S של תיקיות/טבלאות";
 
 var TIKTOK_OPTIONS = ['כן עם מוזיקה אטומטית', 'כן בלי מוזיקה', 'לא'];
-var SLIDE_COUNT_OPTIONS = ['5','6','7','8','9','10'];
+var SLIDE_COUNT_OPTIONS = ['5','10'];
 
 function isLocked(val) { return val && val.indexOf('לא לגעת') !== -1; }
 
