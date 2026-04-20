@@ -151,6 +151,24 @@
   .setting-select-full{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Heebo',sans-serif;font-size:12px;font-weight:600;padding:10px 12px;outline:none;cursor:pointer;direction:rtl}
   .setting-select-full:focus{border-color:var(--accent)}
 
+  /* ── Text input (for client fields) ── */
+  .setting-input{
+    width:100%;
+    background:var(--bg3);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    color:var(--text);
+    font-family:'Heebo',sans-serif;
+    font-size:13px;
+    font-weight:500;
+    padding:10px 12px;
+    outline:none;
+    direction:rtl;
+    transition:border-color .15s;
+  }
+  .setting-input:focus{border-color:var(--accent)}
+  .setting-input.ltr{direction:ltr;text-align:left}
+
   .toggle-switch{width:44px;height:26px;border-radius:13px;border:none;cursor:pointer;position:relative;flex-shrink:0;transition:background .2s}
   .toggle-switch::after{content:'';position:absolute;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
   .toggle-switch.on{background:var(--green)}
@@ -177,24 +195,11 @@
   .prompt-editor-title{font-size:13px;font-weight:800;color:var(--text)}
   .prompt-editor-hint{font-size:10px;color:var(--text-dimmer)}
   .prompt-textarea{
-    display:block;
-    width:100%;
-    min-height:340px;
-    background:var(--bg3);
-    border:none;
-    color:var(--text);
-    font-family:'Heebo',sans-serif;
-    font-size:13px;
-    font-weight:500;
-    line-height:1.7;
-    padding:14px 16px;
-    outline:none;
-    direction:rtl;
-    resize:none;
-    overflow:hidden;
+    display:block;width:100%;min-height:340px;background:var(--bg3);border:none;color:var(--text);
+    font-family:'Heebo',sans-serif;font-size:13px;font-weight:500;line-height:1.7;padding:14px 16px;
+    outline:none;direction:rtl;resize:none;overflow:hidden;
   }
 
-  /* Reset-to-original button — inline with save bar */
   .reset-btn-wrap{display:flex;justify-content:flex-start;padding:0 4px}
   .reset-btn{background:transparent;border:1px solid var(--border-h);color:var(--text-dim);font-family:'Heebo',sans-serif;font-size:11px;font-weight:600;padding:7px 12px;border-radius:20px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s}
   .reset-btn:hover{border-color:var(--red);color:var(--red)}
@@ -382,6 +387,9 @@ var SHEET_RANGES = {
   }
 };
 
+/* Log sheet special target — used when saving client profile fields */
+var LOG_SHEET_TAB = "ID'S של תיקיות/טבלאות";
+
 var TIKTOK_OPTIONS = ['כן עם מוזיקה אטומטית', 'כן בלי מוזיקה', 'לא'];
 
 function isLocked(val) { return val && val.indexOf('לא לגעת') !== -1; }
@@ -419,7 +427,8 @@ var modelName    = params.get('modelName') || '';
 })();
 
 var generalData    = null;
-var generalChanges = {};
+var generalChanges = {};           // for main sheet (הגדרות כלליות)
+var generalLogChanges = {};        // for log sheet (client profile fields)
 var generalRendered = false;
 
 var promptData     = null;
@@ -481,9 +490,10 @@ function closeScreen(id) {
 }
 
 function resetGeneralScreen() {
-  generalRendered = false;
-  generalChanges  = {};
-  generalData     = null;
+  generalRendered   = false;
+  generalChanges    = {};
+  generalLogChanges = {};
+  generalData       = null;
   var body = document.getElementById('general-body');
   var loading = document.getElementById('general-loading');
   if (body && loading) {
@@ -570,7 +580,8 @@ function renderGeneral(data) {
   if (generalRendered) return;
   generalRendered = true;
   generalData     = data;
-  generalChanges  = {};
+  generalChanges    = {};
+  generalLogChanges = {};
 
   var chip = document.getElementById('activeModelChip');
   if (chip && data.models) {
@@ -587,6 +598,7 @@ function renderGeneral(data) {
 
   var html = '';
 
+  /* פלטפורמות */
   if (data.platforms && data.platforms.length) {
     html += '<div class="settings-section">';
     html += '<div class="settings-section-header"><div class="settings-section-icon">🌐</div><div>';
@@ -635,6 +647,7 @@ function renderGeneral(data) {
     html += '</tbody></table></div></div>';
   }
 
+  /* מודל */
   if (data.models && data.models.length) {
     html += '<div class="settings-section">';
     html += '<div class="settings-section-header"><div class="settings-section-icon">🧠</div><div>';
@@ -653,6 +666,7 @@ function renderGeneral(data) {
     html += '</div></div>';
   }
 
+  /* bgMode + approvals */
   if (data.carousel) {
     var c = data.carousel;
     html += '<div class="settings-section">';
@@ -692,6 +706,47 @@ function renderGeneral(data) {
     html += '</div>';
 
     html += '</div>';
+  }
+
+  /* ── נתוני לקוח — Client profile (saved to log sheet) ── */
+  if (data.clientProfile) {
+    var cp = data.clientProfile;
+    html += '<div class="settings-section">';
+    html += '<div class="settings-section-header"><div class="settings-section-icon">👤</div><div>';
+    html += '<div class="settings-section-title">נתוני לקוח</div>';
+    html += '<div class="settings-section-sub">הפרטים שיוצגו בפוסטים ובסטורים שלך</div></div></div>';
+
+    // שם במה
+    html += '<div class="setting-row-stacked">';
+    html += '<div class="setting-label-wrap">';
+    html += '<div class="setting-row-label">שם במה</div>';
+    html += '<div class="setting-row-sub">השם שיופיע בפוסטים/סטורים ליד התמונת פרופיל</div>';
+    html += '</div>';
+    html += '<input type="text" class="setting-input" id="inp-stageName" dir="rtl" oninput="changeClientName(this.value)" placeholder="למשל: רוני גליק">';
+    html += '</div>';
+
+    // שם אינסטגרם
+    html += '<div class="setting-row-stacked">';
+    html += '<div class="setting-label-wrap">';
+    html += '<div class="setting-row-label">שם אינסטגרם</div>';
+    html += '<div class="setting-row-sub">הטקסט שיופיע מתחת לשם שלך ליד התמונת פרופיל, נהוג לשים שם אינסטגרם באנגלית<br><em style="color:var(--text-dimmer)">אין צורך להוסיף @, זה כבר מוצג בעיצוב</em></div>';
+    html += '</div>';
+    html += '<input type="text" class="setting-input ltr" id="inp-instagramHandle" dir="ltr" oninput="changeInstagramHandle(this.value)" placeholder="your.handle">';
+    html += '</div>';
+
+    html += '</div>';
+
+    // set values after HTML is inserted
+    setTimeout(function() {
+      var stageInput = document.getElementById('inp-stageName');
+      var igInput    = document.getElementById('inp-instagramHandle');
+      if (stageInput) stageInput.value = cp.stageName || '';
+      if (igInput) {
+        // מנקה @ מההתחלה אם קיים בערך שמגיע מהשיט
+        var ig = (cp.instagramHandle || '').replace(/^@+/, '').replace(/@/g, '');
+        igInput.value = ig;
+      }
+    }, 0);
   }
 
   body.insertAdjacentHTML('beforeend', html);
@@ -734,7 +789,6 @@ function renderPrompt(initialValue) {
   html += '<textarea class="prompt-textarea" id="prompt-textarea" oninput="onPromptInput()" placeholder="כתוב כאן את ההוראות שלך..."></textarea>';
   html += '</div>';
 
-  // כפתור חזרה לגרסה המקורית
   html += '<div class="reset-btn-wrap">';
   html += '<button class="reset-btn" id="prompt-reset-btn" onclick="resetPromptToOriginal()" disabled>↺ חזור לגרסה מקורית</button>';
   html += '</div>';
@@ -750,28 +804,22 @@ function renderPrompt(initialValue) {
   updateSaveBtn('prompt');
 }
 
-/* ══ AUTO-RESIZE TEXTAREA — מונע scroll jump בדסקטופ ══ */
 function autoResizeTextarea(ta) {
   if (!ta) return;
-  // שומר את מיקום ה-scroll של הדף לפני השינוי
   var scrollY = window.scrollY || window.pageYOffset;
-  // אם זו גלילה פנימית של ה-screen (מובייל), נרצה לשמור גם אותה
   var screenEl = ta.closest('.screen');
   var screenScrollY = screenEl ? screenEl.scrollTop : 0;
 
-  // מחשב את הגובה הרצוי
   ta.style.height = 'auto';
   var needed = ta.scrollHeight;
   var current = parseInt(ta.style.height) || 0;
 
-  // מעדכן רק אם שונה משמעותית (מונע reflow מיותר)
   if (Math.abs(needed - current) > 1) {
     ta.style.height = needed + 'px';
   } else {
-    ta.style.height = current + 'px'; // משחזר את הגובה הקודם
+    ta.style.height = current + 'px';
   }
 
-  // משחזר את מיקום הגלילה
   if (screenEl && screenScrollY) screenEl.scrollTop = screenScrollY;
   if (scrollY) window.scrollTo(0, scrollY);
 }
@@ -902,10 +950,33 @@ function changeCarousel(field, val) {
   updateSaveBtn('general');
 }
 
+/* ── Client profile change handlers (saved to log sheet, cells AC2/AD2) ── */
+function changeClientName(val) {
+  generalLogChanges['AC2'] = val;
+  updateSaveBtn('general');
+}
+
+function changeInstagramHandle(val) {
+  // block @ — מסיר כל תו @
+  var clean = (val || '').replace(/@/g, '');
+  if (clean !== val) {
+    var inp = document.getElementById('inp-instagramHandle');
+    if (inp) {
+      var pos = inp.selectionStart - 1;
+      inp.value = clean;
+      // מחזיר את הסמן למקום הנכון
+      try { inp.setSelectionRange(pos, pos); } catch(e){}
+    }
+  }
+  generalLogChanges['AD2'] = clean;
+  updateSaveBtn('general');
+}
+
 function updateSaveBtn(which) {
   if (which === 'general') {
     var btn = document.getElementById('general-save-btn');
-    if (btn) btn.disabled = Object.keys(generalChanges).length === 0;
+    var hasChanges = Object.keys(generalChanges).length > 0 || Object.keys(generalLogChanges).length > 0;
+    if (btn) btn.disabled = !hasChanges;
   } else if (which === 'prompt') {
     var saveBtn = document.getElementById('prompt-save-btn');
     var resetBtn = document.getElementById('prompt-reset-btn');
@@ -919,10 +990,19 @@ function saveGeneral() {
   var btn = document.getElementById('general-save-btn');
   btn.disabled = true;
   btn.textContent = 'שומר...';
-  sendSave('הגדרות כלליות', generalChanges)
+
+  // שולח את הנתונים הרגילים ואת נתוני הלקוח ללוג שיט בבקשה אחת
+  var payload = {
+    mainChanges: generalChanges,
+    logChanges:  generalLogChanges,
+    logSheetTab: LOG_SHEET_TAB
+  };
+
+  sendSaveMulti('הגדרות כלליות', payload)
     .then(function(){
       showToast('✅ השינויים נשמרו בהצלחה!');
-      generalChanges = {};
+      generalChanges    = {};
+      generalLogChanges = {};
       btn.innerHTML = '💾 שמור שינויים';
       updateSaveBtn('general');
       if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
@@ -957,12 +1037,28 @@ function savePrompt() {
     });
 }
 
+/* single-sheet save */
 function sendSave(sheetName, changes) {
   var url = SAVE_URL
     + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
     + '&sheet='      + encodeURIComponent(sheetName)
     + '&logSheetId=' + encodeURIComponent(logSheetId)
     + '&changes='    + encodeURIComponent(JSON.stringify(changes));
+  return fetch(url).then(function(r){
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  });
+}
+
+/* multi-target save — main sheet + log sheet in one call */
+function sendSaveMulti(sheetName, payload) {
+  var url = SAVE_URL
+    + '?sheetsUrl='   + encodeURIComponent(sheetsUrl)
+    + '&sheet='       + encodeURIComponent(sheetName)
+    + '&logSheetId='  + encodeURIComponent(logSheetId)
+    + '&changes='     + encodeURIComponent(JSON.stringify(payload.mainChanges || {}))
+    + '&logChanges='  + encodeURIComponent(JSON.stringify(payload.logChanges  || {}))
+    + '&logSheetTab=' + encodeURIComponent(payload.logSheetTab || '');
   return fetch(url).then(function(r){
     if (!r.ok) throw new Error('HTTP ' + r.status);
     return r.json();
