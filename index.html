@@ -24,7 +24,6 @@
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 
-  /* ══ Android WebView scroll fix ══ */
   html, body {
     font-family:'Heebo',sans-serif;
     background:var(--bg);
@@ -39,7 +38,6 @@
   }
   #app{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;padding-bottom:calc(24px + env(safe-area-inset-bottom))}
 
-  /* HEADER */
   .header{padding:20px 20px 0}
   .header-label{font-size:11px;font-weight:600;color:var(--text-dimmer);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
   .header-title{font-size:24px;font-weight:900;color:var(--text);line-height:1.15;margin-bottom:4px}
@@ -53,7 +51,6 @@
   .status-chip.inactive .dot{background:var(--red);box-shadow:0 0 6px var(--red);animation:none}
   @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.4}}
 
-  /* NAV CARDS */
   .sections{padding:0 16px;display:flex;flex-direction:column;gap:10px}
   .section-group-label{font-size:10px;font-weight:700;color:var(--text-dimmer);letter-spacing:.1em;text-transform:uppercase;padding:0 4px;margin-top:6px;margin-bottom:2px}
   .nav-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;display:flex;align-items:center;gap:14px;transition:border-color .18s,transform .12s;-webkit-user-select:none;user-select:none;position:relative;overflow:hidden}
@@ -88,7 +85,6 @@
   .nav-card:nth-child(6){animation:fadeSlideIn .3s .28s ease both}
   .nav-card:nth-child(7){animation:fadeSlideIn .3s .32s ease both}
 
-  /* SCREENS */
   .screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:100;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
   .screen.visible{display:flex}
   .screen-topbar{flex-shrink:0;display:flex;align-items:center;gap:12px;padding:16px 20px 14px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
@@ -99,22 +95,18 @@
   .screen-body{flex:1;padding:20px 16px calc(80px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:20px}
   .screen-body-no-save{padding-bottom:calc(24px + env(safe-area-inset-bottom))}
 
-  /* SETTINGS SECTIONS */
   .settings-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
   .settings-section-header{padding:14px 16px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
   .settings-section-icon{font-size:16px}
   .settings-section-title{font-size:13px;font-weight:800;color:var(--text)}
   .settings-section-sub{font-size:11px;color:var(--text-dim);margin-top:2px}
 
-  /* sub-menu question */
   .submenu-question{font-size:14px;font-weight:800;color:var(--text);padding:4px 4px 2px;line-height:1.4}
 
-  /* LOADING */
   .screen-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:60vh;color:var(--text-dim);font-size:13px}
   .spinner{width:32px;height:32px;border:3px solid rgba(37,99,235,.15);border-top-color:var(--accent);border-radius:50%;animation:spin .75s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
 
-  /* PLATFORMS TABLE */
   .platforms-scroll{overflow-x:auto;padding:4px 0;touch-action:pan-x pan-y}
   .platforms-table{width:100%;border-collapse:collapse;min-width:320px}
   .platforms-table th{font-size:10px;font-weight:700;color:var(--text-dimmer);text-align:center;padding:10px 6px 8px;border-bottom:1px solid var(--border);letter-spacing:.05em;white-space:nowrap}
@@ -136,7 +128,6 @@
   .tiktok-select:focus{border-color:var(--accent)}
   .tiktok-select.locked{opacity:.3;cursor:not-allowed}
 
-  /* MODEL CARDS */
   .models-list{display:flex;flex-direction:column}
   .model-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;-webkit-user-select:none;user-select:none}
   .model-row:last-child{border-bottom:none}
@@ -149,7 +140,6 @@
   .model-price{font-size:10px;color:var(--text-dim)}
   .model-active-badge{font-size:9px;font-weight:800;background:var(--green);color:#fff;padding:2px 8px;border-radius:20px;flex-shrink:0}
 
-  /* SETTING ROWS */
   .setting-row{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--border);gap:12px}
   .setting-row:last-child{border-bottom:none}
   .setting-label-wrap{flex:1}
@@ -171,7 +161,6 @@
   .setting-select{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Heebo',sans-serif;font-size:11px;font-weight:600;padding:7px 10px;outline:none;cursor:pointer;direction:rtl;flex-shrink:0}
   .setting-select:focus{border-color:var(--accent)}
 
-  /* INSTRUCTIONS BOX (above prompt editor) */
   .instructions-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;gap:12px}
   .instructions-title{font-size:14px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:6px}
   .instructions-body{font-size:12px;color:var(--text-dim);line-height:1.7}
@@ -183,12 +172,10 @@
   .tip-box-text{font-size:11px;color:var(--text-dim);line-height:1.7}
   .prompt-in-tip{background:var(--bg3);border:1px dashed var(--yellow);border-radius:8px;padding:10px 12px;margin-top:6px;color:#d4e4f7;font-size:11px;font-weight:500;font-style:italic;line-height:1.6}
 
-  /* PROMPT EDITOR ——— AUTO-RESIZE, NO INTERNAL SCROLL (Android fix) */
   .prompt-editor-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
   .prompt-editor-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px}
   .prompt-editor-title{font-size:13px;font-weight:800;color:var(--text)}
   .prompt-editor-hint{font-size:10px;color:var(--text-dimmer)}
-  /* textarea — בלי max-height, בלי overflow, בלי resize. הוא גדל דינמית לפי התוכן */
   .prompt-textarea{
     display:block;
     width:100%;
@@ -203,22 +190,19 @@
     padding:14px 16px;
     outline:none;
     direction:rtl;
-    resize:none;       /* בלי resize handle — הגובה מתעדכן אוטומטית דרך JS */
-    overflow:hidden;   /* קריטי — בלי scroll פנימי */
+    resize:none;
+    overflow:hidden;
   }
 
-  /* SAVE BAR */
   .save-bar{position:fixed;bottom:0;left:0;right:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:var(--bg2);border-top:1px solid var(--border);z-index:50}
   .save-btn{width:100%;background:linear-gradient(135deg,#1a3a8f,#2d5fc4);color:#fff;border:none;border-radius:var(--radius-sm);padding:13px;font-family:'Heebo',sans-serif;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 15px rgba(26,58,143,.3);transition:opacity .2s,transform .15s}
   .save-btn:disabled{opacity:.35;cursor:default;box-shadow:none}
   .save-btn:not(:disabled):active{opacity:.88;transform:scale(.98)}
 
-  /* TOAST */
   .toast{position:fixed;bottom:calc(80px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(20px);background:#1a2540;border:1px solid var(--accent);color:var(--text);font-size:13px;font-weight:600;padding:10px 20px;border-radius:20px;z-index:200;opacity:0;transition:opacity .25s,transform .25s;max-width:90%;text-align:center;pointer-events:none}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   .toast.error{border-color:var(--red);background:#2a1520}
 
-  /* COMING SOON */
   .coming-soon{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:12px;text-align:center}
   .coming-soon-icon{font-size:48px}
   .coming-soon-title{font-size:18px;font-weight:800;color:var(--text)}
@@ -284,7 +268,6 @@
   <div class="bottom-credit">מופעל ע"י <span>Zero Work AI</span></div>
 </div>
 
-<!-- ══ SCREEN: הגדרות כלליות ══ -->
 <div class="screen" id="screen-general">
   <div class="screen-topbar">
     <div class="screen-back" onclick="closeScreen('screen-general')">›</div>
@@ -302,7 +285,6 @@
   </div>
 </div>
 
-<!-- ══ SCREEN: הוראות כתיבת תוכן (sub-menu) ══ -->
 <div class="screen" id="screen-writing">
   <div class="screen-topbar">
     <div class="screen-back" onclick="closeScreen('screen-writing')">›</div>
@@ -329,7 +311,6 @@
   </div>
 </div>
 
-<!-- ══ SCREEN: עריכת פרומפט כתיבה (גנרי — משותף לשלושת הסוגים) ══ -->
 <div class="screen" id="screen-prompt">
   <div class="screen-topbar">
     <div class="screen-back" onclick="closeScreen('screen-prompt')">›</div>
@@ -347,7 +328,6 @@
   </div>
 </div>
 
-<!-- placeholder screens -->
 <div class="screen" id="screen-materials">
   <div class="screen-topbar"><div class="screen-back" onclick="closeScreen('screen-materials')">›</div><div class="screen-topbar-icon">🖼️</div><div class="screen-topbar-title">חומרים אישיים</div></div>
   <div class="screen-body"><div class="coming-soon"><div class="coming-soon-icon">🚧</div><div class="coming-soon-title">בקרוב</div></div></div>
@@ -375,7 +355,6 @@
 var tg = window.Telegram && window.Telegram.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
-/* disableVerticalSwipes רק באייפון — באנדרויד זה מפריע לגלילה הפנימית */
 var isAndroid = /android/i.test(navigator.userAgent);
 if (tg && !isAndroid && tg.disableVerticalSwipes) {
   try { tg.disableVerticalSwipes(); } catch(e){}
@@ -399,7 +378,6 @@ var TIKTOK_OPTIONS = ['כן עם מוזיקה אטומטית', 'כן בלי מו
 
 function isLocked(val) { return val && val.indexOf('לא לגעת') !== -1; }
 
-/* ══ URL PARAMS ══ */
 var params       = new URLSearchParams(window.location.search);
 var sheetsUrl    = params.get('sheetsUrl') || '';
 var logSheetId   = params.get('logSheetId') || '';
@@ -407,7 +385,6 @@ var clientName   = params.get('clientName') || '';
 var agentStatus  = params.get('agentStatus') || '';
 var modelName    = params.get('modelName') || '';
 
-/* ══ INIT HEADER ══ */
 (function initHeader(){
   if (clientName) {
     var firstName = clientName.trim().split(/\s+/)[0];
@@ -433,7 +410,6 @@ var modelName    = params.get('modelName') || '';
   }
 })();
 
-/* ══ STATE ══ */
 var generalData    = null;
 var generalChanges = {};
 var generalRendered = false;
@@ -442,7 +418,6 @@ var promptData     = null;
 var promptChanges  = {};
 var promptRendered = false;
 
-/* ══ PROMPT CONFIG ══ */
 var PROMPT_CONFIG = {
   carousel: {
     title: 'הוראות כתיבה לפוסט קרוסלה',
@@ -470,7 +445,6 @@ var PROMPT_CONFIG = {
   }
 };
 
-/* ══ NAVIGATION ══ */
 function openScreen(id, sheetName) {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
   var el = document.getElementById(id);
@@ -545,14 +519,18 @@ function openWritingPrompt(type) {
   fetchPrompt(cfg);
 }
 
-/* ══ FETCH: general ══ */
-function fetchSettings(sheetName, screenId) {
-  var ranges = SHEET_RANGES[sheetName] || {};
-  var url = GET_URL
+/* ══ GENERIC FETCH — logSheetId תמיד נשלח ══ */
+function buildGetUrl(sheetName, ranges) {
+  return GET_URL
     + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
     + '&sheet='      + encodeURIComponent(sheetName)
     + '&logSheetId=' + encodeURIComponent(logSheetId)
-    + '&ranges='     + encodeURIComponent(JSON.stringify(ranges));
+    + '&ranges='     + encodeURIComponent(JSON.stringify(ranges || {}));
+}
+
+function fetchSettings(sheetName, screenId) {
+  var ranges = SHEET_RANGES[sheetName] || {};
+  var url = buildGetUrl(sheetName, ranges);
 
   fetch(url)
     .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
@@ -562,13 +540,9 @@ function fetchSettings(sheetName, screenId) {
     .catch(function(err){ console.error('fetchSettings error:', err); });
 }
 
-/* ══ FETCH: prompt ══ */
 function fetchPrompt(cfg) {
   var ranges = SHEET_RANGES[cfg.sheet] || {};
-  var url = GET_URL
-    + '?sheetsUrl=' + encodeURIComponent(sheetsUrl)
-    + '&sheet='     + encodeURIComponent(cfg.sheet)
-    + '&ranges='    + encodeURIComponent(JSON.stringify(ranges));
+  var url = buildGetUrl(cfg.sheet, ranges);
 
   fetch(url)
     .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
@@ -585,7 +559,6 @@ function fetchPrompt(cfg) {
     });
 }
 
-/* ══ RENDER: הגדרות כלליות ══ */
 function renderGeneral(data) {
   if (generalRendered) return;
   generalRendered = true;
@@ -718,7 +691,6 @@ function renderGeneral(data) {
   updateSaveBtn('general');
 }
 
-/* ══ RENDER: prompt editor ══ */
 function renderPrompt(initialValue) {
   promptRendered = true;
   promptData.value = initialValue || '';
@@ -760,14 +732,12 @@ function renderPrompt(initialValue) {
   var ta = document.getElementById('prompt-textarea');
   if (ta) {
     ta.value = promptData.value;
-    // Auto-resize מיידי כשהתוכן נטען (כך שאין scroll פנימי גם כשהפרומפט ארוך)
     autoResizeTextarea(ta);
   }
 
   updateSaveBtn('prompt');
 }
 
-/* ══ AUTO-RESIZE TEXTAREA (Android scroll fix) ══ */
 function autoResizeTextarea(ta) {
   if (!ta) return;
   ta.style.height = 'auto';
@@ -777,7 +747,7 @@ function autoResizeTextarea(ta) {
 function onPromptInput() {
   var ta = document.getElementById('prompt-textarea');
   if (!ta || !promptData) return;
-  autoResizeTextarea(ta); // מעדכן את הגובה בכל הקלדה — הפרומפט תמיד נראה במלואו בלי scroll פנימי
+  autoResizeTextarea(ta);
   var newVal = ta.value;
   if (newVal === promptData.value) {
     delete promptChanges[promptData.cfg.cell];
@@ -787,7 +757,6 @@ function onPromptInput() {
   updateSaveBtn('prompt');
 }
 
-/* ══ INTERACTIONS ══ */
 function togglePlatform(ri, field) {
   if (!generalData || !generalData.platforms) return;
   if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
@@ -940,9 +909,10 @@ function savePrompt() {
 
 function sendSave(sheetName, changes) {
   var url = SAVE_URL
-    + '?sheetsUrl=' + encodeURIComponent(sheetsUrl)
-    + '&sheet='     + encodeURIComponent(sheetName)
-    + '&changes='   + encodeURIComponent(JSON.stringify(changes));
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent(sheetName)
+    + '&logSheetId=' + encodeURIComponent(logSheetId)
+    + '&changes='    + encodeURIComponent(JSON.stringify(changes));
   return fetch(url).then(function(r){
     if (!r.ok) throw new Error('HTTP ' + r.status);
     return r.json();
