@@ -23,8 +23,21 @@
     --radius:16px; --radius-sm:10px;
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overscroll-behavior:none}
-  #app{min-height:100dvh;display:flex;flex-direction:column;padding-bottom:calc(24px + env(safe-area-inset-bottom))}
+
+  /* ══ Android WebView scroll fix ══ */
+  html, body {
+    font-family:'Heebo',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    height:100%;
+    width:100%;
+    overflow-x:hidden;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-y:contain;
+    touch-action:manipulation;
+  }
+  #app{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;padding-bottom:calc(24px + env(safe-area-inset-bottom))}
 
   /* HEADER */
   .header{padding:20px 20px 0}
@@ -76,7 +89,7 @@
   .nav-card:nth-child(7){animation:fadeSlideIn .3s .32s ease both}
 
   /* SCREENS */
-  .screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:100;flex-direction:column;overflow-y:auto}
+  .screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:100;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
   .screen.visible{display:flex}
   .screen-topbar{flex-shrink:0;display:flex;align-items:center;gap:12px;padding:16px 20px 14px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
   .screen-back{width:34px;height:34px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:var(--text-dim);flex-shrink:0}
@@ -102,7 +115,7 @@
   @keyframes spin{to{transform:rotate(360deg)}}
 
   /* PLATFORMS TABLE */
-  .platforms-scroll{overflow-x:auto;padding:4px 0}
+  .platforms-scroll{overflow-x:auto;padding:4px 0;touch-action:pan-x pan-y}
   .platforms-table{width:100%;border-collapse:collapse;min-width:320px}
   .platforms-table th{font-size:10px;font-weight:700;color:var(--text-dimmer);text-align:center;padding:10px 6px 8px;border-bottom:1px solid var(--border);letter-spacing:.05em;white-space:nowrap}
   .platforms-table th:first-child{text-align:right;padding-right:16px}
@@ -170,13 +183,29 @@
   .tip-box-text{font-size:11px;color:var(--text-dim);line-height:1.7}
   .prompt-in-tip{background:var(--bg3);border:1px dashed var(--yellow);border-radius:8px;padding:10px 12px;margin-top:6px;color:#d4e4f7;font-size:11px;font-weight:500;font-style:italic;line-height:1.6}
 
-  /* PROMPT EDITOR */
+  /* PROMPT EDITOR ——— AUTO-RESIZE, NO INTERNAL SCROLL (Android fix) */
   .prompt-editor-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
   .prompt-editor-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px}
   .prompt-editor-title{font-size:13px;font-weight:800;color:var(--text)}
   .prompt-editor-hint{font-size:10px;color:var(--text-dimmer)}
-  .prompt-textarea{width:100%;min-height:340px;background:var(--bg3);border:none;color:var(--text);font-family:'Heebo',sans-serif;font-size:13px;font-weight:500;line-height:1.7;padding:14px 16px;outline:none;direction:rtl;resize:vertical}
-  .prompt-textarea:focus{background:var(--bg3)}
+  /* textarea — בלי max-height, בלי overflow, בלי resize. הוא גדל דינמית לפי התוכן */
+  .prompt-textarea{
+    display:block;
+    width:100%;
+    min-height:340px;
+    background:var(--bg3);
+    border:none;
+    color:var(--text);
+    font-family:'Heebo',sans-serif;
+    font-size:13px;
+    font-weight:500;
+    line-height:1.7;
+    padding:14px 16px;
+    outline:none;
+    direction:rtl;
+    resize:none;       /* בלי resize handle — הגובה מתעדכן אוטומטית דרך JS */
+    overflow:hidden;   /* קריטי — בלי scroll פנימי */
+  }
 
   /* SAVE BAR */
   .save-bar{position:fixed;bottom:0;left:0;right:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:var(--bg2);border-top:1px solid var(--border);z-index:50}
@@ -346,10 +375,15 @@
 var tg = window.Telegram && window.Telegram.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
+/* disableVerticalSwipes רק באייפון — באנדרויד זה מפריע לגלילה הפנימית */
+var isAndroid = /android/i.test(navigator.userAgent);
+if (tg && !isAndroid && tg.disableVerticalSwipes) {
+  try { tg.disableVerticalSwipes(); } catch(e){}
+}
+
 var GET_URL  = 'https://aiagentsforsale.app.n8n.cloud/webhook/0bb2242d-4be2-43f5-8f66-984d6efc5a19';
 var SAVE_URL = 'https://aiagentsforsale.app.n8n.cloud/webhook/02052baf-98b8-4808-8d93-23470deabc5e';
 
-/* ══ Sheet → ranges map ══ */
 var SHEET_RANGES = {
   'הגדרות כלליות': {
     platforms:'A2:G6', models:'I2:N10',
@@ -380,10 +414,7 @@ var modelName    = params.get('modelName') || '';
     if (firstName) {
       var gl = document.getElementById('greetingLine');
       var nm = document.getElementById('clientFirstName');
-      if (gl && nm) {
-        nm.textContent = firstName;
-        gl.style.display = '';
-      }
+      if (gl && nm) { nm.textContent = firstName; gl.style.display = ''; }
     }
   }
   var chip = document.getElementById('agentStatusChip');
@@ -407,11 +438,11 @@ var generalData    = null;
 var generalChanges = {};
 var generalRendered = false;
 
-var promptData     = null;  // { type, cell, sheet, value, title, icon }
+var promptData     = null;
 var promptChanges  = {};
 var promptRendered = false;
 
-/* ══ PROMPT CONFIG (for each type) ══ */
+/* ══ PROMPT CONFIG ══ */
 var PROMPT_CONFIG = {
   carousel: {
     title: 'הוראות כתיבה לפוסט קרוסלה',
@@ -492,20 +523,16 @@ function resetPromptScreen() {
   updateSaveBtn('prompt');
 }
 
-/* ══ OPEN WRITING PROMPT SCREEN ══ */
 function openWritingPrompt(type) {
   var cfg = PROMPT_CONFIG[type];
   if (!cfg) return;
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 
-  // עדכן כותרת ואייקון
   document.getElementById('prompt-title').textContent = cfg.title;
   document.getElementById('prompt-icon').textContent  = cfg.icon;
 
-  // שמור מצב נוכחי
   promptData = { type: type, cfg: cfg, value: '' };
 
-  // הצג את המסך
   var el = document.getElementById('screen-prompt');
   el.classList.add('visible');
   el.scrollTop = 0;
@@ -515,11 +542,10 @@ function openWritingPrompt(type) {
     tg.BackButton.onClick(function(){ closeScreen('screen-prompt'); });
   }
 
-  // משוך את הפרומפט
   fetchPrompt(cfg);
 }
 
-/* ══ FETCH: general settings ══ */
+/* ══ FETCH: general ══ */
 function fetchSettings(sheetName, screenId) {
   var ranges = SHEET_RANGES[sheetName] || {};
   var url = GET_URL
@@ -547,7 +573,6 @@ function fetchPrompt(cfg) {
   fetch(url)
     .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
     .then(function(data){
-      // data.prompts אמור להכיל את הערכים לפי שם העמודה
       var val = '';
       if (data.prompts && data.prompts[cfg.fieldName] !== undefined) {
         val = data.prompts[cfg.fieldName] || '';
@@ -556,7 +581,7 @@ function fetchPrompt(cfg) {
     })
     .catch(function(err){
       console.error('fetchPrompt error:', err);
-      renderPrompt(''); // fallback — ריק
+      renderPrompt('');
     });
 }
 
@@ -582,7 +607,6 @@ function renderGeneral(data) {
 
   var html = '';
 
-  /* פלטפורמות */
   if (data.platforms && data.platforms.length) {
     html += '<div class="settings-section">';
     html += '<div class="settings-section-header"><div class="settings-section-icon">🌐</div><div>';
@@ -631,7 +655,6 @@ function renderGeneral(data) {
     html += '</tbody></table></div></div>';
   }
 
-  /* מודל */
   if (data.models && data.models.length) {
     html += '<div class="settings-section">';
     html += '<div class="settings-section-header"><div class="settings-section-icon">🧠</div><div>';
@@ -650,7 +673,6 @@ function renderGeneral(data) {
     html += '</div></div>';
   }
 
-  /* אופן בחירת תמונות רקע + אישורים */
   if (data.carousel) {
     var c = data.carousel;
     html += '<div class="settings-section">';
@@ -708,7 +730,6 @@ function renderPrompt(initialValue) {
 
   var html = '';
 
-  // תיבת הוראות
   html += '<div class="instructions-box">';
   html += '<div class="instructions-title">💡 איך זה עובד?</div>';
   html += '<div class="instructions-body">';
@@ -716,7 +737,6 @@ function renderPrompt(initialValue) {
   html += '<p>תוכלו לערוך / להוסיף מה שתרצו להוראות כתיבה האילו. אין כאן נכון או לא נכון, <strong>הכל לפי העדפה אישית שלכם</strong>, ממש כמו שאתם כותבים לצ\'אט גיפיטי.</p>';
   html += '</div>';
 
-  // טיפ גאוני
   html += '<div class="tip-box">';
   html += '<div class="tip-box-title">⚡ טיפ גאוני</div>';
   html += '<div class="tip-box-text">';
@@ -725,9 +745,8 @@ function renderPrompt(initialValue) {
   html += 'לאחר מכן תדביקו כאן בהוראות כתיבה את הפרומפט שקיבלתם.';
   html += '</div></div>';
 
-  html += '</div>'; // end instructions-box
+  html += '</div>';
 
-  // עורך פרומפט
   html += '<div class="prompt-editor-wrap">';
   html += '<div class="prompt-editor-header">';
   html += '<div class="prompt-editor-title">ההוראות שלך</div>';
@@ -738,16 +757,27 @@ function renderPrompt(initialValue) {
 
   body.insertAdjacentHTML('beforeend', html);
 
-  // מלא את ה-textarea
   var ta = document.getElementById('prompt-textarea');
-  if (ta) ta.value = promptData.value;
+  if (ta) {
+    ta.value = promptData.value;
+    // Auto-resize מיידי כשהתוכן נטען (כך שאין scroll פנימי גם כשהפרומפט ארוך)
+    autoResizeTextarea(ta);
+  }
 
   updateSaveBtn('prompt');
+}
+
+/* ══ AUTO-RESIZE TEXTAREA (Android scroll fix) ══ */
+function autoResizeTextarea(ta) {
+  if (!ta) return;
+  ta.style.height = 'auto';
+  ta.style.height = ta.scrollHeight + 'px';
 }
 
 function onPromptInput() {
   var ta = document.getElementById('prompt-textarea');
   if (!ta || !promptData) return;
+  autoResizeTextarea(ta); // מעדכן את הגובה בכל הקלדה — הפרומפט תמיד נראה במלואו בלי scroll פנימי
   var newVal = ta.value;
   if (newVal === promptData.value) {
     delete promptChanges[promptData.cfg.cell];
@@ -757,7 +787,7 @@ function onPromptInput() {
   updateSaveBtn('prompt');
 }
 
-/* ══ INTERACTIONS (general screen) ══ */
+/* ══ INTERACTIONS ══ */
 function togglePlatform(ri, field) {
   if (!generalData || !generalData.platforms) return;
   if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
@@ -856,7 +886,6 @@ function changeCarousel(field, val) {
   updateSaveBtn('general');
 }
 
-/* ══ SAVE BTN ══ */
 function updateSaveBtn(which) {
   if (which === 'general') {
     var btn = document.getElementById('general-save-btn');
@@ -867,7 +896,6 @@ function updateSaveBtn(which) {
   }
 }
 
-/* ══ SAVE: general settings ══ */
 function saveGeneral() {
   var btn = document.getElementById('general-save-btn');
   btn.disabled = true;
@@ -888,7 +916,6 @@ function saveGeneral() {
     });
 }
 
-/* ══ SAVE: prompt ══ */
 function savePrompt() {
   if (!promptData) return;
   var btn = document.getElementById('prompt-save-btn');
@@ -897,7 +924,6 @@ function savePrompt() {
   sendSave(promptData.cfg.sheet, promptChanges)
     .then(function(){
       showToast('✅ ההוראות נשמרו בהצלחה!');
-      // עדכן את הערך השמור כך שלחיצה מחדש על "שמור" לא תשלח שוב
       if (promptData) promptData.value = promptChanges[promptData.cfg.cell] || promptData.value;
       promptChanges = {};
       btn.innerHTML = '💾 שמור שינויים';
@@ -912,7 +938,6 @@ function savePrompt() {
     });
 }
 
-/* ══ shared SAVE helper ══ */
 function sendSave(sheetName, changes) {
   var url = SAVE_URL
     + '?sheetsUrl=' + encodeURIComponent(sheetsUrl)
