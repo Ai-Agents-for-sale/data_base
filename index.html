@@ -151,7 +151,6 @@
   .setting-select-full{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Heebo',sans-serif;font-size:12px;font-weight:600;padding:10px 12px;outline:none;cursor:pointer;direction:rtl}
   .setting-select-full:focus{border-color:var(--accent)}
 
-  /* ── Text input (for client fields) ── */
   .setting-input{
     width:100%;
     background:var(--bg3);
@@ -178,6 +177,29 @@
 
   .setting-select{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Heebo',sans-serif;font-size:11px;font-weight:600;padding:7px 10px;outline:none;cursor:pointer;direction:rtl;flex-shrink:0}
   .setting-select:focus{border-color:var(--accent)}
+
+  /* Slide counter - large, visual */
+  .slide-counter-wrap{display:flex;flex-direction:column;gap:14px;padding:16px}
+  .slide-counter-display{display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .slide-counter-label{flex:1}
+  .slide-counter-value{background:var(--accent-s);border:1px solid var(--accent);color:var(--text);font-size:24px;font-weight:900;min-width:56px;height:56px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .slide-counter-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:4px}
+  .slide-counter-btn{
+    background:var(--bg3);
+    border:1px solid var(--border);
+    color:var(--text-dim);
+    font-family:'Heebo',sans-serif;
+    font-size:14px;
+    font-weight:800;
+    padding:10px 0;
+    border-radius:var(--radius-sm);
+    cursor:pointer;
+    transition:all .15s;
+    -webkit-user-select:none;user-select:none;
+  }
+  .slide-counter-btn:hover{border-color:var(--border-h);color:var(--text)}
+  .slide-counter-btn:active{transform:scale(.94)}
+  .slide-counter-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.3)}
 
   .instructions-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;gap:12px}
   .instructions-title{font-size:14px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:6px}
@@ -248,9 +270,9 @@
     </div>
     <div class="divider"></div>
     <div class="section-group-label">תוכן ופוסטים</div>
-    <div class="nav-card purple" onclick="openScreen('screen-carousel','')">
+    <div class="nav-card purple" onclick="openScreen('screen-carousel','הגדרות לפוסט קרוסלה')">
       <div class="nav-card-icon">🎨</div>
-      <div class="nav-card-body"><div class="nav-card-title">הגדרות פוסט קרוסלה</div><div class="nav-card-desc">פרומפט כתיבה, כמות סליידים</div></div>
+      <div class="nav-card-body"><div class="nav-card-title">הגדרות פוסט קרוסלה</div><div class="nav-card-desc">כמות סליידים, הוראות כתיבה</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
     <div class="nav-card teal" onclick="openScreen('screen-writing','')">
@@ -298,6 +320,25 @@
   </div>
 </div>
 
+<!-- ══ SCREEN: הגדרות פוסט קרוסלה ══ -->
+<div class="screen" id="screen-carousel">
+  <div class="screen-topbar">
+    <div class="screen-back" onclick="closeScreen('screen-carousel')">›</div>
+    <div class="screen-topbar-icon">🎨</div>
+    <div class="screen-topbar-title">הגדרות פוסט קרוסלה</div>
+  </div>
+  <div class="screen-body" id="carousel-body">
+    <div class="screen-loading" id="carousel-loading">
+      <div class="spinner"></div>
+      <div>טוען הגדרות...</div>
+    </div>
+  </div>
+  <div class="save-bar">
+    <button class="save-btn" id="carousel-save-btn" onclick="saveCarousel()" disabled>💾 שמור שינויים</button>
+  </div>
+</div>
+
+<!-- ══ SCREEN: הוראות כתיבת תוכן (sub-menu) ══ -->
 <div class="screen" id="screen-writing">
   <div class="screen-topbar">
     <div class="screen-back" onclick="closeScreen('screen-writing')">›</div>
@@ -324,6 +365,7 @@
   </div>
 </div>
 
+<!-- ══ SCREEN: עריכת פרומפט כתיבה (גנרי) ══ -->
 <div class="screen" id="screen-prompt">
   <div class="screen-topbar">
     <div class="screen-back" onclick="closeScreen('screen-prompt')">›</div>
@@ -341,12 +383,9 @@
   </div>
 </div>
 
+<!-- placeholder screens -->
 <div class="screen" id="screen-materials">
   <div class="screen-topbar"><div class="screen-back" onclick="closeScreen('screen-materials')">›</div><div class="screen-topbar-icon">🖼️</div><div class="screen-topbar-title">חומרים אישיים</div></div>
-  <div class="screen-body"><div class="coming-soon"><div class="coming-soon-icon">🚧</div><div class="coming-soon-title">בקרוב</div></div></div>
-</div>
-<div class="screen" id="screen-carousel">
-  <div class="screen-topbar"><div class="screen-back" onclick="closeScreen('screen-carousel')">›</div><div class="screen-topbar-icon">🎨</div><div class="screen-topbar-title">הגדרות פוסט קרוסלה</div></div>
   <div class="screen-body"><div class="coming-soon"><div class="coming-soon-icon">🚧</div><div class="coming-soon-title">בקרוב</div></div></div>
 </div>
 <div class="screen" id="screen-scheduled">
@@ -382,15 +421,14 @@ var SHEET_RANGES = {
     carousel:'AE2:AJ5', regularPost:'AQ2:AR4',
     story:'BB2:BC4', videos:'BG2:BH3'
   },
-  'פרומפטים': {
-    all: 'A1:G2'
-  }
+  'פרומפטים': { all: 'A1:G2' },
+  'הגדרות לפוסט קרוסלה': {} // הטווחים מוגדרים ב-n8n (ranges1), כאן לא צריך
 };
 
-/* Log sheet special target — used when saving client profile fields */
 var LOG_SHEET_TAB = "ID'S של תיקיות/טבלאות";
 
 var TIKTOK_OPTIONS = ['כן עם מוזיקה אטומטית', 'כן בלי מוזיקה', 'לא'];
+var SLIDE_COUNT_OPTIONS = ['5','6','7','8','9','10'];
 
 function isLocked(val) { return val && val.indexOf('לא לגעת') !== -1; }
 
@@ -426,10 +464,15 @@ var modelName    = params.get('modelName') || '';
   }
 })();
 
+/* ══ STATE ══ */
 var generalData    = null;
-var generalChanges = {};           // for main sheet (הגדרות כלליות)
-var generalLogChanges = {};        // for log sheet (client profile fields)
+var generalChanges = {};
+var generalLogChanges = {};
 var generalRendered = false;
+
+var carouselData    = null;   // { slides: {value, cell}, prompt: {value, cell} }
+var carouselChanges = {};     // מפתחות של תאים → ערכים חדשים (רק להגדרות הכלליות)
+var carouselRendered = false;
 
 var promptData     = null;
 var promptChanges  = {};
@@ -462,6 +505,7 @@ var PROMPT_CONFIG = {
   }
 };
 
+/* ══ NAVIGATION ══ */
 function openScreen(id, sheetName) {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
   var el = document.getElementById(id);
@@ -473,9 +517,8 @@ function openScreen(id, sheetName) {
     tg.BackButton.offClick();
     tg.BackButton.onClick(function(){ closeScreen(id); });
   }
-  if (id === 'screen-general' && sheetName && !generalRendered) {
-    fetchSettings(sheetName, id);
-  }
+  if (id === 'screen-general'  && sheetName && !generalRendered)  fetchSettings(sheetName, id);
+  if (id === 'screen-carousel' && sheetName && !carouselRendered) fetchSettings(sheetName, id);
 }
 
 function closeScreen(id) {
@@ -483,8 +526,9 @@ function closeScreen(id) {
   var el = document.getElementById(id);
   if (el) el.classList.remove('visible');
 
-  if (id === 'screen-general') resetGeneralScreen();
-  if (id === 'screen-prompt')  resetPromptScreen();
+  if (id === 'screen-general')  resetGeneralScreen();
+  if (id === 'screen-carousel') resetCarouselScreen();
+  if (id === 'screen-prompt')   resetPromptScreen();
 
   if (!document.querySelector('.screen.visible') && tg) tg.BackButton.hide();
 }
@@ -502,6 +546,17 @@ function resetGeneralScreen() {
     loading.style.display = 'flex';
   }
   updateSaveBtn('general');
+}
+
+function resetCarouselScreen() {
+  carouselRendered = false;
+  carouselChanges  = {};
+  carouselData     = null;
+  var body = document.getElementById('carousel-body');
+  if (body) {
+    body.innerHTML = '<div class="screen-loading" id="carousel-loading"><div class="spinner"></div><div>טוען הגדרות...</div></div>';
+  }
+  updateSaveBtn('carousel');
 }
 
 function resetPromptScreen() {
@@ -552,7 +607,8 @@ function fetchSettings(sheetName, screenId) {
   fetch(url)
     .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
     .then(function(data){
-      if (screenId === 'screen-general') renderGeneral(data);
+      if (screenId === 'screen-general')  renderGeneral(data);
+      if (screenId === 'screen-carousel') renderCarousel(data);
     })
     .catch(function(err){ console.error('fetchSettings error:', err); });
 }
@@ -576,6 +632,7 @@ function fetchPrompt(cfg) {
     });
 }
 
+/* ══ RENDER: הגדרות כלליות (unchanged) ══ */
 function renderGeneral(data) {
   if (generalRendered) return;
   generalRendered = true;
@@ -586,10 +643,7 @@ function renderGeneral(data) {
   var chip = document.getElementById('activeModelChip');
   if (chip && data.models) {
     var active = data.models.find(function(m){ return m.isActive; });
-    if (active) {
-      chip.textContent = '⚡ ' + active.name;
-      chip.style.display = '';
-    }
+    if (active) { chip.textContent = '⚡ ' + active.name; chip.style.display = ''; }
   }
 
   var body    = document.getElementById('general-body');
@@ -598,7 +652,6 @@ function renderGeneral(data) {
 
   var html = '';
 
-  /* פלטפורמות */
   if (data.platforms && data.platforms.length) {
     html += '<div class="settings-section">';
     html += '<div class="settings-section-header"><div class="settings-section-icon">🌐</div><div>';
@@ -647,7 +700,6 @@ function renderGeneral(data) {
     html += '</tbody></table></div></div>';
   }
 
-  /* מודל */
   if (data.models && data.models.length) {
     html += '<div class="settings-section">';
     html += '<div class="settings-section-header"><div class="settings-section-icon">🧠</div><div>';
@@ -666,7 +718,6 @@ function renderGeneral(data) {
     html += '</div></div>';
   }
 
-  /* bgMode + approvals */
   if (data.carousel) {
     var c = data.carousel;
     html += '<div class="settings-section">';
@@ -677,7 +728,7 @@ function renderGeneral(data) {
     html += '<div class="setting-row-label">אופן בחירת תמונות רקע</div>';
     html += '<div class="setting-row-sub">תיקייה כללית = הסוכן בוחר רנדומלית מכל התמונות שלך.<br>לפי נושאים = הסוכן ישאל אותך מאיזה תיקיית נושא לבחור את התמונות.</div>';
     html += '</div>';
-    html += '<select class="setting-select-full" id="sel-bgMode" onchange="changeCarousel(\'bgMode\',this.value)">';
+    html += '<select class="setting-select-full" id="sel-bgMode" onchange="changeCarouselApproval(\'bgMode\',this.value)">';
     var bgOptions = [
       ['כל התמונות מהתיקיית תמונות רקע הראשית', '📁 תיקייה כללית'],
       ['לשאול אותי מאיזה תיקייה לבחור את התמונות בהתאם לנושא הפוסט', '🗂️ לפי נושאים']
@@ -696,19 +747,18 @@ function renderGeneral(data) {
     var onContent = c.approvalContent === 'כן';
     html += '<div class="setting-row">';
     html += '<div class="setting-label-wrap"><div class="setting-row-label">אישור תוכן כתוב</div><div class="setting-row-sub">הסוכן ישלח לאישורך לפני שממשיך לעיצוב</div></div>';
-    html += '<button class="toggle-switch '+(onContent?'on':'off')+'" id="tog-approvalContent" onclick="toggleCarousel(\'approvalContent\')"></button>';
+    html += '<button class="toggle-switch '+(onContent?'on':'off')+'" id="tog-approvalContent" onclick="toggleCarouselApproval(\'approvalContent\')"></button>';
     html += '</div>';
 
     var onDesign = c.approvalDesign === 'כן';
     html += '<div class="setting-row">';
     html += '<div class="setting-label-wrap"><div class="setting-row-label">אישור עיצוב סופי</div><div class="setting-row-sub">הסוכן ישלח לאישורך לפני שמעלה לרשתות</div></div>';
-    html += '<button class="toggle-switch '+(onDesign?'on':'off')+'" id="tog-approvalDesign" onclick="toggleCarousel(\'approvalDesign\')"></button>';
+    html += '<button class="toggle-switch '+(onDesign?'on':'off')+'" id="tog-approvalDesign" onclick="toggleCarouselApproval(\'approvalDesign\')"></button>';
     html += '</div>';
 
     html += '</div>';
   }
 
-  /* ── נתוני לקוח — Client profile (saved to log sheet) ── */
   if (data.clientProfile) {
     var cp = data.clientProfile;
     html += '<div class="settings-section">';
@@ -716,7 +766,6 @@ function renderGeneral(data) {
     html += '<div class="settings-section-title">נתוני לקוח</div>';
     html += '<div class="settings-section-sub">הפרטים שיוצגו בפוסטים ובסטורים שלך</div></div></div>';
 
-    // שם במה
     html += '<div class="setting-row-stacked">';
     html += '<div class="setting-label-wrap">';
     html += '<div class="setting-row-label">שם במה</div>';
@@ -725,7 +774,6 @@ function renderGeneral(data) {
     html += '<input type="text" class="setting-input" id="inp-stageName" dir="rtl" oninput="changeClientName(this.value)" placeholder="למשל: רוני גליק">';
     html += '</div>';
 
-    // שם אינסטגרם
     html += '<div class="setting-row-stacked">';
     html += '<div class="setting-label-wrap">';
     html += '<div class="setting-row-label">שם אינסטגרם</div>';
@@ -736,13 +784,11 @@ function renderGeneral(data) {
 
     html += '</div>';
 
-    // set values after HTML is inserted
     setTimeout(function() {
       var stageInput = document.getElementById('inp-stageName');
       var igInput    = document.getElementById('inp-instagramHandle');
       if (stageInput) stageInput.value = cp.stageName || '';
       if (igInput) {
-        // מנקה @ מההתחלה אם קיים בערך שמגיע מהשיט
         var ig = (cp.instagramHandle || '').replace(/^@+/, '').replace(/@/g, '');
         igInput.value = ig;
       }
@@ -751,6 +797,85 @@ function renderGeneral(data) {
 
   body.insertAdjacentHTML('beforeend', html);
   updateSaveBtn('general');
+}
+
+/* ══ RENDER: הגדרות פוסט קרוסלה ══ */
+function renderCarousel(data) {
+  if (carouselRendered) return;
+  carouselRendered = true;
+  carouselData     = data;
+  carouselChanges  = {};
+
+  var body    = document.getElementById('carousel-body');
+  var loading = document.getElementById('carousel-loading');
+  if (loading) loading.style.display = 'none';
+
+  var html = '';
+
+  // סקשן 1: כמות סליידים
+  var currentSlides = (data.slides && data.slides.value) ? String(data.slides.value) : '5';
+  html += '<div class="settings-section">';
+  html += '<div class="settings-section-header"><div class="settings-section-icon">🎞️</div><div>';
+  html += '<div class="settings-section-title">כמות סליידים בפוסט קרוסלה</div>';
+  html += '<div class="settings-section-sub">יותר סליידים = יותר תוכן, אך לוקח יותר טוקנים</div></div></div>';
+  html += '<div class="slide-counter-wrap">';
+  html += '<div class="slide-counter-display">';
+  html += '<div class="slide-counter-label">';
+  html += '<div class="setting-row-label">הכמות הנוכחית</div>';
+  html += '<div class="setting-row-sub">לחץ על מספר כדי לשנות</div>';
+  html += '</div>';
+  html += '<div class="slide-counter-value" id="slide-counter-value">'+currentSlides+'</div>';
+  html += '</div>';
+  html += '<div class="slide-counter-grid">';
+  SLIDE_COUNT_OPTIONS.forEach(function(opt) {
+    var active = opt === currentSlides ? ' active' : '';
+    html += '<button class="slide-counter-btn'+active+'" data-val="'+opt+'" onclick="changeSlideCount(\''+opt+'\')">'+opt+'</button>';
+  });
+  html += '</div></div>';
+  html += '</div>';
+
+  // סקשן 2: הוראות כתיבה
+  html += '<div class="settings-section">';
+  html += '<div class="settings-section-header"><div class="settings-section-icon">✍️</div><div>';
+  html += '<div class="settings-section-title">הוראות כתיבה לקרוסלה</div>';
+  html += '<div class="settings-section-sub">איך הסוכן כותב פוסטים מרובי סליידים</div></div></div>';
+  html += '<div class="nav-card teal" style="margin:12px;border-radius:var(--radius-sm)" onclick="openWritingPrompt(\'carousel\')">';
+  html += '<div class="nav-card-icon">🎨</div>';
+  html += '<div class="nav-card-body">';
+  html += '<div class="nav-card-title">ערוך הוראות כתיבה</div>';
+  html += '<div class="nav-card-desc">שפה, סגנון, טון של הפוסטים</div>';
+  html += '</div>';
+  html += '<div class="nav-card-arrow">‹</div>';
+  html += '</div>';
+  html += '</div>';
+
+  body.insertAdjacentHTML('beforeend', html);
+  updateSaveBtn('carousel');
+}
+
+function changeSlideCount(val) {
+  if (!carouselData || !carouselData.slides) return;
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+
+  // עדכון UI
+  var display = document.getElementById('slide-counter-value');
+  if (display) display.textContent = val;
+  var btns = document.querySelectorAll('.slide-counter-btn');
+  btns.forEach(function(b) {
+    if (b.dataset.val === val) b.classList.add('active');
+    else                        b.classList.remove('active');
+  });
+
+  // שמירת השינוי לתא הנכון
+  var cell = carouselData.slides.cell;
+  if (cell) {
+    if (val === String(carouselData.slides.value)) {
+      delete carouselChanges[cell];
+    } else {
+      carouselChanges[cell] = val;
+    }
+  }
+  updateSaveBtn('carousel');
 }
 
 function renderPrompt(initialValue) {
@@ -852,6 +977,7 @@ function resetPromptToOriginal() {
   showToast('↺ חזרת לגרסה המקורית');
 }
 
+/* ══ general settings interactions (unchanged) ══ */
 function togglePlatform(ri, field) {
   if (!generalData || !generalData.platforms) return;
   if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
@@ -931,7 +1057,7 @@ function selectModel(mi) {
   updateSaveBtn('general');
 }
 
-function toggleCarousel(field) {
+function toggleCarouselApproval(field) {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
   var tog = document.getElementById('tog-'+field);
   if (!tog) return;
@@ -943,28 +1069,25 @@ function toggleCarousel(field) {
   updateSaveBtn('general');
 }
 
-function changeCarousel(field, val) {
+function changeCarouselApproval(field, val) {
   var cell = generalData.carousel && generalData.carousel.cells && generalData.carousel.cells[field];
   if (cell) generalChanges[cell] = val;
   else generalChanges['carousel_'+field] = val;
   updateSaveBtn('general');
 }
 
-/* ── Client profile change handlers (saved to log sheet, cells AC2/AD2) ── */
 function changeClientName(val) {
   generalLogChanges['AC2'] = val;
   updateSaveBtn('general');
 }
 
 function changeInstagramHandle(val) {
-  // block @ — מסיר כל תו @
   var clean = (val || '').replace(/@/g, '');
   if (clean !== val) {
     var inp = document.getElementById('inp-instagramHandle');
     if (inp) {
       var pos = inp.selectionStart - 1;
       inp.value = clean;
-      // מחזיר את הסמן למקום הנכון
       try { inp.setSelectionRange(pos, pos); } catch(e){}
     }
   }
@@ -976,6 +1099,10 @@ function updateSaveBtn(which) {
   if (which === 'general') {
     var btn = document.getElementById('general-save-btn');
     var hasChanges = Object.keys(generalChanges).length > 0 || Object.keys(generalLogChanges).length > 0;
+    if (btn) btn.disabled = !hasChanges;
+  } else if (which === 'carousel') {
+    var btn = document.getElementById('carousel-save-btn');
+    var hasChanges = Object.keys(carouselChanges).length > 0;
     if (btn) btn.disabled = !hasChanges;
   } else if (which === 'prompt') {
     var saveBtn = document.getElementById('prompt-save-btn');
@@ -991,7 +1118,6 @@ function saveGeneral() {
   btn.disabled = true;
   btn.textContent = 'שומר...';
 
-  // שולח את הנתונים הרגילים ואת נתוני הלקוח ללוג שיט בבקשה אחת
   var payload = {
     mainChanges: generalChanges,
     logChanges:  generalLogChanges,
@@ -1005,6 +1131,34 @@ function saveGeneral() {
       generalLogChanges = {};
       btn.innerHTML = '💾 שמור שינויים';
       updateSaveBtn('general');
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    })
+    .catch(function(err){
+      console.error('save error:', err);
+      showToast('❌ שגיאה בשמירה, נסה שוב', true);
+      btn.disabled = false;
+      btn.innerHTML = '💾 שמור שינויים';
+    });
+}
+
+/* ══ save: carousel (slide count only — saved to הגדרות כלליות sheet) ══ */
+function saveCarousel() {
+  var btn = document.getElementById('carousel-save-btn');
+  btn.disabled = true;
+  btn.textContent = 'שומר...';
+
+  // כמות הסליידים נשמרת בשיט "הגדרות כלליות"
+  sendSave('הגדרות כלליות', carouselChanges)
+    .then(function(){
+      showToast('✅ השינויים נשמרו בהצלחה!');
+      // עדכן את הערך השמור כך שלא יזוהה כשינוי מחדש
+      if (carouselData && carouselData.slides && carouselData.slides.cell) {
+        var newVal = carouselChanges[carouselData.slides.cell];
+        if (newVal !== undefined) carouselData.slides.value = newVal;
+      }
+      carouselChanges = {};
+      btn.innerHTML = '💾 שמור שינויים';
+      updateSaveBtn('carousel');
       if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
     })
     .catch(function(err){
