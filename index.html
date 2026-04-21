@@ -1715,7 +1715,9 @@ function handleUpload(files) {
   }).then(function() {
     showToast('✅ הועלו ' + images.length + ' תמונות');
     if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-    fetchFolderContents(currentFolder.source, currentFolder.ref);
+    // לא קוראים ל-fetchFolderContents כדי לא להחליף את התצוגה המיידית מ-Cloudinary
+    // ברשימה מהדרייב (שייתכן וה-n8n עוד לא סיים לעדכן).
+    // בפעם הבאה שהלקוח ייכנס לתיקייה, התמונות האמיתיות יטענו אוטומטית.
   }).catch(function(err) {
     console.error('upload error:', err);
     showToast('❌ שגיאה בהעלאה: ' + (err.message || 'נסה שוב'), true);
