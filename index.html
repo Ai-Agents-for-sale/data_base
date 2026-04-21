@@ -1676,6 +1676,24 @@ function handleUpload(files) {
 
   Promise.all(promises).then(function(uploadedFiles) {
     // uploadedFiles = [{ url, name, originalName }, ...]
+    
+    // תצוגה מיידית: מוסיפים את התמונות שעלו ל-Cloudinary ל-state המקומי
+    // (ה-URLs האמיתיים מהדרייב יחליפו אותן בריענון הבא)
+    if (currentFolderData) {
+      if (!currentFolderData.files) currentFolderData.files = [];
+      uploadedFiles.forEach(function(f, idx) {
+        currentFolderData.files.push({
+          id:           'pending-' + Date.now() + '-' + idx, // ID זמני
+          name:         f.name,
+          mimeType:     'image/jpeg',
+          thumbnailUrl: f.url,
+          driveUrl:     f.url,
+          _pending:     true // סימון שזו תמונה ממתינה
+        });
+      });
+      renderFolder(currentFolderData);
+    }
+
     var filesParam = JSON.stringify(uploadedFiles.map(function(f){
       return { url: f.url, name: f.name };
     }));
