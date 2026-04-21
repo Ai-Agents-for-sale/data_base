@@ -1677,9 +1677,9 @@ function handleUpload(files) {
       files: payload
     };
 
+    // שולחים כ-text/plain (בלי Content-Type: application/json) כדי להימנע מ-CORS preflight
     return fetch(SAVE_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     });
   }).then(function(r) {
