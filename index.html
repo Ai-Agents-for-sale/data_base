@@ -1646,6 +1646,13 @@ function handleUpload(files) {
     showToast('⚠️ '+ nonImageCount +' קבצים שאינם תמונות לא הועלו', true);
   }
 
+  // מגבלה של 10 תמונות בפעם אחת
+  var MAX_FILES = 10;
+  if (images.length > MAX_FILES) {
+    showToast('⚠️ ניתן להעלות עד ' + MAX_FILES + ' תמונות בבת אחת. נסה להעלות פחות תמונות', true);
+    return;
+  }
+
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 
   var currentFolder = folderStack[folderStack.length - 1];
@@ -1656,7 +1663,6 @@ function handleUpload(files) {
   // Convert each image to JPEG (base64)
   var promises = images.map(function(file) {
     return convertImageToJpeg(file).then(function(result) {
-      // שם הקובץ — עם סיומת .jpg
       var baseName = (file.name || 'image').replace(/\.[^.]+$/, '');
       return {
         name:     baseName + '.jpg',
@@ -1667,6 +1673,19 @@ function handleUpload(files) {
   });
 
   Promise.all(promises).then(function(payload) {
+    // בדיקת גודל כולל - לא לחרוג מ-12MB (n8n webhook מוגבל ל-16MB)
+    var MAX_SIZE_BYTES = 12 * 1024 * 1024; // 12MB
+    var totalSize = 0;
+    payload.forEach(function(f){ totalSize += (f.data && f.data.length) || 0; });
+    // base64 size ~= actual bytes (כי זה string של base64)
+    
+    if (totalSize > MAX_SIZE_BYTES) {
+      var totalMB = (totalSize / (1024 * 1024)).toFixed(1);
+      showToast('⚠️ התמונות שהעלת כבדות מדי (' + totalMB + 'MB). נסה להעלות פחות תמונות בפעם אחת', true);
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+      return Promise.reject(new Error('payload too large'));
+    }
+
     var body = {
       action: 'upload',
       sheet: 'חומרים אישיים',
@@ -1683,13 +1702,16 @@ function handleUpload(files) {
       body: JSON.stringify(body)
     });
   }).then(function(r) {
+    if (!r) return;
     if (!r.ok) throw new Error('HTTP ' + r.status);
     return r.json();
-  }).then(function() {
+  }).then(function(resp) {
+    if (!resp) return; // במקרה שהתמונות היו כבדות מדי
     showToast('✅ הועלו ' + images.length + ' תמונות');
     if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
     fetchFolderContents(currentFolder.source, currentFolder.ref);
   }).catch(function(err) {
+    if (err && err.message === 'payload too large') return; // כבר הצגנו הודעה
     console.error('upload error:', err);
     showToast('❌ שגיאה בהעלאה, נסה שוב', true);
   });
