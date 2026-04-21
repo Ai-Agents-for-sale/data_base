@@ -64,12 +64,14 @@
   .nav-card.teal  {--c:var(--teal);  --cs:var(--teal-s);  --cg:rgba(8,145,178,.2)}
   .nav-card.pink  {--c:var(--pink);  --cs:var(--pink-s);  --cg:rgba(219,39,119,.2)}
   .nav-card.orange{--c:var(--orange);--cs:var(--orange-s);--cg:rgba(234,88,12,.2)}
+  .nav-card.disabled{opacity:.5;cursor:not-allowed;pointer-events:none}
   .nav-card-icon{width:46px;height:46px;border-radius:12px;background:var(--cs);border:1px solid var(--c);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
   .nav-card-body{flex:1;min-width:0}
   .nav-card-title{font-size:14px;font-weight:800;color:var(--text);margin-bottom:3px}
   .nav-card-desc{font-size:11px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .nav-card-arrow{font-size:20px;color:var(--text-dimmer);flex-shrink:0}
   .nav-card:active .nav-card-arrow{color:var(--c);transform:translateX(-3px)}
+  .nav-card-badge{font-size:9px;font-weight:800;background:var(--gold);color:#fff;padding:2px 8px;border-radius:20px;flex-shrink:0;margin-left:4px}
   .divider{height:1px;background:var(--border);margin:6px 16px}
   .bottom-credit{text-align:center;font-size:10px;color:var(--text-dimmer);padding:20px 16px 0}
   .bottom-credit span{color:var(--accent);font-weight:700}
@@ -77,21 +79,18 @@
   @keyframes fadeSlideIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
   .header{animation:fadeSlideIn .35s ease both}
   .status-bar{animation:fadeSlideIn .35s .05s ease both}
-  .nav-card:nth-child(1){animation:fadeSlideIn .3s .08s ease both}
-  .nav-card:nth-child(2){animation:fadeSlideIn .3s .12s ease both}
-  .nav-card:nth-child(3){animation:fadeSlideIn .3s .16s ease both}
-  .nav-card:nth-child(4){animation:fadeSlideIn .3s .20s ease both}
-  .nav-card:nth-child(5){animation:fadeSlideIn .3s .24s ease both}
-  .nav-card:nth-child(6){animation:fadeSlideIn .3s .28s ease both}
-  .nav-card:nth-child(7){animation:fadeSlideIn .3s .32s ease both}
 
   .screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:100;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
   .screen.visible{display:flex}
   .screen-topbar{flex-shrink:0;display:flex;align-items:center;gap:12px;padding:16px 20px 14px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
   .screen-back{width:34px;height:34px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:var(--text-dim);flex-shrink:0}
   .screen-back:active{border-color:var(--border-h);color:var(--text)}
-  .screen-topbar-title{font-size:15px;font-weight:800;color:var(--text)}
+  .screen-topbar-title{font-size:15px;font-weight:800;color:var(--text);flex:1}
   .screen-topbar-icon{font-size:18px}
+  .screen-topbar-action{font-size:12px;font-weight:700;color:var(--accent);cursor:pointer;padding:6px 10px;border-radius:8px;-webkit-user-select:none;user-select:none}
+  .screen-topbar-action:active{background:var(--accent-s)}
+  .screen-topbar-action.danger{color:var(--red)}
+  .screen-topbar-action.danger:active{background:var(--red-s)}
   .screen-body{flex:1;padding:20px 16px calc(80px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:20px}
   .screen-body-no-save{padding-bottom:calc(24px + env(safe-area-inset-bottom))}
 
@@ -178,25 +177,12 @@
   .setting-select{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Heebo',sans-serif;font-size:11px;font-weight:600;padding:7px 10px;outline:none;cursor:pointer;direction:rtl;flex-shrink:0}
   .setting-select:focus{border-color:var(--accent)}
 
-  /* Slide counter - large, visual */
   .slide-counter-wrap{display:flex;flex-direction:column;gap:14px;padding:16px}
   .slide-counter-display{display:flex;align-items:center;justify-content:space-between;gap:16px}
   .slide-counter-label{flex:1}
   .slide-counter-value{background:var(--accent-s);border:1px solid var(--accent);color:var(--text);font-size:24px;font-weight:900;min-width:56px;height:56px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0}
   .slide-counter-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:4px}
-  .slide-counter-btn{
-    background:var(--bg3);
-    border:1px solid var(--border);
-    color:var(--text-dim);
-    font-family:'Heebo',sans-serif;
-    font-size:18px;
-    font-weight:800;
-    padding:16px 0;
-    border-radius:var(--radius-sm);
-    cursor:pointer;
-    transition:all .15s;
-    -webkit-user-select:none;user-select:none;
-  }
+  .slide-counter-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text-dim);font-family:'Heebo',sans-serif;font-size:18px;font-weight:800;padding:16px 0;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;-webkit-user-select:none;user-select:none}
   .slide-counter-btn:hover{border-color:var(--border-h);color:var(--text)}
   .slide-counter-btn:active{transform:scale(.94)}
   .slide-counter-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.3)}
@@ -216,11 +202,7 @@
   .prompt-editor-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px}
   .prompt-editor-title{font-size:13px;font-weight:800;color:var(--text)}
   .prompt-editor-hint{font-size:10px;color:var(--text-dimmer)}
-  .prompt-textarea{
-    display:block;width:100%;min-height:340px;background:var(--bg3);border:none;color:var(--text);
-    font-family:'Heebo',sans-serif;font-size:13px;font-weight:500;line-height:1.7;padding:14px 16px;
-    outline:none;direction:rtl;resize:none;overflow:hidden;
-  }
+  .prompt-textarea{display:block;width:100%;min-height:340px;background:var(--bg3);border:none;color:var(--text);font-family:'Heebo',sans-serif;font-size:13px;font-weight:500;line-height:1.7;padding:14px 16px;outline:none;direction:rtl;resize:none;overflow:hidden}
 
   .reset-btn-wrap{display:flex;justify-content:flex-start;padding:0 4px}
   .reset-btn{background:transparent;border:1px solid var(--border-h);color:var(--text-dim);font-family:'Heebo',sans-serif;font-size:11px;font-weight:600;padding:7px 12px;border-radius:20px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s}
@@ -233,10 +215,106 @@
   .save-btn{width:100%;background:linear-gradient(135deg,#1a3a8f,#2d5fc4);color:#fff;border:none;border-radius:var(--radius-sm);padding:13px;font-family:'Heebo',sans-serif;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 15px rgba(26,58,143,.3);transition:opacity .2s,transform .15s}
   .save-btn:disabled{opacity:.35;cursor:default;box-shadow:none}
   .save-btn:not(:disabled):active{opacity:.88;transform:scale(.98)}
+  .save-btn.danger{background:linear-gradient(135deg,#991b1b,#dc2626);box-shadow:0 4px 15px rgba(220,38,38,.3)}
+
+  /* ── Images Grid ── */
+  .materials-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:2px 4px;font-size:11px;color:var(--text-dim)}
+  .materials-toolbar strong{color:var(--text);font-weight:700}
+
+  .images-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .img-tile{
+    position:relative;aspect-ratio:1;background:var(--bg2);border:1px solid var(--border);
+    border-radius:var(--radius-sm);overflow:hidden;cursor:pointer;-webkit-user-select:none;user-select:none;
+    transition:transform .12s,border-color .15s;
+  }
+  .img-tile img{width:100%;height:100%;object-fit:cover;display:block}
+  .img-tile:active{transform:scale(.97)}
+  .img-tile.selected{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+  .img-tile-checkbox{
+    position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;
+    background:rgba(0,0,0,0.55);border:1.5px solid #fff;display:flex;align-items:center;justify-content:center;
+    color:#fff;font-size:12px;font-weight:900;transition:all .15s;z-index:2;
+  }
+  .img-tile.selected .img-tile-checkbox{background:var(--accent);border-color:#fff}
+  .img-tile-delete{
+    position:absolute;top:6px;left:6px;width:24px;height:24px;border-radius:50%;
+    background:rgba(0,0,0,0.55);border:none;color:#fff;font-size:13px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s;z-index:2;
+  }
+  .img-tile:hover .img-tile-delete{opacity:1}
+  .img-tile.select-mode .img-tile-delete{display:none}
+  .img-tile:active .img-tile-delete{opacity:1}
+  @media (hover: none){.img-tile-delete{opacity:1}}
+
+  /* ── Upload area ── */
+  .upload-area{
+    background:var(--bg2);border:2px dashed var(--border-h);border-radius:var(--radius);
+    padding:20px 16px;text-align:center;cursor:pointer;transition:border-color .18s,background .18s;
+    -webkit-user-select:none;user-select:none;
+  }
+  .upload-area:hover{border-color:var(--accent);background:var(--accent-s)}
+  .upload-area:active{transform:scale(.99)}
+  .upload-icon{font-size:26px;margin-bottom:4px}
+  .upload-text{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
+  .upload-sub{font-size:10px;color:var(--text-dim)}
+  .upload-area.drag-over{border-color:var(--accent);background:var(--accent-s)}
+  .upload-input{display:none}
+
+  /* Upload preview list */
+  .upload-preview-list{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+  .upload-preview-item{
+    display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg3);
+    border:1px solid var(--border);border-radius:8px;font-size:11px;
+  }
+  .upload-preview-item img{width:32px;height:32px;border-radius:5px;object-fit:cover;flex-shrink:0}
+  .upload-preview-item-name{flex:1;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .upload-preview-item-remove{background:transparent;border:none;color:var(--text-dim);cursor:pointer;font-size:16px;padding:0 4px}
+  .upload-preview-item-remove:hover{color:var(--red)}
+  .upload-preview-item-status{font-size:9px;color:var(--text-dimmer)}
+
+  /* Confirm modal */
+  .modal-backdrop{
+    position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300;
+    display:none;align-items:center;justify-content:center;padding:20px;
+  }
+  .modal-backdrop.visible{display:flex}
+  .modal{
+    background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+    padding:20px;max-width:340px;width:100%;display:flex;flex-direction:column;gap:14px;
+    animation:modalIn .2s ease both;
+  }
+  @keyframes modalIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+  .modal-title{font-size:15px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:6px}
+  .modal-text{font-size:12px;color:var(--text-dim);line-height:1.6}
+  .modal-actions{display:flex;gap:8px;justify-content:flex-end}
+  .modal-btn{
+    padding:9px 16px;font-family:'Heebo',sans-serif;font-size:12px;font-weight:700;border-radius:8px;
+    cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text);
+  }
+  .modal-btn:active{transform:scale(.96)}
+  .modal-btn.primary{background:var(--red);border-color:var(--red);color:#fff}
+  .modal-btn.secondary{background:var(--bg3);color:var(--text-dim)}
+
+  /* Lightbox (image preview) */
+  .lightbox{
+    position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:400;
+    display:none;align-items:center;justify-content:center;padding:20px;
+  }
+  .lightbox.visible{display:flex}
+  .lightbox img{max-width:100%;max-height:100%;border-radius:8px}
+  .lightbox-close{
+    position:absolute;top:calc(16px + env(safe-area-inset-top));right:16px;width:36px;height:36px;border-radius:50%;
+    background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:18px;cursor:pointer;
+  }
 
   .toast{position:fixed;bottom:calc(80px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(20px);background:#1a2540;border:1px solid var(--accent);color:var(--text);font-size:13px;font-weight:600;padding:10px 20px;border-radius:20px;z-index:200;opacity:0;transition:opacity .25s,transform .25s;max-width:90%;text-align:center;pointer-events:none}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   .toast.error{border-color:var(--red);background:#2a1520}
+
+  .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:40vh;gap:8px;text-align:center;color:var(--text-dim)}
+  .empty-state-icon{font-size:42px;margin-bottom:4px}
+  .empty-state-text{font-size:13px;font-weight:700;color:var(--text)}
+  .empty-state-sub{font-size:11px;color:var(--text-dim)}
 
   .coming-soon{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:12px;text-align:center}
   .coming-soon-icon{font-size:48px}
@@ -263,7 +341,7 @@
       <div class="nav-card-body"><div class="nav-card-title">הגדרות כלליות</div><div class="nav-card-desc">מודל שכותב, פלטפורמות, אישורים לפני פרסום, פרטים אישיים</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
-    <div class="nav-card green" onclick="openScreen('screen-materials','')">
+    <div class="nav-card green" onclick="openMaterials()">
       <div class="nav-card-icon">🖼️</div>
       <div class="nav-card-body"><div class="nav-card-title">חומרים אישיים</div><div class="nav-card-desc">תמונות רקע, תמונת פרופיל, אפיון עסק</div></div>
       <div class="nav-card-arrow">‹</div>
@@ -320,7 +398,6 @@
   </div>
 </div>
 
-<!-- ══ SCREEN: הגדרות פוסט קרוסלה ══ -->
 <div class="screen" id="screen-carousel">
   <div class="screen-topbar">
     <div class="screen-back" onclick="closeScreen('screen-carousel')">›</div>
@@ -338,7 +415,6 @@
   </div>
 </div>
 
-<!-- ══ SCREEN: הוראות כתיבת תוכן (sub-menu) ══ -->
 <div class="screen" id="screen-writing">
   <div class="screen-topbar">
     <div class="screen-back" onclick="closeScreen('screen-writing')">›</div>
@@ -365,7 +441,6 @@
   </div>
 </div>
 
-<!-- ══ SCREEN: עריכת פרומפט כתיבה (גנרי) ══ -->
 <div class="screen" id="screen-prompt">
   <div class="screen-topbar">
     <div class="screen-back" onclick="closeScreen('screen-prompt')">›</div>
@@ -383,11 +458,63 @@
   </div>
 </div>
 
-<!-- placeholder screens -->
+<!-- ══ MATERIALS SCREENS ══ -->
+
+<!-- מסך ראשי: 5 התיקיות הראשיות -->
 <div class="screen" id="screen-materials">
-  <div class="screen-topbar"><div class="screen-back" onclick="closeScreen('screen-materials')">›</div><div class="screen-topbar-icon">🖼️</div><div class="screen-topbar-title">חומרים אישיים</div></div>
-  <div class="screen-body"><div class="coming-soon"><div class="coming-soon-icon">🚧</div><div class="coming-soon-title">בקרוב</div></div></div>
+  <div class="screen-topbar">
+    <div class="screen-back" onclick="closeScreen('screen-materials')">›</div>
+    <div class="screen-topbar-icon">🖼️</div>
+    <div class="screen-topbar-title">חומרים אישיים</div>
+  </div>
+  <div class="screen-body screen-body-no-save">
+    <div class="submenu-question">איזה חומרים תרצה לנהל?</div>
+    <div class="nav-card green" onclick="openFolder('main','תמונות רקע כללית','🖼️','תמונות הרקע לפוסטים ולסטורים')">
+      <div class="nav-card-icon">🖼️</div>
+      <div class="nav-card-body"><div class="nav-card-title">תמונות רקע כללית</div><div class="nav-card-desc">כל תמונות הרקע לפוסטים ולסטורים</div></div>
+      <div class="nav-card-arrow">‹</div>
+    </div>
+    <div class="nav-card teal" onclick="openFolder('main','תמונות לפי נושאים','📂','מחולקות לפי נושא')">
+      <div class="nav-card-icon">📂</div>
+      <div class="nav-card-body"><div class="nav-card-title">תמונות רקע לפי נושאים</div><div class="nav-card-desc">תת-תיקיות לפי נושאים שונים</div></div>
+      <div class="nav-card-arrow">‹</div>
+    </div>
+    <div class="nav-card purple" onclick="openFolder('main','תמונת פרופיל','👤','התמונה בעיגול שמופיעה בפוסטים')">
+      <div class="nav-card-icon">👤</div>
+      <div class="nav-card-body"><div class="nav-card-title">תמונת פרופיל</div><div class="nav-card-desc">התמונה בעיגול שמופיעה בפוסטים</div></div>
+      <div class="nav-card-arrow">‹</div>
+    </div>
+    <div class="nav-card gold" onclick="openFolder('main','אימון פנים','🧠','תמונות פנים ליצירת תמונות AI')">
+      <div class="nav-card-icon">🧠</div>
+      <div class="nav-card-body"><div class="nav-card-title">תמונות פנים לאימון AI</div><div class="nav-card-desc">תמונות שלך ליצירת תמונות AI</div></div>
+      <div class="nav-card-arrow">‹</div>
+    </div>
+    <div class="nav-card pink disabled">
+      <div class="nav-card-icon">📸</div>
+      <div class="nav-card-body"><div class="nav-card-title">תמונות כתוכן</div><div class="nav-card-desc">עבודות, ביקורות, עדויות</div></div>
+      <div class="nav-card-badge">בבנייה</div>
+    </div>
+  </div>
 </div>
+
+<!-- מסך תוכן תיקייה (תת-תיקיות + תמונות) -->
+<div class="screen" id="screen-folder">
+  <div class="screen-topbar">
+    <div class="screen-back" onclick="closeScreen('screen-folder')">›</div>
+    <div class="screen-topbar-icon" id="folder-icon">📂</div>
+    <div class="screen-topbar-title" id="folder-title">תיקייה</div>
+    <div class="screen-topbar-action" id="folder-select-btn" onclick="toggleSelectMode()" style="display:none">בחירה</div>
+    <div class="screen-topbar-action danger" id="folder-delete-btn" onclick="confirmDeleteSelected()" style="display:none">🗑 מחק</div>
+  </div>
+  <div class="screen-body" id="folder-body">
+    <div class="screen-loading" id="folder-loading">
+      <div class="spinner"></div>
+      <div>טוען חומרים...</div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-materials-oldplaceholder" style="display:none"></div>
 <div class="screen" id="screen-scheduled">
   <div class="screen-topbar"><div class="screen-back" onclick="closeScreen('screen-scheduled')">›</div><div class="screen-topbar-icon">📅</div><div class="screen-topbar-title">תכנים מתוזמנים</div></div>
   <div class="screen-body"><div class="coming-soon"><div class="coming-soon-icon">🚧</div><div class="coming-soon-title">בקרוב</div></div></div>
@@ -400,6 +527,27 @@
   <div class="screen-topbar"><div class="screen-back" onclick="closeScreen('screen-competitors')">›</div><div class="screen-topbar-icon">📊</div><div class="screen-topbar-title">מתחרים ודוחות</div></div>
   <div class="screen-body"><div class="coming-soon"><div class="coming-soon-icon">🚧</div><div class="coming-soon-title">בקרוב</div></div></div>
 </div>
+
+<!-- Modal למחיקה -->
+<div class="modal-backdrop" id="modal-delete">
+  <div class="modal">
+    <div class="modal-title">🗑 מחיקת תמונות</div>
+    <div class="modal-text" id="modal-delete-text">האם אתה בטוח שברצונך למחוק?</div>
+    <div class="modal-actions">
+      <button class="modal-btn secondary" onclick="closeModal('modal-delete')">ביטול</button>
+      <button class="modal-btn primary" id="modal-delete-confirm" onclick="performDelete()">מחק</button>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="event.stopPropagation();closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<!-- input נסתר להעלאת תמונות -->
+<input type="file" class="upload-input" id="upload-input" accept="image/*" multiple>
 
 <div class="toast" id="toast"></div>
 
@@ -422,11 +570,11 @@ var SHEET_RANGES = {
     story:'BB2:BC4', videos:'BG2:BH3'
   },
   'פרומפטים': { all: 'A1:G2' },
-  'הגדרות לפוסט קרוסלה': {} // הטווחים מוגדרים ב-n8n (ranges1), כאן לא צריך
+  'הגדרות לפוסט קרוסלה': {},
+  'חומרים אישיים': {}
 };
 
 var LOG_SHEET_TAB = "ID'S של תיקיות/טבלאות";
-
 var TIKTOK_OPTIONS = ['כן עם מוזיקה אטומטית', 'כן בלי מוזיקה', 'לא'];
 var SLIDE_COUNT_OPTIONS = ['5','10'];
 
@@ -464,42 +612,42 @@ var modelName    = params.get('modelName') || '';
   }
 })();
 
-/* ══ STATE ══ */
+/* ══ GLOBAL STATE ══ */
 var generalData    = null;
 var generalChanges = {};
 var generalLogChanges = {};
 var generalRendered = false;
 
-var carouselData    = null;   // { slides: {value, cell}, prompt: {value, cell} }
-var carouselChanges = {};     // מפתחות של תאים → ערכים חדשים (רק להגדרות הכלליות)
+var carouselData    = null;
+var carouselChanges = {};
 var carouselRendered = false;
 
 var promptData     = null;
 var promptChanges  = {};
 var promptRendered = false;
 
+/* Materials state */
+var folderStack = [];       // היסטוריית מסלול: [{title, icon, type, ref}]
+var currentFolderData = null;  // { folders: [...], files: [...] }
+var selectMode = false;
+var selectedFileIds = {};   // { fileId: true }
+
 var PROMPT_CONFIG = {
   carousel: {
-    title: 'הוראות כתיבה לפוסט קרוסלה',
-    icon: '🎨',
-    sheet: 'פרומפטים',
-    cell: 'A2',
+    title: 'הוראות כתיבה לפוסט קרוסלה', icon: '🎨',
+    sheet: 'פרומפטים', cell: 'A2',
     fieldName: 'כללי כתיבה - סוכן פוסט קרוסלה (זה אינו כל הפרומפט, לשינויים במבנה השקופיות יש לפנות אלינו)',
     contentLabel: 'קרוסלות'
   },
   story: {
-    title: 'הוראות כתיבה לסטורי',
-    icon: '📸',
-    sheet: 'פרומפטים',
-    cell: 'C2',
+    title: 'הוראות כתיבה לסטורי', icon: '📸',
+    sheet: 'פרומפטים', cell: 'C2',
     fieldName: 'כללי כתיבה - סוכן סטורי (זה אינו כל הפרומפט, לשינויים על התנהגות בהתאם לסוג בקשה יש לפנות אלינו)',
     contentLabel: 'סטוריז'
   },
   regularPost: {
-    title: 'הוראות כתיבה לפוסט רגיל',
-    icon: '📝',
-    sheet: 'פרומפטים',
-    cell: 'E2',
+    title: 'הוראות כתיבה לפוסט רגיל', icon: '📝',
+    sheet: 'פרומפטים', cell: 'E2',
     fieldName: 'כללי כתיבה - פוסט רגיל',
     contentLabel: 'פוסטים'
   }
@@ -521,6 +669,19 @@ function openScreen(id, sheetName) {
   if (id === 'screen-carousel' && sheetName && !carouselRendered) fetchSettings(sheetName, id);
 }
 
+function openMaterials() {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  folderStack = []; // מאפסים את המסלול כשמתחילים מחדש
+  var el = document.getElementById('screen-materials');
+  el.classList.add('visible');
+  el.scrollTop = 0;
+  if (tg) {
+    tg.BackButton.show();
+    tg.BackButton.offClick();
+    tg.BackButton.onClick(function(){ closeScreen('screen-materials'); });
+  }
+}
+
 function closeScreen(id) {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
   var el = document.getElementById(id);
@@ -529,6 +690,8 @@ function closeScreen(id) {
   if (id === 'screen-general')  resetGeneralScreen();
   if (id === 'screen-carousel') resetCarouselScreen();
   if (id === 'screen-prompt')   resetPromptScreen();
+  if (id === 'screen-folder')   handleFolderBack();
+  if (id === 'screen-materials') folderStack = [];
 
   if (!document.querySelector('.screen.visible') && tg) tg.BackButton.hide();
 }
@@ -799,7 +962,6 @@ function renderGeneral(data) {
   updateSaveBtn('general');
 }
 
-/* ══ RENDER: הגדרות פוסט קרוסלה ══ */
 function renderCarousel(data) {
   if (carouselRendered) return;
   carouselRendered = true;
@@ -812,7 +974,6 @@ function renderCarousel(data) {
 
   var html = '';
 
-  // סקשן 1: כמות סליידים
   var currentSlides = (data.slides && data.slides.value) ? String(data.slides.value) : '5';
   html += '<div class="settings-section">';
   html += '<div class="settings-section-header"><div class="settings-section-icon">🎞️</div><div>';
@@ -834,7 +995,6 @@ function renderCarousel(data) {
   html += '</div></div>';
   html += '</div>';
 
-  // סקשן 2: הוראות כתיבה
   html += '<div class="settings-section">';
   html += '<div class="settings-section-header"><div class="settings-section-icon">✍️</div><div>';
   html += '<div class="settings-section-title">הוראות כתיבה לקרוסלה</div>';
@@ -857,7 +1017,6 @@ function changeSlideCount(val) {
   if (!carouselData || !carouselData.slides) return;
   if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
 
-  // עדכון UI
   var display = document.getElementById('slide-counter-value');
   if (display) display.textContent = val;
   var btns = document.querySelectorAll('.slide-counter-btn');
@@ -866,14 +1025,10 @@ function changeSlideCount(val) {
     else                        b.classList.remove('active');
   });
 
-  // שמירת השינוי לתא הנכון
   var cell = carouselData.slides.cell;
   if (cell) {
-    if (val === String(carouselData.slides.value)) {
-      delete carouselChanges[cell];
-    } else {
-      carouselChanges[cell] = val;
-    }
+    if (val === String(carouselData.slides.value)) delete carouselChanges[cell];
+    else carouselChanges[cell] = val;
   }
   updateSaveBtn('carousel');
 }
@@ -888,23 +1043,19 @@ function renderPrompt(initialValue) {
   var cfg = promptData.cfg;
 
   var html = '';
-
   html += '<div class="instructions-box">';
   html += '<div class="instructions-title">💡 איך זה עובד?</div>';
   html += '<div class="instructions-body">';
   html += '<p>הוראות אילו מכתיבות לסוכן <strong>איך לכתוב</strong> כשהוא כותב ' + cfg.contentLabel + ' (שפה, סגנון וכו\').</p>';
   html += '<p>תוכלו לערוך / להוסיף מה שתרצו להוראות כתיבה האילו. אין כאן נכון או לא נכון, <strong>הכל לפי העדפה אישית שלכם</strong>, ממש כמו שאתם כותבים לצ\'אט גיפיטי.</p>';
   html += '</div>';
-
   html += '<div class="tip-box">';
   html += '<div class="tip-box-title">⚡ טיפ גאוני</div>';
   html += '<div class="tip-box-text">';
   html += 'אם יש לכם צ\'אט / ג\'מיני שמכירים טוב את השפה שלכם, כנסו אליהם ותדביקו את הפרומפט הזה:';
   html += '<div class="prompt-in-tip">תכתוב לי פרומפט שמתאר בדיוק את סגנון הכתיבה שלי עבור סוכן שמייצר לי תוכן לרשתות. תכלול דוגמאות, הנחיות, מילים שאני אוהב להשתמש ושפה.</div>';
   html += 'לאחר מכן תדביקו כאן בהוראות כתיבה את הפרומפט שקיבלתם.';
-  html += '</div></div>';
-
-  html += '</div>';
+  html += '</div></div></div>';
 
   html += '<div class="prompt-editor-wrap">';
   html += '<div class="prompt-editor-header">';
@@ -925,7 +1076,6 @@ function renderPrompt(initialValue) {
     ta.value = promptData.value;
     autoResizeTextarea(ta);
   }
-
   updateSaveBtn('prompt');
 }
 
@@ -938,12 +1088,8 @@ function autoResizeTextarea(ta) {
   ta.style.height = 'auto';
   var needed = ta.scrollHeight;
   var current = parseInt(ta.style.height) || 0;
-
-  if (Math.abs(needed - current) > 1) {
-    ta.style.height = needed + 'px';
-  } else {
-    ta.style.height = current + 'px';
-  }
+  if (Math.abs(needed - current) > 1) ta.style.height = needed + 'px';
+  else ta.style.height = current + 'px';
 
   if (screenEl && screenScrollY) screenEl.scrollTop = screenScrollY;
   if (scrollY) window.scrollTo(0, scrollY);
@@ -954,11 +1100,8 @@ function onPromptInput() {
   if (!ta || !promptData) return;
   autoResizeTextarea(ta);
   var newVal = ta.value;
-  if (newVal === promptData.value) {
-    delete promptChanges[promptData.cfg.cell];
-  } else {
-    promptChanges[promptData.cfg.cell] = newVal;
-  }
+  if (newVal === promptData.value) delete promptChanges[promptData.cfg.cell];
+  else                             promptChanges[promptData.cfg.cell] = newVal;
   updateSaveBtn('prompt');
 }
 
@@ -967,9 +1110,7 @@ function resetPromptToOriginal() {
   var ta = document.getElementById('prompt-textarea');
   if (!ta) return;
   if (Object.keys(promptChanges).length === 0) return;
-
   if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
-
   ta.value = promptData.value;
   promptChanges = {};
   autoResizeTextarea(ta);
@@ -977,7 +1118,446 @@ function resetPromptToOriginal() {
   showToast('↺ חזרת לגרסה המקורית');
 }
 
-/* ══ general settings interactions (unchanged) ══ */
+/* ══════════════════════════════════════════════════════════════════
+   MATERIALS LOGIC
+   ══════════════════════════════════════════════════════════════════ */
+
+/**
+ * openFolder(source, folderName, icon, desc)
+ * source: 'main' — תיקייה ראשית (מהרשימה באפ). folderName הוא הטקסט שישלח.
+ * source: 'sub'  — תת-תיקייה (ID) — folderName הוא ID אמיתי, icon ודסק לתצוגה.
+ */
+function openFolder(source, folderNameOrId, icon, displayTitle) {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+
+  var title = displayTitle || folderNameOrId;
+  var titleForBreadcrumb = displayTitle || folderNameOrId;
+
+  // דוחפים למסלול
+  folderStack.push({
+    source: source,
+    ref: folderNameOrId,        // שם לתיקייה ראשית / ID לתת-תיקייה
+    title: titleForBreadcrumb,
+    icon: icon || '📂'
+  });
+
+  // מציגים את המסך
+  var el = document.getElementById('screen-folder');
+  el.classList.add('visible');
+  el.scrollTop = 0;
+
+  // מאפסים סטייט של בחירה
+  selectMode = false;
+  selectedFileIds = {};
+
+  document.getElementById('folder-title').textContent = titleForBreadcrumb;
+  document.getElementById('folder-icon').textContent  = icon || '📂';
+  updateFolderTopbar();
+
+  // מצב טעינה
+  var body = document.getElementById('folder-body');
+  body.innerHTML = '<div class="screen-loading" id="folder-loading"><div class="spinner"></div><div>טוען חומרים...</div></div>';
+
+  if (tg) {
+    tg.BackButton.show();
+    tg.BackButton.offClick();
+    tg.BackButton.onClick(function(){ closeScreen('screen-folder'); });
+  }
+
+  // שולחים ל-n8n
+  fetchFolderContents(source, folderNameOrId);
+}
+
+/**
+ * Back handler — pops stack, fetches previous folder if any
+ */
+function handleFolderBack() {
+  folderStack.pop(); // הסר את הנוכחי
+  if (folderStack.length === 0) {
+    // חזרה למסך הראשי של החומרים
+    currentFolderData = null;
+    return;
+  }
+
+  // נכנסים חזרה לתיקייה הקודמת
+  var prev = folderStack[folderStack.length - 1];
+  // לא רוצה לקרוא שוב לשרת בחזרה — אבל זה פשוט יותר ככה, שהנתונים יהיו עדכניים
+  var el = document.getElementById('screen-folder');
+  el.classList.add('visible');
+  el.scrollTop = 0;
+
+  selectMode = false;
+  selectedFileIds = {};
+
+  document.getElementById('folder-title').textContent = prev.title;
+  document.getElementById('folder-icon').textContent  = prev.icon;
+  updateFolderTopbar();
+
+  var body = document.getElementById('folder-body');
+  body.innerHTML = '<div class="screen-loading" id="folder-loading"><div class="spinner"></div><div>טוען חומרים...</div></div>';
+
+  fetchFolderContents(prev.source, prev.ref);
+}
+
+function fetchFolderContents(source, ref) {
+  // source === 'main' → folderName=...; source === 'sub' → folderId=...
+  var url = GET_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent('חומרים אישיים')
+    + '&logSheetId=' + encodeURIComponent(logSheetId);
+
+  if (source === 'main') {
+    url += '&folderName=' + encodeURIComponent(ref);
+  } else {
+    url += '&folderId=' + encodeURIComponent(ref);
+  }
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(data){
+      currentFolderData = data;
+      renderFolder(data);
+    })
+    .catch(function(err){
+      console.error('fetchFolderContents error:', err);
+      var body = document.getElementById('folder-body');
+      body.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">שגיאה בטעינת התיקייה</div><div class="empty-state-sub">נסה שוב מאוחר יותר</div></div>';
+    });
+}
+
+function renderFolder(data) {
+  var body = document.getElementById('folder-body');
+  body.innerHTML = '';
+
+  var folders = (data && data.folders) || [];
+  var files   = (data && data.files)   || [];
+
+  // אם יש תת-תיקיות — מציגים כרטיסים
+  if (folders.length > 0) {
+    var fhtml = '<div class="submenu-question">בחר תת-תיקייה</div>';
+    folders.forEach(function(f, idx) {
+      var colorClass = ['green','teal','purple','gold','pink','orange'][idx % 6];
+      fhtml += '<div class="nav-card '+colorClass+'" onclick="openFolder(\'sub\',\''+ escapeAttr(f.id) +'\',\'📁\',\''+ escapeAttr(f.name) +'\')">';
+      fhtml += '<div class="nav-card-icon">📁</div>';
+      fhtml += '<div class="nav-card-body"><div class="nav-card-title">'+ escapeHtml(f.name) +'</div><div class="nav-card-desc">תיקייה</div></div>';
+      fhtml += '<div class="nav-card-arrow">‹</div>';
+      fhtml += '</div>';
+    });
+    body.insertAdjacentHTML('beforeend', fhtml);
+  }
+
+  // אם יש קבצים (תמונות) — מציגים grid + אזור העלאה
+  if (files.length > 0 || folders.length === 0) {
+    var html = '';
+
+    // אזור העלאה
+    html += '<div class="upload-area" onclick="triggerUpload()" id="upload-area">';
+    html += '<div class="upload-icon">📤</div>';
+    html += '<div class="upload-text">העלה תמונות חדשות</div>';
+    html += '<div class="upload-sub">לחץ לבחירה או גרור תמונות לכאן</div>';
+    html += '</div>';
+
+    if (files.length > 0) {
+      html += '<div class="materials-toolbar">';
+      html += '<div><strong>'+ files.length +'</strong> תמונות בתיקייה</div>';
+      html += '<div>לחץ על 🗑 למחיקה, או הפעל בחירה</div>';
+      html += '</div>';
+
+      html += '<div class="images-grid" id="images-grid">';
+      files.forEach(function(f) {
+        html += buildImgTileHtml(f);
+      });
+      html += '</div>';
+    } else {
+      html += '<div class="empty-state">';
+      html += '<div class="empty-state-icon">🖼️</div>';
+      html += '<div class="empty-state-text">אין כאן עדיין תמונות</div>';
+      html += '<div class="empty-state-sub">לחץ למעלה כדי להעלות את הראשונה</div>';
+      html += '</div>';
+    }
+
+    body.insertAdjacentHTML('beforeend', html);
+
+    // הגדרת ה-upload input listener
+    wireUploadInput();
+  }
+
+  updateFolderTopbar();
+}
+
+function buildImgTileHtml(f) {
+  var isSelected = !!selectedFileIds[f.id];
+  var selectClass = selectMode ? ' select-mode' : '';
+  var selectedClass = isSelected ? ' selected' : '';
+  var html = '<div class="img-tile'+selectClass+selectedClass+'" data-id="'+ escapeAttr(f.id) +'" onclick="onImgTileClick(event,\''+ escapeAttr(f.id) +'\')">';
+  html += '<img src="'+ escapeAttr(f.thumbnailUrl) +'" alt="'+ escapeAttr(f.name) +'" loading="lazy" onerror="this.style.opacity=0.2">';
+  if (selectMode) {
+    html += '<div class="img-tile-checkbox">'+ (isSelected ? '✓' : '') +'</div>';
+  } else {
+    html += '<button class="img-tile-delete" onclick="event.stopPropagation();confirmDeleteSingle(\''+ escapeAttr(f.id) +'\')">🗑</button>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function onImgTileClick(event, fileId) {
+  if (selectMode) {
+    event.preventDefault();
+    toggleFileSelection(fileId);
+  } else {
+    // פותח את התמונה ב-lightbox
+    var file = (currentFolderData.files || []).find(function(f){ return f.id === fileId; });
+    if (file) openLightbox(file.thumbnailUrl.replace(/\/w_\d+\//,'/w_1600/'));
+  }
+}
+
+function toggleFileSelection(fileId) {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+  if (selectedFileIds[fileId]) delete selectedFileIds[fileId];
+  else                         selectedFileIds[fileId] = true;
+
+  // עדכון UI של הכרטיס
+  var tile = document.querySelector('.img-tile[data-id="'+ fileId +'"]');
+  if (tile) {
+    if (selectedFileIds[fileId]) tile.classList.add('selected');
+    else                         tile.classList.remove('selected');
+    var cb = tile.querySelector('.img-tile-checkbox');
+    if (cb) cb.textContent = selectedFileIds[fileId] ? '✓' : '';
+  }
+  updateFolderTopbar();
+}
+
+function toggleSelectMode() {
+  selectMode = !selectMode;
+  if (!selectMode) selectedFileIds = {};
+  renderFolder(currentFolderData); // רינדור מחדש
+}
+
+function updateFolderTopbar() {
+  var selectBtn = document.getElementById('folder-select-btn');
+  var deleteBtn = document.getElementById('folder-delete-btn');
+  if (!selectBtn || !deleteBtn) return;
+
+  var hasFiles = currentFolderData && currentFolderData.files && currentFolderData.files.length > 0;
+
+  if (!hasFiles) {
+    selectBtn.style.display = 'none';
+    deleteBtn.style.display = 'none';
+    return;
+  }
+
+  if (selectMode) {
+    var count = Object.keys(selectedFileIds).length;
+    selectBtn.textContent = 'ביטול';
+    selectBtn.style.display = '';
+    deleteBtn.textContent = count > 0 ? ('🗑 מחק ' + count) : '🗑 מחק';
+    deleteBtn.style.display = count > 0 ? '' : 'none';
+  } else {
+    selectBtn.textContent = 'בחירה';
+    selectBtn.style.display = '';
+    deleteBtn.style.display = 'none';
+  }
+}
+
+/* ══ Delete ══ */
+var pendingDeleteIds = [];
+
+function confirmDeleteSingle(fileId) {
+  var file = (currentFolderData.files || []).find(function(f){ return f.id === fileId; });
+  if (!file) return;
+  pendingDeleteIds = [fileId];
+  document.getElementById('modal-delete-text').textContent = 'למחוק את התמונה "'+ file.name +'"?';
+  document.getElementById('modal-delete-confirm').textContent = 'מחק תמונה';
+  openModal('modal-delete');
+}
+
+function confirmDeleteSelected() {
+  var ids = Object.keys(selectedFileIds);
+  if (ids.length === 0) return;
+  pendingDeleteIds = ids;
+  document.getElementById('modal-delete-text').textContent = 'למחוק '+ ids.length +' תמונות שנבחרו? פעולה זו אינה ניתנת לביטול.';
+  document.getElementById('modal-delete-confirm').textContent = 'מחק ' + ids.length;
+  openModal('modal-delete');
+}
+
+function performDelete() {
+  var ids = pendingDeleteIds.slice();
+  if (ids.length === 0) { closeModal('modal-delete'); return; }
+
+  var btn = document.getElementById('modal-delete-confirm');
+  btn.disabled = true;
+  btn.textContent = 'מוחק...';
+
+  // איסוף פרטי הקבצים כדי לשלוח לפלואו
+  var filesToDelete = [];
+  ids.forEach(function(id) {
+    var f = (currentFolderData.files || []).find(function(x){ return x.id === id; });
+    if (f) filesToDelete.push({ id: f.id, name: f.name });
+  });
+
+  var url = SAVE_URL
+    + '?sheetsUrl='   + encodeURIComponent(sheetsUrl)
+    + '&sheet='       + encodeURIComponent('חומרים אישיים')
+    + '&logSheetId='  + encodeURIComponent(logSheetId)
+    + '&action='      + encodeURIComponent('delete')
+    + '&fileIds='     + encodeURIComponent(JSON.stringify(filesToDelete));
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(){
+      // עדכון UI — מסיר את הקבצים מהרשימה המקומית
+      if (currentFolderData && currentFolderData.files) {
+        currentFolderData.files = currentFolderData.files.filter(function(f){
+          return ids.indexOf(f.id) === -1;
+        });
+      }
+      pendingDeleteIds = [];
+      selectedFileIds = {};
+      selectMode = false;
+      renderFolder(currentFolderData);
+      closeModal('modal-delete');
+      btn.disabled = false;
+      showToast('✅ נמחקו ' + ids.length + ' תמונות');
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    })
+    .catch(function(err){
+      console.error('delete error:', err);
+      btn.disabled = false;
+      btn.textContent = 'מחק';
+      showToast('❌ שגיאה במחיקה, נסה שוב', true);
+    });
+}
+
+/* ══ Upload ══ */
+function triggerUpload() {
+  var inp = document.getElementById('upload-input');
+  if (inp) inp.click();
+}
+
+function wireUploadInput() {
+  var inp = document.getElementById('upload-input');
+  if (!inp) return;
+  // מנקים listener ישן
+  inp.onchange = null;
+  inp.onchange = function(e) {
+    var filesList = e.target.files;
+    if (!filesList || filesList.length === 0) return;
+    handleUpload(Array.prototype.slice.call(filesList));
+    inp.value = ''; // מאפשר לבחור את אותו קובץ שוב
+  };
+
+  // drag & drop
+  var area = document.getElementById('upload-area');
+  if (!area) return;
+  area.ondragover = function(e){ e.preventDefault(); area.classList.add('drag-over'); };
+  area.ondragleave = function(e){ e.preventDefault(); area.classList.remove('drag-over'); };
+  area.ondrop = function(e) {
+    e.preventDefault();
+    area.classList.remove('drag-over');
+    var dropped = e.dataTransfer && e.dataTransfer.files;
+    if (dropped && dropped.length) handleUpload(Array.prototype.slice.call(dropped));
+  };
+}
+
+function handleUpload(files) {
+  // מסננים לתמונות בלבד
+  var images = files.filter(function(f){ return f.type && f.type.indexOf('image/') === 0; });
+  if (images.length === 0) {
+    showToast('⚠️ ניתן להעלות רק תמונות', true);
+    return;
+  }
+
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+
+  // ממירים כל תמונה ל-base64 ושולחים
+  var currentFolder = folderStack[folderStack.length - 1];
+  if (!currentFolder) return;
+
+  showToast('⬆️ מעלה ' + images.length + ' תמונות...');
+
+  var promises = images.map(function(file) {
+    return fileToBase64(file).then(function(base64) {
+      return {
+        name: file.name,
+        mimeType: file.type,
+        data: base64
+      };
+    });
+  });
+
+  Promise.all(promises).then(function(payload) {
+    // שולח את כל התמונות בבקשה אחת
+    var body = {
+      action: 'upload',
+      sheet: 'חומרים אישיים',
+      sheetsUrl: sheetsUrl,
+      logSheetId: logSheetId,
+      folderSource: currentFolder.source,
+      folderRef:    currentFolder.ref,
+      files: payload
+    };
+
+    return fetch(SAVE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+  }).then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }).then(function(resp) {
+    showToast('✅ הועלו ' + images.length + ' תמונות');
+    if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    // רענון התיקייה מהשרת
+    fetchFolderContents(currentFolder.source, currentFolder.ref);
+  }).catch(function(err) {
+    console.error('upload error:', err);
+    showToast('❌ שגיאה בהעלאה, נסה שוב', true);
+  });
+}
+
+function fileToBase64(file) {
+  return new Promise(function(resolve, reject) {
+    var reader = new FileReader();
+    reader.onload = function() {
+      // מסירים את prefix ה-data URL
+      var result = reader.result || '';
+      var comma = result.indexOf(',');
+      resolve(comma >= 0 ? result.substring(comma + 1) : result);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ══ Lightbox ══ */
+function openLightbox(url) {
+  document.getElementById('lightbox-img').src = url;
+  document.getElementById('lightbox').classList.add('visible');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('visible');
+  document.getElementById('lightbox-img').src = '';
+}
+
+/* ══ Modals ══ */
+function openModal(id) {
+  document.getElementById(id).classList.add('visible');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('visible');
+}
+
+/* ══ Helpers ══ */
+function escapeHtml(s) {
+  s = String(s || '');
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function escapeAttr(s) {
+  return String(s || '').replace(/'/g,"\\'").replace(/"/g,'&quot;');
+}
+
+/* ══ general settings interactions ══ */
 function togglePlatform(ri, field) {
   if (!generalData || !generalData.platforms) return;
   if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
@@ -1141,17 +1721,13 @@ function saveGeneral() {
     });
 }
 
-/* ══ save: carousel (slide count only — saved to הגדרות כלליות sheet) ══ */
 function saveCarousel() {
   var btn = document.getElementById('carousel-save-btn');
   btn.disabled = true;
   btn.textContent = 'שומר...';
-
-  // כמות הסליידים נשמרת בשיט "הגדרות כלליות"
   sendSave('הגדרות כלליות', carouselChanges)
     .then(function(){
       showToast('✅ השינויים נשמרו בהצלחה!');
-      // עדכן את הערך השמור כך שלא יזוהה כשינוי מחדש
       if (carouselData && carouselData.slides && carouselData.slides.cell) {
         var newVal = carouselChanges[carouselData.slides.cell];
         if (newVal !== undefined) carouselData.slides.value = newVal;
@@ -1191,7 +1767,6 @@ function savePrompt() {
     });
 }
 
-/* single-sheet save */
 function sendSave(sheetName, changes) {
   var url = SAVE_URL
     + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
@@ -1204,7 +1779,6 @@ function sendSave(sheetName, changes) {
   });
 }
 
-/* multi-target save — main sheet + log sheet in one call */
 function sendSaveMulti(sheetName, payload) {
   var url = SAVE_URL
     + '?sheetsUrl='   + encodeURIComponent(sheetsUrl)
