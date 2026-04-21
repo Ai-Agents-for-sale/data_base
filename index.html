@@ -241,6 +241,11 @@
 
   .materials-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:2px 4px;font-size:11px;color:var(--text-dim)}
   .materials-toolbar strong{color:var(--text);font-weight:700}
+  .toolbar-btns{display:flex;gap:6px}
+  .toolbar-btn-select{background:var(--accent-s);border:1px solid var(--accent);color:var(--accent);font-family:'Heebo',sans-serif;font-size:11px;font-weight:700;padding:6px 12px;border-radius:8px;cursor:pointer;-webkit-user-select:none;user-select:none;transition:all .15s}
+  .toolbar-btn-select:active{transform:scale(.95)}
+  .toolbar-btn-select.cancel{background:var(--bg3);border-color:var(--border-h);color:var(--text-dim)}
+  .toolbar-btn-select.danger{background:var(--red);border-color:var(--red);color:#fff}
 
   .images-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
   .img-tile{position:relative;aspect-ratio:1;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;cursor:pointer;-webkit-user-select:none;user-select:none;transition:transform .12s,border-color .15s}
@@ -251,6 +256,11 @@
   .img-tile.selected .img-tile-checkbox{background:var(--accent);border-color:#fff}
   .img-tile-delete{position:absolute;top:6px;left:6px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.55);border:none;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity .15s;z-index:2}
   .img-tile.select-mode .img-tile-delete{display:none}
+  .img-tile.pending img{opacity:0.55;filter:blur(1px)}
+  .img-tile-pending-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);z-index:3;border-radius:inherit}
+  .img-tile-spinner{width:24px;height:24px;border:2.5px solid rgba(255,255,255,0.25);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+  .img-tile.pending.loaded img{opacity:1;filter:none}
+  .img-tile.pending.loaded .img-tile-pending-overlay{display:none}
 
   .upload-area{background:var(--bg2);border:2px dashed var(--border-h);border-radius:var(--radius);padding:20px 16px;text-align:center;cursor:pointer;transition:border-color .18s,background .18s;-webkit-user-select:none;user-select:none}
   .upload-area:hover{border-color:var(--accent);background:var(--accent-s)}
@@ -309,12 +319,12 @@
     <div class="section-group-label">הגדרות כלליות</div>
     <div class="nav-card blue" onclick="openScreen('screen-general','הגדרות כלליות')">
       <div class="nav-card-icon">⚙️</div>
-      <div class="nav-card-body"><div class="nav-card-title-row"><div class="nav-card-title">הגדרות כלליות</div></div><div class="nav-card-desc-compact">מודל שכותב, פלטפורמות, אישורים לפני פרסום, פרטים אישיים</div></div>
+      <div class="nav-card-body"><div class="nav-card-title-row"><div class="nav-card-title">הגדרות כלליות</div></div><div class="nav-card-desc">מודל שכותב, פלטפורמות, אישורים לפני פרסום,<br>פרטים אישיים</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
     <div class="nav-card green" onclick="openMaterials()">
       <div class="nav-card-icon">🖼️</div>
-      <div class="nav-card-body"><div class="nav-card-title-row"><div class="nav-card-title">חומרים אישיים</div></div><div class="nav-card-desc-compact">תמונות רקע, תמונת פרופיל, אפיון עסק</div></div>
+      <div class="nav-card-body"><div class="nav-card-title-row"><div class="nav-card-title">תמונות ואפיון עסק</div></div><div class="nav-card-desc-compact">תמונות רקע, תמונת פרופיל, אפיון עסק</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
     <div class="divider"></div>
@@ -434,7 +444,7 @@
   <div class="screen-topbar">
     <div class="screen-back" onclick="closeScreen('screen-materials')">›</div>
     <div class="screen-topbar-icon">🖼️</div>
-    <div class="screen-topbar-title">חומרים אישיים</div>
+    <div class="screen-topbar-title">תמונות ואפיון עסק</div>
   </div>
   <div class="screen-body screen-body-no-save" id="materials-body">
     <div class="screen-loading" id="materials-loading">
@@ -1319,7 +1329,19 @@ function renderFolder(data) {
     if (files.length > 0) {
       html += '<div class="materials-toolbar">';
       html += '<div><strong>'+ files.length +'</strong> תמונות בתיקייה</div>';
-      html += '<div>לחץ על 🗑 למחיקה, או הפעל בחירה</div>';
+      if (selectMode) {
+        var selCount = Object.keys(selectedFileIds).length;
+        if (selCount > 0) {
+          html += '<div class="toolbar-btns">';
+          html += '<button class="toolbar-btn-select cancel" onclick="toggleSelectMode()">ביטול</button>';
+          html += '<button class="toolbar-btn-select danger" onclick="confirmDeleteSelected()">🗑 מחק ' + selCount + '</button>';
+          html += '</div>';
+        } else {
+          html += '<button class="toolbar-btn-select cancel" onclick="toggleSelectMode()">ביטול בחירה</button>';
+        }
+      } else {
+        html += '<button class="toolbar-btn-select" onclick="toggleSelectMode()">✓ הפעל בחירה</button>';
+      }
       html += '</div>';
 
       html += '<div class="images-grid" id="images-grid">';
@@ -1426,11 +1448,15 @@ function buildImgTileHtml(f) {
   var isSelected = !!selectedFileIds[f.id];
   var selectClass = selectMode ? ' select-mode' : '';
   var selectedClass = isSelected ? ' selected' : '';
-  var html = '<div class="img-tile'+selectClass+selectedClass+'" data-id="'+ escapeAttr(f.id) +'" onclick="onImgTileClick(event,\''+ escapeAttr(f.id) +'\')">';
-  html += '<img src="'+ escapeAttr(f.thumbnailUrl) +'" alt="'+ escapeAttr(f.name) +'" loading="lazy" onerror="this.style.opacity=0.2">';
+  var pendingClass = f._pending ? ' pending' : '';
+  var html = '<div class="img-tile'+selectClass+selectedClass+pendingClass+'" data-id="'+ escapeAttr(f.id) +'" onclick="onImgTileClick(event,\''+ escapeAttr(f.id) +'\')">';
+  html += '<img src="'+ escapeAttr(f.thumbnailUrl) +'" alt="'+ escapeAttr(f.name) +'" loading="lazy" onload="this.closest(\'.img-tile\').classList.add(\'loaded\')" onerror="this.style.opacity=0.2">';
+  if (f._pending) {
+    html += '<div class="img-tile-pending-overlay"><div class="img-tile-spinner"></div></div>';
+  }
   if (selectMode) {
     html += '<div class="img-tile-checkbox">'+ (isSelected ? '✓' : '') +'</div>';
-  } else {
+  } else if (!f._pending) {
     html += '<button class="img-tile-delete" onclick="event.stopPropagation();confirmDeleteSingle(\''+ escapeAttr(f.id) +'\')">🗑</button>';
   }
   html += '</div>';
@@ -1451,15 +1477,8 @@ function toggleFileSelection(fileId) {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
   if (selectedFileIds[fileId]) delete selectedFileIds[fileId];
   else                         selectedFileIds[fileId] = true;
-
-  var tile = document.querySelector('.img-tile[data-id="'+ fileId +'"]');
-  if (tile) {
-    if (selectedFileIds[fileId]) tile.classList.add('selected');
-    else                         tile.classList.remove('selected');
-    var cb = tile.querySelector('.img-tile-checkbox');
-    if (cb) cb.textContent = selectedFileIds[fileId] ? '✓' : '';
-  }
-  updateFolderTopbar();
+  // רענון מלא - כדי שה-toolbar יעדכן את הספירה
+  renderFolder(currentFolderData);
 }
 
 function toggleSelectMode() {
@@ -1472,26 +1491,9 @@ function updateFolderTopbar() {
   var selectBtn = document.getElementById('folder-select-btn');
   var deleteBtn = document.getElementById('folder-delete-btn');
   if (!selectBtn || !deleteBtn) return;
-
-  var hasFiles = currentFolderData && currentFolderData.files && currentFolderData.files.length > 0;
-
-  if (!hasFiles) {
-    selectBtn.style.display = 'none';
-    deleteBtn.style.display = 'none';
-    return;
-  }
-
-  if (selectMode) {
-    var count = Object.keys(selectedFileIds).length;
-    selectBtn.textContent = 'ביטול';
-    selectBtn.style.display = '';
-    deleteBtn.textContent = count > 0 ? ('🗑 מחק ' + count) : '🗑 מחק';
-    deleteBtn.style.display = count > 0 ? '' : 'none';
-  } else {
-    selectBtn.textContent = 'בחירה';
-    selectBtn.style.display = '';
-    deleteBtn.style.display = 'none';
-  }
+  // כפתורי בחירה/מחיקה עברו ל-toolbar inline ליד הרשת - כאן תמיד מוסתרים
+  selectBtn.style.display = 'none';
+  deleteBtn.style.display = 'none';
 }
 
 /* ══ bgMode change (immediate save) ══ */
@@ -1661,7 +1663,7 @@ function handleUpload(files) {
   var currentFolder = folderStack[folderStack.length - 1];
   if (!currentFolder) return;
 
-  showToast('⬆️ מעלה ' + images.length + ' תמונות...');
+  showToast('✅ הפעולה התקבלה, התמונות יופיעו בעוד כמה רגעים');
 
   // שלב 1: ממיר כל תמונה ל-JPEG
   // שלב 2: מעלה ל-Cloudinary במקביל
@@ -1713,7 +1715,6 @@ function handleUpload(files) {
       return r.json();
     });
   }).then(function() {
-    showToast('✅ הועלו ' + images.length + ' תמונות');
     if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
     // לא קוראים ל-fetchFolderContents כדי לא להחליף את התצוגה המיידית מ-Cloudinary
     // ברשימה מהדרייב (שייתכן וה-n8n עוד לא סיים לעדכן).
