@@ -53,7 +53,7 @@
 
   .sections{padding:0 16px;display:flex;flex-direction:column;gap:10px}
   .section-group-label{font-size:10px;font-weight:700;color:var(--text-dimmer);letter-spacing:.1em;text-transform:uppercase;padding:0 4px;margin-top:6px;margin-bottom:2px}
-  .nav-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;display:flex;align-items:center;gap:14px;transition:border-color .18s,transform .12s;-webkit-user-select:none;user-select:none;position:relative;overflow:hidden}
+  .nav-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;display:flex;align-items:flex-start;gap:14px;transition:border-color .18s,transform .12s;-webkit-user-select:none;user-select:none;position:relative;overflow:hidden}
   .nav-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .18s;border-radius:inherit;background:var(--cs,transparent)}
   .nav-card:active{transform:scale(.985);border-color:var(--c);box-shadow:0 0 0 1px var(--c),inset 0 0 20px var(--cg,transparent)}
   .nav-card:active::before{opacity:1}
@@ -67,11 +67,15 @@
   .nav-card.disabled{opacity:.5;cursor:not-allowed;pointer-events:none}
   .nav-card-icon{width:46px;height:46px;border-radius:12px;background:var(--cs);border:1px solid var(--c);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
   .nav-card-body{flex:1;min-width:0}
-  .nav-card-title{font-size:14px;font-weight:800;color:var(--text);margin-bottom:3px}
-  .nav-card-desc{font-size:11px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .nav-card-arrow{font-size:20px;color:var(--text-dimmer);flex-shrink:0}
+  .nav-card-title-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap}
+  .nav-card-title{font-size:14px;font-weight:800;color:var(--text)}
+  .nav-card-desc{font-size:11px;color:var(--text-dim);line-height:1.5;white-space:normal}
+  .nav-card-desc-compact{font-size:11px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-card-arrow{font-size:20px;color:var(--text-dimmer);flex-shrink:0;align-self:center}
   .nav-card:active .nav-card-arrow{color:var(--c);transform:translateX(-3px)}
-  .nav-card-badge{font-size:9px;font-weight:800;background:var(--gold);color:#fff;padding:2px 8px;border-radius:20px;flex-shrink:0;margin-left:4px}
+  .nav-card-badge{font-size:9px;font-weight:800;background:var(--gold);color:#fff;padding:2px 8px;border-radius:20px;flex-shrink:0}
+  .nav-card-badge.active-label{background:var(--green);color:#fff;display:inline-flex;align-items:center;gap:4px}
+  .nav-card-badge.active-label::before{content:'●';font-size:7px}
   .divider{height:1px;background:var(--border);margin:6px 16px}
   .bottom-credit{text-align:center;font-size:10px;color:var(--text-dimmer);padding:20px 16px 0}
   .bottom-credit span{color:var(--accent);font-weight:700}
@@ -101,6 +105,26 @@
   .settings-section-sub{font-size:11px;color:var(--text-dim);margin-top:2px}
 
   .submenu-question{font-size:14px;font-weight:800;color:var(--text);padding:4px 4px 2px;line-height:1.4}
+
+  /* ── Info box (explanations above sub-folders) ── */
+  .info-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;gap:12px}
+  .info-box-title{font-size:13px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:6px}
+  .info-box-body{font-size:12px;color:var(--text-dim);line-height:1.7}
+
+  /* tip yellow like prompt editor */
+  .tip-box{background:rgba(250,204,21,0.08);border:1px solid rgba(250,204,21,0.25);border-radius:var(--radius-sm);padding:12px;display:flex;flex-direction:column;gap:6px}
+  .tip-box-title{font-size:12px;font-weight:800;color:var(--yellow);display:flex;align-items:center;gap:6px}
+  .tip-box-text{font-size:11px;color:var(--text-dim);line-height:1.7}
+
+  /* ── bgMode toggle inline (in sub-folders screen) ── */
+  .bgmode-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+  .bgmode-instruction{font-size:11px;color:var(--text-dim);padding:12px 16px 0;line-height:1.5}
+  .bgmode-instruction strong{color:var(--text)}
+  .bgmode-toggle-wrap{padding:12px 16px 14px}
+  .bgmode-choices{display:flex;gap:8px;background:var(--bg3);padding:4px;border-radius:var(--radius-sm)}
+  .bgmode-choice{flex:1;text-align:center;padding:9px 6px;border-radius:7px;font-size:11px;font-weight:700;color:var(--text-dim);cursor:pointer;transition:all .2s;-webkit-user-select:none;user-select:none}
+  .bgmode-choice:active{transform:scale(.98)}
+  .bgmode-choice.active{background:var(--accent);color:#fff;box-shadow:0 2px 6px rgba(37,99,235,.3)}
 
   .screen-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:60vh;color:var(--text-dim);font-size:13px}
   .spinner{width:32px;height:32px;border:3px solid rgba(37,99,235,.15);border-top-color:var(--accent);border-radius:50%;animation:spin .75s linear infinite}
@@ -150,20 +174,7 @@
   .setting-select-full{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Heebo',sans-serif;font-size:12px;font-weight:600;padding:10px 12px;outline:none;cursor:pointer;direction:rtl}
   .setting-select-full:focus{border-color:var(--accent)}
 
-  .setting-input{
-    width:100%;
-    background:var(--bg3);
-    border:1px solid var(--border);
-    border-radius:var(--radius-sm);
-    color:var(--text);
-    font-family:'Heebo',sans-serif;
-    font-size:13px;
-    font-weight:500;
-    padding:10px 12px;
-    outline:none;
-    direction:rtl;
-    transition:border-color .15s;
-  }
+  .setting-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Heebo',sans-serif;font-size:13px;font-weight:500;padding:10px 12px;outline:none;direction:rtl;transition:border-color .15s}
   .setting-input:focus{border-color:var(--accent)}
   .setting-input.ltr{direction:ltr;text-align:left}
 
@@ -193,9 +204,6 @@
   .instructions-body p{margin-bottom:8px}
   .instructions-body p:last-child{margin-bottom:0}
   .instructions-body strong{color:var(--text)}
-  .tip-box{background:rgba(250,204,21,0.08);border:1px solid rgba(250,204,21,0.25);border-radius:var(--radius-sm);padding:12px;display:flex;flex-direction:column;gap:6px}
-  .tip-box-title{font-size:12px;font-weight:800;color:var(--yellow);display:flex;align-items:center;gap:6px}
-  .tip-box-text{font-size:11px;color:var(--text-dim);line-height:1.7}
   .prompt-in-tip{background:var(--bg3);border:1px dashed var(--yellow);border-radius:8px;padding:10px 12px;margin-top:6px;color:#d4e4f7;font-size:11px;font-weight:500;font-style:italic;line-height:1.6}
 
   .prompt-editor-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
@@ -215,43 +223,36 @@
   .save-btn{width:100%;background:linear-gradient(135deg,#1a3a8f,#2d5fc4);color:#fff;border:none;border-radius:var(--radius-sm);padding:13px;font-family:'Heebo',sans-serif;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 15px rgba(26,58,143,.3);transition:opacity .2s,transform .15s}
   .save-btn:disabled{opacity:.35;cursor:default;box-shadow:none}
   .save-btn:not(:disabled):active{opacity:.88;transform:scale(.98)}
-  .save-btn.danger{background:linear-gradient(135deg,#991b1b,#dc2626);box-shadow:0 4px 15px rgba(220,38,38,.3)}
 
-  /* ── Images Grid ── */
+  /* ── Sub-folder card with rename ── */
+  .folder-card{position:relative;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;display:flex;align-items:center;gap:14px;transition:border-color .18s,transform .12s;-webkit-user-select:none;user-select:none;overflow:hidden}
+  .folder-card:active{transform:scale(.985);border-color:var(--teal)}
+  .folder-card.editing{cursor:default;background:var(--bg3)}
+  .folder-card-icon{width:46px;height:46px;border-radius:12px;background:var(--teal-s);border:1px solid var(--teal);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+  .folder-card-body{flex:1;min-width:0;display:flex;align-items:center;gap:8px}
+  .folder-card-title{font-size:14px;font-weight:800;color:var(--text);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .folder-card-title-input{flex:1;background:var(--bg);border:1px solid var(--accent);border-radius:6px;color:var(--text);font-family:'Heebo',sans-serif;font-size:14px;font-weight:800;padding:6px 8px;outline:none;direction:rtl}
+  .folder-card-edit-btn{background:transparent;border:none;color:var(--text-dimmer);cursor:pointer;padding:4px 6px;border-radius:6px;font-size:14px;transition:color .15s}
+  .folder-card-edit-btn:hover{color:var(--teal)}
+  .folder-card-edit-btn:active{transform:scale(.92)}
+  .folder-card-save-btn{background:var(--accent);border:none;color:#fff;cursor:pointer;padding:6px 10px;border-radius:6px;font-size:11px;font-weight:700}
+  .folder-card-cancel-btn{background:transparent;border:1px solid var(--border-h);color:var(--text-dim);cursor:pointer;padding:6px 10px;border-radius:6px;font-size:11px;font-weight:700}
+  .folder-card-arrow{font-size:20px;color:var(--text-dimmer);flex-shrink:0}
+
   .materials-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:2px 4px;font-size:11px;color:var(--text-dim)}
   .materials-toolbar strong{color:var(--text);font-weight:700}
 
   .images-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  .img-tile{
-    position:relative;aspect-ratio:1;background:var(--bg2);border:1px solid var(--border);
-    border-radius:var(--radius-sm);overflow:hidden;cursor:pointer;-webkit-user-select:none;user-select:none;
-    transition:transform .12s,border-color .15s;
-  }
+  .img-tile{position:relative;aspect-ratio:1;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;cursor:pointer;-webkit-user-select:none;user-select:none;transition:transform .12s,border-color .15s}
   .img-tile img{width:100%;height:100%;object-fit:cover;display:block}
   .img-tile:active{transform:scale(.97)}
   .img-tile.selected{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
-  .img-tile-checkbox{
-    position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;
-    background:rgba(0,0,0,0.55);border:1.5px solid #fff;display:flex;align-items:center;justify-content:center;
-    color:#fff;font-size:12px;font-weight:900;transition:all .15s;z-index:2;
-  }
+  .img-tile-checkbox{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,0.55);border:1.5px solid #fff;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:900;transition:all .15s;z-index:2}
   .img-tile.selected .img-tile-checkbox{background:var(--accent);border-color:#fff}
-  .img-tile-delete{
-    position:absolute;top:6px;left:6px;width:24px;height:24px;border-radius:50%;
-    background:rgba(0,0,0,0.55);border:none;color:#fff;font-size:13px;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s;z-index:2;
-  }
-  .img-tile:hover .img-tile-delete{opacity:1}
+  .img-tile-delete{position:absolute;top:6px;left:6px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.55);border:none;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity .15s;z-index:2}
   .img-tile.select-mode .img-tile-delete{display:none}
-  .img-tile:active .img-tile-delete{opacity:1}
-  @media (hover: none){.img-tile-delete{opacity:1}}
 
-  /* ── Upload area ── */
-  .upload-area{
-    background:var(--bg2);border:2px dashed var(--border-h);border-radius:var(--radius);
-    padding:20px 16px;text-align:center;cursor:pointer;transition:border-color .18s,background .18s;
-    -webkit-user-select:none;user-select:none;
-  }
+  .upload-area{background:var(--bg2);border:2px dashed var(--border-h);border-radius:var(--radius);padding:20px 16px;text-align:center;cursor:pointer;transition:border-color .18s,background .18s;-webkit-user-select:none;user-select:none}
   .upload-area:hover{border-color:var(--accent);background:var(--accent-s)}
   .upload-area:active{transform:scale(.99)}
   .upload-icon{font-size:26px;margin-bottom:4px}
@@ -260,52 +261,22 @@
   .upload-area.drag-over{border-color:var(--accent);background:var(--accent-s)}
   .upload-input{display:none}
 
-  /* Upload preview list */
-  .upload-preview-list{display:flex;flex-direction:column;gap:6px;margin-top:10px}
-  .upload-preview-item{
-    display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg3);
-    border:1px solid var(--border);border-radius:8px;font-size:11px;
-  }
-  .upload-preview-item img{width:32px;height:32px;border-radius:5px;object-fit:cover;flex-shrink:0}
-  .upload-preview-item-name{flex:1;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .upload-preview-item-remove{background:transparent;border:none;color:var(--text-dim);cursor:pointer;font-size:16px;padding:0 4px}
-  .upload-preview-item-remove:hover{color:var(--red)}
-  .upload-preview-item-status{font-size:9px;color:var(--text-dimmer)}
-
-  /* Confirm modal */
-  .modal-backdrop{
-    position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300;
-    display:none;align-items:center;justify-content:center;padding:20px;
-  }
+  .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300;display:none;align-items:center;justify-content:center;padding:20px}
   .modal-backdrop.visible{display:flex}
-  .modal{
-    background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
-    padding:20px;max-width:340px;width:100%;display:flex;flex-direction:column;gap:14px;
-    animation:modalIn .2s ease both;
-  }
+  .modal{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;max-width:340px;width:100%;display:flex;flex-direction:column;gap:14px;animation:modalIn .2s ease both}
   @keyframes modalIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
   .modal-title{font-size:15px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:6px}
   .modal-text{font-size:12px;color:var(--text-dim);line-height:1.6}
   .modal-actions{display:flex;gap:8px;justify-content:flex-end}
-  .modal-btn{
-    padding:9px 16px;font-family:'Heebo',sans-serif;font-size:12px;font-weight:700;border-radius:8px;
-    cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text);
-  }
+  .modal-btn{padding:9px 16px;font-family:'Heebo',sans-serif;font-size:12px;font-weight:700;border-radius:8px;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text)}
   .modal-btn:active{transform:scale(.96)}
   .modal-btn.primary{background:var(--red);border-color:var(--red);color:#fff}
   .modal-btn.secondary{background:var(--bg3);color:var(--text-dim)}
 
-  /* Lightbox (image preview) */
-  .lightbox{
-    position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:400;
-    display:none;align-items:center;justify-content:center;padding:20px;
-  }
+  .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:400;display:none;align-items:center;justify-content:center;padding:20px}
   .lightbox.visible{display:flex}
   .lightbox img{max-width:100%;max-height:100%;border-radius:8px}
-  .lightbox-close{
-    position:absolute;top:calc(16px + env(safe-area-inset-top));right:16px;width:36px;height:36px;border-radius:50%;
-    background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:18px;cursor:pointer;
-  }
+  .lightbox-close{position:absolute;top:calc(16px + env(safe-area-inset-top));right:16px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:18px;cursor:pointer}
 
   .toast{position:fixed;bottom:calc(80px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(20px);background:#1a2540;border:1px solid var(--accent);color:var(--text);font-size:13px;font-weight:600;padding:10px 20px;border-radius:20px;z-index:200;opacity:0;transition:opacity .25s,transform .25s;max-width:90%;text-align:center;pointer-events:none}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -338,43 +309,43 @@
     <div class="section-group-label">הגדרות כלליות</div>
     <div class="nav-card blue" onclick="openScreen('screen-general','הגדרות כלליות')">
       <div class="nav-card-icon">⚙️</div>
-      <div class="nav-card-body"><div class="nav-card-title">הגדרות כלליות</div><div class="nav-card-desc">מודל שכותב, פלטפורמות, אישורים לפני פרסום, פרטים אישיים</div></div>
+      <div class="nav-card-body"><div class="nav-card-title-row"><div class="nav-card-title">הגדרות כלליות</div></div><div class="nav-card-desc-compact">מודל שכותב, פלטפורמות, אישורים לפני פרסום, פרטים אישיים</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
     <div class="nav-card green" onclick="openMaterials()">
       <div class="nav-card-icon">🖼️</div>
-      <div class="nav-card-body"><div class="nav-card-title">חומרים אישיים</div><div class="nav-card-desc">תמונות רקע, תמונת פרופיל, אפיון עסק</div></div>
+      <div class="nav-card-body"><div class="nav-card-title-row"><div class="nav-card-title">חומרים אישיים</div></div><div class="nav-card-desc-compact">תמונות רקע, תמונת פרופיל, אפיון עסק</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
     <div class="divider"></div>
     <div class="section-group-label">תוכן ופוסטים</div>
     <div class="nav-card purple" onclick="openScreen('screen-carousel','הגדרות לפוסט קרוסלה')">
       <div class="nav-card-icon">🎨</div>
-      <div class="nav-card-body"><div class="nav-card-title">הגדרות פוסט קרוסלה</div><div class="nav-card-desc">כמות סליידים, הוראות כתיבה</div></div>
+      <div class="nav-card-body"><div class="nav-card-title-row"><div class="nav-card-title">הגדרות פוסט קרוסלה</div></div><div class="nav-card-desc-compact">כמות סליידים, הוראות כתיבה</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
     <div class="nav-card teal" onclick="openScreen('screen-writing','')">
       <div class="nav-card-icon">✍️</div>
-      <div class="nav-card-body"><div class="nav-card-title">הוראות כתיבת תוכן</div><div class="nav-card-desc">פרומפטים לקרוסלה, סטורי, פוסט רגיל</div></div>
+      <div class="nav-card-body"><div class="nav-card-title-row"><div class="nav-card-title">הוראות כתיבת תוכן</div></div><div class="nav-card-desc-compact">פרומפטים לקרוסלה, סטורי, פוסט רגיל</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
     <div class="nav-card gold" onclick="openScreen('screen-scheduled','')">
       <div class="nav-card-icon">📅</div>
-      <div class="nav-card-body"><div class="nav-card-title">תכנים מתוזמנים</div><div class="nav-card-desc">תכנים שתוזמנו, פינות קבועות לפוסטים/סטורים</div></div>
+      <div class="nav-card-body"><div class="nav-card-title-row"><div class="nav-card-title">תכנים מתוזמנים</div></div><div class="nav-card-desc-compact">תכנים שתוזמנו, פינות קבועות לפוסטים/סטורים</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
     <div class="divider"></div>
     <div class="section-group-label">סרטונים</div>
     <div class="nav-card orange" onclick="openScreen('screen-videos','')">
       <div class="nav-card-icon">🎬</div>
-      <div class="nav-card-body"><div class="nav-card-title">הגדרות סרטונים</div><div class="nav-card-desc">הגדרות לסגנון עריכה, תיקיות סרטונים, סרטונים לערוך לקליפים</div></div>
+      <div class="nav-card-body"><div class="nav-card-title-row"><div class="nav-card-title">הגדרות סרטונים</div></div><div class="nav-card-desc-compact">הגדרות לסגנון עריכה, תיקיות סרטונים, סרטונים לערוך לקליפים</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
     <div class="divider"></div>
     <div class="section-group-label">ניתוח ודוחות</div>
     <div class="nav-card pink" onclick="openScreen('screen-competitors','')">
       <div class="nav-card-icon">📊</div>
-      <div class="nav-card-body"><div class="nav-card-title">מתחרים ודוחות</div><div class="nav-card-desc">עמודים לניתוח, דוחות שבועיים</div></div>
+      <div class="nav-card-body"><div class="nav-card-title-row"><div class="nav-card-title">מתחרים ודוחות</div></div><div class="nav-card-desc-compact">עמודים לניתוח, דוחות שבועיים</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
   </div>
@@ -425,17 +396,17 @@
     <div class="submenu-question">איזה הוראות כתיבה תרצה לערוך?</div>
     <div class="nav-card purple" onclick="openWritingPrompt('carousel')">
       <div class="nav-card-icon">🎨</div>
-      <div class="nav-card-body"><div class="nav-card-title">הוראות כתיבה לפוסט קרוסלה</div><div class="nav-card-desc">איך הסוכן כותב פוסטים מרובי סליידים</div></div>
+      <div class="nav-card-body"><div class="nav-card-title-row"><div class="nav-card-title">הוראות כתיבה לפוסט קרוסלה</div></div><div class="nav-card-desc-compact">איך הסוכן כותב פוסטים מרובי סליידים</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
     <div class="nav-card teal" onclick="openWritingPrompt('story')">
       <div class="nav-card-icon">📸</div>
-      <div class="nav-card-body"><div class="nav-card-title">הוראות כתיבה לסטורי</div><div class="nav-card-desc">איך הסוכן כותב סטורי</div></div>
+      <div class="nav-card-body"><div class="nav-card-title-row"><div class="nav-card-title">הוראות כתיבה לסטורי</div></div><div class="nav-card-desc-compact">איך הסוכן כותב סטורי</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
     <div class="nav-card gold" onclick="openWritingPrompt('regularPost')">
       <div class="nav-card-icon">📝</div>
-      <div class="nav-card-body"><div class="nav-card-title">הוראות כתיבה לפוסט רגיל</div><div class="nav-card-desc">איך הסוכן כותב פוסט רגיל</div></div>
+      <div class="nav-card-body"><div class="nav-card-title-row"><div class="nav-card-title">הוראות כתיבה לפוסט רגיל</div></div><div class="nav-card-desc-compact">איך הסוכן כותב פוסט רגיל</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
   </div>
@@ -458,46 +429,21 @@
   </div>
 </div>
 
-<!-- ══ MATERIALS SCREENS ══ -->
-
-<!-- מסך ראשי: 5 התיקיות הראשיות -->
+<!-- מסך ראשי של חומרים אישיים — בנוי דינמית -->
 <div class="screen" id="screen-materials">
   <div class="screen-topbar">
     <div class="screen-back" onclick="closeScreen('screen-materials')">›</div>
     <div class="screen-topbar-icon">🖼️</div>
     <div class="screen-topbar-title">חומרים אישיים</div>
   </div>
-  <div class="screen-body screen-body-no-save">
-    <div class="submenu-question">איזה חומרים תרצה לנהל?</div>
-    <div class="nav-card green" onclick="openFolder('main','תמונות רקע כללית','🖼️','תמונות הרקע לפוסטים ולסטורים')">
-      <div class="nav-card-icon">🖼️</div>
-      <div class="nav-card-body"><div class="nav-card-title">תמונות רקע כללית</div><div class="nav-card-desc">כל תמונות הרקע לפוסטים ולסטורים</div></div>
-      <div class="nav-card-arrow">‹</div>
-    </div>
-    <div class="nav-card teal" onclick="openFolder('main','תמונות לפי נושאים','📂','מחולקות לפי נושא')">
-      <div class="nav-card-icon">📂</div>
-      <div class="nav-card-body"><div class="nav-card-title">תמונות רקע לפי נושאים</div><div class="nav-card-desc">תת-תיקיות לפי נושאים שונים</div></div>
-      <div class="nav-card-arrow">‹</div>
-    </div>
-    <div class="nav-card purple" onclick="openFolder('main','תמונת פרופיל','👤','התמונה בעיגול שמופיעה בפוסטים')">
-      <div class="nav-card-icon">👤</div>
-      <div class="nav-card-body"><div class="nav-card-title">תמונת פרופיל</div><div class="nav-card-desc">התמונה בעיגול שמופיעה בפוסטים</div></div>
-      <div class="nav-card-arrow">‹</div>
-    </div>
-    <div class="nav-card gold" onclick="openFolder('main','אימון פנים','🧠','תמונות פנים ליצירת תמונות AI')">
-      <div class="nav-card-icon">🧠</div>
-      <div class="nav-card-body"><div class="nav-card-title">תמונות פנים לאימון AI</div><div class="nav-card-desc">תמונות שלך ליצירת תמונות AI</div></div>
-      <div class="nav-card-arrow">‹</div>
-    </div>
-    <div class="nav-card pink disabled">
-      <div class="nav-card-icon">📸</div>
-      <div class="nav-card-body"><div class="nav-card-title">תמונות כתוכן</div><div class="nav-card-desc">עבודות, ביקורות, עדויות</div></div>
-      <div class="nav-card-badge">בבנייה</div>
+  <div class="screen-body screen-body-no-save" id="materials-body">
+    <div class="screen-loading" id="materials-loading">
+      <div class="spinner"></div>
+      <div>טוען...</div>
     </div>
   </div>
 </div>
 
-<!-- מסך תוכן תיקייה (תת-תיקיות + תמונות) -->
 <div class="screen" id="screen-folder">
   <div class="screen-topbar">
     <div class="screen-back" onclick="closeScreen('screen-folder')">›</div>
@@ -514,7 +460,6 @@
   </div>
 </div>
 
-<div class="screen" id="screen-materials-oldplaceholder" style="display:none"></div>
 <div class="screen" id="screen-scheduled">
   <div class="screen-topbar"><div class="screen-back" onclick="closeScreen('screen-scheduled')">›</div><div class="screen-topbar-icon">📅</div><div class="screen-topbar-title">תכנים מתוזמנים</div></div>
   <div class="screen-body"><div class="coming-soon"><div class="coming-soon-icon">🚧</div><div class="coming-soon-title">בקרוב</div></div></div>
@@ -528,7 +473,6 @@
   <div class="screen-body"><div class="coming-soon"><div class="coming-soon-icon">🚧</div><div class="coming-soon-title">בקרוב</div></div></div>
 </div>
 
-<!-- Modal למחיקה -->
 <div class="modal-backdrop" id="modal-delete">
   <div class="modal">
     <div class="modal-title">🗑 מחיקת תמונות</div>
@@ -540,13 +484,11 @@
   </div>
 </div>
 
-<!-- Lightbox -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <button class="lightbox-close" onclick="event.stopPropagation();closeLightbox()">✕</button>
   <img id="lightbox-img" src="" alt="">
 </div>
 
-<!-- input נסתר להעלאת תמונות -->
 <input type="file" class="upload-input" id="upload-input" accept="image/*" multiple>
 
 <div class="toast" id="toast"></div>
@@ -577,6 +519,52 @@ var SHEET_RANGES = {
 var LOG_SHEET_TAB = "ID'S של תיקיות/טבלאות";
 var TIKTOK_OPTIONS = ['כן עם מוזיקה אטומטית', 'כן בלי מוזיקה', 'לא'];
 var SLIDE_COUNT_OPTIONS = ['5','10'];
+
+/* bgMode values (from the sheet) */
+var BG_MODE_GENERAL  = 'כל התמונות מהתיקיית תמונות רקע הראשית';
+var BG_MODE_BY_TOPIC = 'לשאול אותי מאיזה תיקייה לבחור את התמונות בהתאם לנושא הפוסט';
+
+/* Materials main folders config */
+var MAIN_FOLDERS = [
+  {
+    key: 'general',
+    name: 'תמונות רקע כללית',
+    icon: '🖼️',
+    color: 'green',
+    desc: 'הסוכן יבחר מכאן תמונות רקע באופן רנדומלי לפוסטים/סטורים (ניתן להחליף את התמונות שהוא בחר בעת אישור התוכן אם תרצה)',
+    bgMatchValue: BG_MODE_GENERAL
+  },
+  {
+    key: 'topics',
+    name: 'תמונות רקע מחולקים לנושאים',
+    icon: '📂',
+    color: 'teal',
+    desc: 'אם חשוב לך שהתמונות רקע שהסוכן בוחר יהיו קשורות לתוכן עצמו ולא יבחרו רנדומלית, כאן יש 4 "תת תיקיות" שנועדו לחלק את תמונות הרקע שלך לפי נושאים.',
+    bgMatchValue: BG_MODE_BY_TOPIC
+  },
+  {
+    key: 'profile',
+    name: 'תמונת פרופיל',
+    icon: '👤',
+    color: 'purple',
+    desc: 'התמונה בעיגול שמופיעה בפוסטים/סטורים שלך'
+  },
+  {
+    key: 'face',
+    name: 'אימון פנים',
+    icon: '🧠',
+    color: 'gold',
+    desc: 'העלה לכאן 1-3 תמונות ברורות של הפנים שלך לאימון הסוכן'
+  },
+  {
+    key: 'content',
+    name: 'תמונות כתוכן',
+    icon: '📸',
+    color: 'pink',
+    desc: 'עבודות, ביקורות, עדויות',
+    disabled: true
+  }
+];
 
 function isLocked(val) { return val && val.indexOf('לא לגעת') !== -1; }
 
@@ -612,7 +600,6 @@ var modelName    = params.get('modelName') || '';
   }
 })();
 
-/* ══ GLOBAL STATE ══ */
 var generalData    = null;
 var generalChanges = {};
 var generalLogChanges = {};
@@ -627,10 +614,13 @@ var promptChanges  = {};
 var promptRendered = false;
 
 /* Materials state */
-var folderStack = [];       // היסטוריית מסלול: [{title, icon, type, ref}]
-var currentFolderData = null;  // { folders: [...], files: [...] }
+var folderStack = [];
+var currentFolderData = null;
 var selectMode = false;
-var selectedFileIds = {};   // { fileId: true }
+var selectedFileIds = {};
+
+/* bgMode state — תאריך נוכחי של ההגדרה + מידע על התא לעדכון */
+var currentBgMode = { value: '', cell: null };
 
 var PROMPT_CONFIG = {
   carousel: {
@@ -653,7 +643,6 @@ var PROMPT_CONFIG = {
   }
 };
 
-/* ══ NAVIGATION ══ */
 function openScreen(id, sheetName) {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
   var el = document.getElementById(id);
@@ -671,7 +660,7 @@ function openScreen(id, sheetName) {
 
 function openMaterials() {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-  folderStack = []; // מאפסים את המסלול כשמתחילים מחדש
+  folderStack = [];
   var el = document.getElementById('screen-materials');
   el.classList.add('visible');
   el.scrollTop = 0;
@@ -680,6 +669,61 @@ function openMaterials() {
     tg.BackButton.offClick();
     tg.BackButton.onClick(function(){ closeScreen('screen-materials'); });
   }
+  // Render with loading, then fetch bgMode
+  renderMaterialsMain();
+  fetchMaterialsMeta();
+}
+
+function fetchMaterialsMeta() {
+  // קריאה קלה שמבקשת את bgMode בלי פתיחת תיקייה (או נפתח תיקייה מהירה כלשהי שתביא bgMode)
+  // המסלול הקיים דורש folderName - אז נשתמש ב-general כדי לקבל bgMode (התוצאה קבועה)
+  var url = GET_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent('חומרים אישיים')
+    + '&logSheetId=' + encodeURIComponent(logSheetId)
+    + '&folderName=' + encodeURIComponent('תמונות רקע כללית')
+    + '&metaOnly=1';
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(data){
+      if (data && data.bgMode) {
+        currentBgMode.value = data.bgMode.value || '';
+        currentBgMode.cell  = data.bgMode.cell  || null;
+      }
+      renderMaterialsMain(); // רענון עם ה-label
+    })
+    .catch(function(err){
+      console.warn('fetchMaterialsMeta error:', err);
+    });
+}
+
+function renderMaterialsMain() {
+  var body = document.getElementById('materials-body');
+  var html = '<div class="submenu-question">איזה חומרים תרצה לנהל?</div>';
+
+  MAIN_FOLDERS.forEach(function(folder) {
+    var disabledClass = folder.disabled ? ' disabled' : '';
+    var onclick = folder.disabled ? '' : ' onclick="openFolder(\'main\',\''+ escapeAttr(folder.name) +'\',\''+ folder.icon +'\',\''+ escapeAttr(folder.name) +'\')"';
+    
+    // האם זו התיקייה המוגדרת?
+    var isActive = folder.bgMatchValue && currentBgMode.value === folder.bgMatchValue;
+    
+    html += '<div class="nav-card '+ folder.color + disabledClass +'"' + onclick + '>';
+    html += '<div class="nav-card-icon">'+ folder.icon +'</div>';
+    html += '<div class="nav-card-body">';
+    html += '<div class="nav-card-title-row">';
+    html += '<div class="nav-card-title">'+ escapeHtml(folder.name) +'</div>';
+    if (isActive) html += '<div class="nav-card-badge active-label">מוגדר</div>';
+    if (folder.disabled) html += '<div class="nav-card-badge">בבנייה</div>';
+    html += '</div>';
+    html += '<div class="nav-card-desc">'+ escapeHtml(folder.desc) +'</div>';
+    html += '</div>';
+    if (!folder.disabled) html += '<div class="nav-card-arrow">‹</div>';
+    html += '</div>';
+  });
+
+  body.innerHTML = html;
 }
 
 function closeScreen(id) {
@@ -795,7 +839,6 @@ function fetchPrompt(cfg) {
     });
 }
 
-/* ══ RENDER: הגדרות כלליות (unchanged) ══ */
 function renderGeneral(data) {
   if (generalRendered) return;
   generalRendered = true;
@@ -893,8 +936,8 @@ function renderGeneral(data) {
     html += '</div>';
     html += '<select class="setting-select-full" id="sel-bgMode" onchange="changeCarouselApproval(\'bgMode\',this.value)">';
     var bgOptions = [
-      ['כל התמונות מהתיקיית תמונות רקע הראשית', '📁 תיקייה כללית'],
-      ['לשאול אותי מאיזה תיקייה לבחור את התמונות בהתאם לנושא הפוסט', '🗂️ לפי נושאים']
+      [BG_MODE_GENERAL, '📁 תיקייה כללית'],
+      [BG_MODE_BY_TOPIC, '🗂️ לפי נושאים']
     ];
     bgOptions.forEach(function(pair) {
       var sel = c.bgMode === pair[0] ? 'selected' : '';
@@ -1001,10 +1044,7 @@ function renderCarousel(data) {
   html += '<div class="settings-section-sub">איך הסוכן כותב פוסטים מרובי סליידים</div></div></div>';
   html += '<div class="nav-card teal" style="margin:12px;border-radius:var(--radius-sm)" onclick="openWritingPrompt(\'carousel\')">';
   html += '<div class="nav-card-icon">🎨</div>';
-  html += '<div class="nav-card-body">';
-  html += '<div class="nav-card-title">ערוך הוראות כתיבה</div>';
-  html += '<div class="nav-card-desc">שפה, סגנון, טון של הפוסטים</div>';
-  html += '</div>';
+  html += '<div class="nav-card-body"><div class="nav-card-title-row"><div class="nav-card-title">ערוך הוראות כתיבה</div></div><div class="nav-card-desc-compact">שפה, סגנון, טון של הפוסטים</div></div>';
   html += '<div class="nav-card-arrow">‹</div>';
   html += '</div>';
   html += '</div>';
@@ -1122,31 +1162,22 @@ function resetPromptToOriginal() {
    MATERIALS LOGIC
    ══════════════════════════════════════════════════════════════════ */
 
-/**
- * openFolder(source, folderName, icon, desc)
- * source: 'main' — תיקייה ראשית (מהרשימה באפ). folderName הוא הטקסט שישלח.
- * source: 'sub'  — תת-תיקייה (ID) — folderName הוא ID אמיתי, icon ודסק לתצוגה.
- */
 function openFolder(source, folderNameOrId, icon, displayTitle) {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 
-  var title = displayTitle || folderNameOrId;
   var titleForBreadcrumb = displayTitle || folderNameOrId;
 
-  // דוחפים למסלול
   folderStack.push({
     source: source,
-    ref: folderNameOrId,        // שם לתיקייה ראשית / ID לתת-תיקייה
+    ref: folderNameOrId,
     title: titleForBreadcrumb,
     icon: icon || '📂'
   });
 
-  // מציגים את המסך
   var el = document.getElementById('screen-folder');
   el.classList.add('visible');
   el.scrollTop = 0;
 
-  // מאפסים סטייט של בחירה
   selectMode = false;
   selectedFileIds = {};
 
@@ -1154,7 +1185,6 @@ function openFolder(source, folderNameOrId, icon, displayTitle) {
   document.getElementById('folder-icon').textContent  = icon || '📂';
   updateFolderTopbar();
 
-  // מצב טעינה
   var body = document.getElementById('folder-body');
   body.innerHTML = '<div class="screen-loading" id="folder-loading"><div class="spinner"></div><div>טוען חומרים...</div></div>';
 
@@ -1164,24 +1194,19 @@ function openFolder(source, folderNameOrId, icon, displayTitle) {
     tg.BackButton.onClick(function(){ closeScreen('screen-folder'); });
   }
 
-  // שולחים ל-n8n
   fetchFolderContents(source, folderNameOrId);
 }
 
-/**
- * Back handler — pops stack, fetches previous folder if any
- */
 function handleFolderBack() {
-  folderStack.pop(); // הסר את הנוכחי
+  folderStack.pop();
   if (folderStack.length === 0) {
-    // חזרה למסך הראשי של החומרים
     currentFolderData = null;
+    // רענון המסך הראשי עם ה-bgMode העדכני
+    renderMaterialsMain();
     return;
   }
 
-  // נכנסים חזרה לתיקייה הקודמת
   var prev = folderStack[folderStack.length - 1];
-  // לא רוצה לקרוא שוב לשרת בחזרה — אבל זה פשוט יותר ככה, שהנתונים יהיו עדכניים
   var el = document.getElementById('screen-folder');
   el.classList.add('visible');
   el.scrollTop = 0;
@@ -1200,7 +1225,6 @@ function handleFolderBack() {
 }
 
 function fetchFolderContents(source, ref) {
-  // source === 'main' → folderName=...; source === 'sub' → folderId=...
   var url = GET_URL
     + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
     + '&sheet='      + encodeURIComponent('חומרים אישיים')
@@ -1216,6 +1240,11 @@ function fetchFolderContents(source, ref) {
     .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
     .then(function(data){
       currentFolderData = data;
+      // עדכון bgMode אם הגיע
+      if (data && data.bgMode) {
+        currentBgMode.value = data.bgMode.value || '';
+        currentBgMode.cell  = data.bgMode.cell  || null;
+      }
       renderFolder(data);
     })
     .catch(function(err){
@@ -1232,25 +1261,55 @@ function renderFolder(data) {
   var folders = (data && data.folders) || [];
   var files   = (data && data.files)   || [];
 
-  // אם יש תת-תיקיות — מציגים כרטיסים
-  if (folders.length > 0) {
-    var fhtml = '<div class="submenu-question">בחר תת-תיקייה</div>';
-    folders.forEach(function(f, idx) {
-      var colorClass = ['green','teal','purple','gold','pink','orange'][idx % 6];
-      fhtml += '<div class="nav-card '+colorClass+'" onclick="openFolder(\'sub\',\''+ escapeAttr(f.id) +'\',\'📁\',\''+ escapeAttr(f.name) +'\')">';
-      fhtml += '<div class="nav-card-icon">📁</div>';
-      fhtml += '<div class="nav-card-body"><div class="nav-card-title">'+ escapeHtml(f.name) +'</div><div class="nav-card-desc">תיקייה</div></div>';
-      fhtml += '<div class="nav-card-arrow">‹</div>';
-      fhtml += '</div>';
-    });
-    body.insertAdjacentHTML('beforeend', fhtml);
+  // Check if this is the "topics" screen (showing sub-folders)
+  var currentTop = folderStack[folderStack.length - 1];
+  var isTopicsScreen = currentTop && currentTop.source === 'main' && currentTop.ref === 'תמונות רקע מחולקים לנושאים';
+
+  var html = '';
+
+  // If topics screen — add the explanation + bgMode toggle on top
+  if (isTopicsScreen) {
+    html += '<div class="info-box">';
+    html += '<div class="info-box-title">💡 איך עובד?</div>';
+    html += '<div class="info-box-body">';
+    html += 'אם חשוב לך שהתמונות רקע שהסוכן בוחר יהיו קשורות לתוכן עצמו ולא יבחרו רנדומלית, כאן יש 4 <strong>"תת תיקיות"</strong> שנועדו לחלק את תמונות הרקע שלך לפי נושאים. תוכל להעלות לכל אחת מהן תמונות רקע שמתאימות לנושא אחר שיש לך בעסק, ובעת יצירת תוכן הסוכן ישאל אותך מאיזה "תת תיקייה" לבחור את התמונות.';
+    html += '</div>';
+    html += '<div class="tip-box">';
+    html += '<div class="tip-box-title">💡 טיפ</div>';
+    html += '<div class="tip-box-text">ניתן לערוך את שמות התיקיות כדי לזכור איזה נושא כל תיקייה. לחץ על אייקון העפרון (✏️) ליד שם התיקייה.</div>';
+    html += '</div>';
+    html += '</div>';
+
+    // bgMode toggle
+    var isByTopic = currentBgMode.value === BG_MODE_BY_TOPIC;
+    html += '<div class="bgmode-card">';
+    html += '<div class="bgmode-instruction"><strong>כדי שהסוכן יבחר תמונות רקע לפי נושאים יש לסמן "לפי נושאים"</strong></div>';
+    html += '<div class="bgmode-toggle-wrap">';
+    html += '<div class="bgmode-choices">';
+    html += '<div class="bgmode-choice'+(isByTopic?'':' active')+'" onclick="changeBgMode(\'general\')">📁 תיקייה כללית</div>';
+    html += '<div class="bgmode-choice'+(isByTopic?' active':'')+'" onclick="changeBgMode(\'byTopic\')">🗂️ לפי נושאים</div>';
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
   }
 
-  // אם יש קבצים (תמונות) — מציגים grid + אזור העלאה
-  if (files.length > 0 || folders.length === 0) {
-    var html = '';
+  // תת-תיקיות
+  if (folders.length > 0) {
+    if (!isTopicsScreen) {
+      html += '<div class="submenu-question">בחר תת-תיקייה</div>';
+    }
+    folders.forEach(function(f) {
+      html += buildFolderCardHtml(f);
+    });
+    body.insertAdjacentHTML('beforeend', html);
+    html = ''; // reset
+  } else if (isTopicsScreen) {
+    body.insertAdjacentHTML('beforeend', html);
+    html = '';
+  }
 
-    // אזור העלאה
+  // קבצים / אזור העלאה
+  if (files.length > 0 || (!isTopicsScreen && folders.length === 0)) {
     html += '<div class="upload-area" onclick="triggerUpload()" id="upload-area">';
     html += '<div class="upload-icon">📤</div>';
     html += '<div class="upload-text">העלה תמונות חדשות</div>';
@@ -1277,12 +1336,90 @@ function renderFolder(data) {
     }
 
     body.insertAdjacentHTML('beforeend', html);
-
-    // הגדרת ה-upload input listener
     wireUploadInput();
   }
 
   updateFolderTopbar();
+}
+
+function buildFolderCardHtml(f) {
+  var html = '<div class="folder-card" data-id="'+ escapeAttr(f.id) +'" onclick="openFolderFromCard(event,\''+ escapeAttr(f.id) +'\',\''+ escapeAttr(f.name) +'\')">';
+  html += '<div class="folder-card-icon">📁</div>';
+  html += '<div class="folder-card-body">';
+  html += '<div class="folder-card-title" data-name="'+ escapeAttr(f.name) +'">'+ escapeHtml(f.name) +'</div>';
+  html += '<button class="folder-card-edit-btn" onclick="event.stopPropagation();startRenameFolder(\''+ escapeAttr(f.id) +'\',\''+ escapeAttr(f.name) +'\')" title="שנה שם">✏️</button>';
+  html += '</div>';
+  html += '<div class="folder-card-arrow">‹</div>';
+  html += '</div>';
+  return html;
+}
+
+function openFolderFromCard(event, id, name) {
+  // אם לוחצים על input של שם — לא פותחים
+  if (event.target && (event.target.tagName === 'INPUT' || event.target.classList.contains('folder-card-edit-btn'))) return;
+  openFolder('sub', id, '📁', name);
+}
+
+function startRenameFolder(id, currentName) {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+  var card = document.querySelector('.folder-card[data-id="'+ id +'"]');
+  if (!card) return;
+  card.classList.add('editing');
+  var bodyEl = card.querySelector('.folder-card-body');
+  bodyEl.innerHTML =
+    '<input type="text" class="folder-card-title-input" id="rename-input-'+ id +'" dir="rtl" value="'+ escapeAttr(currentName) +'" />' +
+    '<button class="folder-card-save-btn" onclick="event.stopPropagation();commitRenameFolder(\''+ escapeAttr(id) +'\',\''+ escapeAttr(currentName) +'\')">שמור</button>' +
+    '<button class="folder-card-cancel-btn" onclick="event.stopPropagation();cancelRenameFolder(\''+ escapeAttr(id) +'\',\''+ escapeAttr(currentName) +'\')">ביטול</button>';
+  var inp = document.getElementById('rename-input-' + id);
+  if (inp) { inp.focus(); inp.select(); }
+}
+
+function cancelRenameFolder(id, originalName) {
+  var card = document.querySelector('.folder-card[data-id="'+ id +'"]');
+  if (!card) return;
+  card.classList.remove('editing');
+  var bodyEl = card.querySelector('.folder-card-body');
+  bodyEl.innerHTML =
+    '<div class="folder-card-title" data-name="'+ escapeAttr(originalName) +'">'+ escapeHtml(originalName) +'</div>' +
+    '<button class="folder-card-edit-btn" onclick="event.stopPropagation();startRenameFolder(\''+ escapeAttr(id) +'\',\''+ escapeAttr(originalName) +'\')" title="שנה שם">✏️</button>';
+}
+
+function commitRenameFolder(id, originalName) {
+  var inp = document.getElementById('rename-input-' + id);
+  if (!inp) return;
+  var newName = (inp.value || '').trim();
+  if (!newName) { showToast('⚠️ שם לא יכול להיות ריק', true); return; }
+  if (newName === originalName) { cancelRenameFolder(id, originalName); return; }
+
+  var card = document.querySelector('.folder-card[data-id="'+ id +'"]');
+  var btn  = card ? card.querySelector('.folder-card-save-btn') : null;
+  if (btn) { btn.disabled = true; btn.textContent = 'שומר...'; }
+
+  var url = SAVE_URL
+    + '?sheetsUrl='   + encodeURIComponent(sheetsUrl)
+    + '&sheet='       + encodeURIComponent('חומרים אישיים')
+    + '&logSheetId='  + encodeURIComponent(logSheetId)
+    + '&action='      + encodeURIComponent('rename')
+    + '&folderId='    + encodeURIComponent(id)
+    + '&newName='     + encodeURIComponent(newName);
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(){
+      // עדכון ב-state המקומי
+      if (currentFolderData && currentFolderData.folders) {
+        var found = currentFolderData.folders.find(function(x){ return x.id === id; });
+        if (found) found.name = newName;
+      }
+      cancelRenameFolder(id, newName);
+      showToast('✅ השם עודכן');
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    })
+    .catch(function(err){
+      console.error('rename error:', err);
+      if (btn) { btn.disabled = false; btn.textContent = 'שמור'; }
+      showToast('❌ שגיאה בעדכון השם', true);
+    });
 }
 
 function buildImgTileHtml(f) {
@@ -1305,7 +1442,6 @@ function onImgTileClick(event, fileId) {
     event.preventDefault();
     toggleFileSelection(fileId);
   } else {
-    // פותח את התמונה ב-lightbox
     var file = (currentFolderData.files || []).find(function(f){ return f.id === fileId; });
     if (file) openLightbox(file.thumbnailUrl.replace(/\/w_\d+\//,'/w_1600/'));
   }
@@ -1316,7 +1452,6 @@ function toggleFileSelection(fileId) {
   if (selectedFileIds[fileId]) delete selectedFileIds[fileId];
   else                         selectedFileIds[fileId] = true;
 
-  // עדכון UI של הכרטיס
   var tile = document.querySelector('.img-tile[data-id="'+ fileId +'"]');
   if (tile) {
     if (selectedFileIds[fileId]) tile.classList.add('selected');
@@ -1330,7 +1465,7 @@ function toggleFileSelection(fileId) {
 function toggleSelectMode() {
   selectMode = !selectMode;
   if (!selectMode) selectedFileIds = {};
-  renderFolder(currentFolderData); // רינדור מחדש
+  renderFolder(currentFolderData);
 }
 
 function updateFolderTopbar() {
@@ -1357,6 +1492,49 @@ function updateFolderTopbar() {
     selectBtn.style.display = '';
     deleteBtn.style.display = 'none';
   }
+}
+
+/* ══ bgMode change (immediate save) ══ */
+function changeBgMode(choice) {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+  var newValue = choice === 'byTopic' ? BG_MODE_BY_TOPIC : BG_MODE_GENERAL;
+
+  if (newValue === currentBgMode.value) return;
+  if (!currentBgMode.cell) {
+    showToast('⚠️ לא ניתן לשמור את ההגדרה', true);
+    return;
+  }
+
+  // עדכון UI מיידי
+  var prev = currentBgMode.value;
+  currentBgMode.value = newValue;
+  var choices = document.querySelectorAll('.bgmode-choice');
+  choices.forEach(function(c){ c.classList.remove('active'); });
+  if (choice === 'byTopic') {
+    choices[1] && choices[1].classList.add('active');
+  } else {
+    choices[0] && choices[0].classList.add('active');
+  }
+
+  // שליחה לפלואו שמירה (שומר בשיט "הגדרות כלליות")
+  var changes = {};
+  changes[currentBgMode.cell] = newValue;
+
+  sendSave('הגדרות כלליות', changes)
+    .then(function(){
+      showToast('✅ השינוי נשמר');
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    })
+    .catch(function(err){
+      console.error('bgMode save error:', err);
+      // rollback
+      currentBgMode.value = prev;
+      var choices2 = document.querySelectorAll('.bgmode-choice');
+      choices2.forEach(function(c){ c.classList.remove('active'); });
+      if (prev === BG_MODE_BY_TOPIC) choices2[1] && choices2[1].classList.add('active');
+      else                            choices2[0] && choices2[0].classList.add('active');
+      showToast('❌ שגיאה בשמירה', true);
+    });
 }
 
 /* ══ Delete ══ */
@@ -1388,7 +1566,6 @@ function performDelete() {
   btn.disabled = true;
   btn.textContent = 'מוחק...';
 
-  // איסוף פרטי הקבצים כדי לשלוח לפלואו
   var filesToDelete = [];
   ids.forEach(function(id) {
     var f = (currentFolderData.files || []).find(function(x){ return x.id === id; });
@@ -1405,7 +1582,6 @@ function performDelete() {
   fetch(url)
     .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
     .then(function(){
-      // עדכון UI — מסיר את הקבצים מהרשימה המקומית
       if (currentFolderData && currentFolderData.files) {
         currentFolderData.files = currentFolderData.files.filter(function(f){
           return ids.indexOf(f.id) === -1;
@@ -1437,16 +1613,14 @@ function triggerUpload() {
 function wireUploadInput() {
   var inp = document.getElementById('upload-input');
   if (!inp) return;
-  // מנקים listener ישן
   inp.onchange = null;
   inp.onchange = function(e) {
     var filesList = e.target.files;
     if (!filesList || filesList.length === 0) return;
     handleUpload(Array.prototype.slice.call(filesList));
-    inp.value = ''; // מאפשר לבחור את אותו קובץ שוב
+    inp.value = '';
   };
 
-  // drag & drop
   var area = document.getElementById('upload-area');
   if (!area) return;
   area.ondragover = function(e){ e.preventDefault(); area.classList.add('drag-over'); };
@@ -1460,33 +1634,39 @@ function wireUploadInput() {
 }
 
 function handleUpload(files) {
-  // מסננים לתמונות בלבד
+  // Filter images only
   var images = files.filter(function(f){ return f.type && f.type.indexOf('image/') === 0; });
+  var nonImageCount = files.length - images.length;
+  
   if (images.length === 0) {
     showToast('⚠️ ניתן להעלות רק תמונות', true);
     return;
   }
+  if (nonImageCount > 0) {
+    showToast('⚠️ '+ nonImageCount +' קבצים שאינם תמונות לא הועלו', true);
+  }
 
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 
-  // ממירים כל תמונה ל-base64 ושולחים
   var currentFolder = folderStack[folderStack.length - 1];
   if (!currentFolder) return;
 
-  showToast('⬆️ מעלה ' + images.length + ' תמונות...');
+  showToast('⬆️ ממיר ומעלה ' + images.length + ' תמונות...');
 
+  // Convert each image to JPEG (base64)
   var promises = images.map(function(file) {
-    return fileToBase64(file).then(function(base64) {
+    return convertImageToJpeg(file).then(function(result) {
+      // שם הקובץ — עם סיומת .jpg
+      var baseName = (file.name || 'image').replace(/\.[^.]+$/, '');
       return {
-        name: file.name,
-        mimeType: file.type,
-        data: base64
+        name:     baseName + '.jpg',
+        mimeType: 'image/jpeg',
+        data:     result
       };
     });
   });
 
   Promise.all(promises).then(function(payload) {
-    // שולח את כל התמונות בבקשה אחת
     var body = {
       action: 'upload',
       sheet: 'חומרים אישיים',
@@ -1505,10 +1685,9 @@ function handleUpload(files) {
   }).then(function(r) {
     if (!r.ok) throw new Error('HTTP ' + r.status);
     return r.json();
-  }).then(function(resp) {
+  }).then(function() {
     showToast('✅ הועלו ' + images.length + ' תמונות');
     if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-    // רענון התיקייה מהשרת
     fetchFolderContents(currentFolder.source, currentFolder.ref);
   }).catch(function(err) {
     console.error('upload error:', err);
@@ -1516,14 +1695,39 @@ function handleUpload(files) {
   });
 }
 
-function fileToBase64(file) {
+/* ממיר תמונה ל-JPEG דרך Canvas. מחזיר base64 בלי prefix. */
+function convertImageToJpeg(file) {
   return new Promise(function(resolve, reject) {
     var reader = new FileReader();
-    reader.onload = function() {
-      // מסירים את prefix ה-data URL
-      var result = reader.result || '';
-      var comma = result.indexOf(',');
-      resolve(comma >= 0 ? result.substring(comma + 1) : result);
+    reader.onload = function(e) {
+      var img = new Image();
+      img.onload = function() {
+        try {
+          var canvas = document.createElement('canvas');
+          // מגבלה סבירה של גודל: עד 2400 בפרופורציה
+          var maxDim = 2400;
+          var w = img.width, h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) { h = Math.round(h * (maxDim / w)); w = maxDim; }
+            else       { w = Math.round(w * (maxDim / h)); h = maxDim; }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          var ctx = canvas.getContext('2d');
+          // רקע לבן במקרה של PNG שקוף
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+          // jpeg באיכות 92%
+          var dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+          var comma = dataUrl.indexOf(',');
+          resolve(comma >= 0 ? dataUrl.substring(comma + 1) : dataUrl);
+        } catch (err) {
+          reject(err);
+        }
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
     };
     reader.onerror = reject;
     reader.readAsDataURL(file);
@@ -1540,21 +1744,15 @@ function closeLightbox() {
   document.getElementById('lightbox-img').src = '';
 }
 
-/* ══ Modals ══ */
-function openModal(id) {
-  document.getElementById(id).classList.add('visible');
-}
-function closeModal(id) {
-  document.getElementById(id).classList.remove('visible');
-}
+function openModal(id) { document.getElementById(id).classList.add('visible'); }
+function closeModal(id) { document.getElementById(id).classList.remove('visible'); }
 
-/* ══ Helpers ══ */
 function escapeHtml(s) {
   s = String(s || '');
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 function escapeAttr(s) {
-  return String(s || '').replace(/'/g,"\\'").replace(/"/g,'&quot;');
+  return String(s || '').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;');
 }
 
 /* ══ general settings interactions ══ */
