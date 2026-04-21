@@ -257,6 +257,9 @@
   .img-tile-delete{position:absolute;top:6px;left:6px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.55);border:none;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity .15s;z-index:2}
   .img-tile.select-mode .img-tile-delete{display:none}
   .img-tile.pending img{opacity:0.55;filter:blur(1px)}
+  .img-tile.uploading{background:linear-gradient(135deg,var(--bg3),var(--bg2))}
+  .img-tile.uploading::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(37,99,235,0.08),transparent);animation:shimmer 1.5s infinite}
+  @keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
   .img-tile-pending-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);z-index:3;border-radius:inherit}
   .img-tile-spinner{width:24px;height:24px;border:2.5px solid rgba(255,255,255,0.25);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
   .img-tile.pending.loaded img{opacity:1;filter:none}
@@ -1448,16 +1451,27 @@ function buildImgTileHtml(f) {
   var isSelected = !!selectedFileIds[f.id];
   var selectClass = selectMode ? ' select-mode' : '';
   var selectedClass = isSelected ? ' selected' : '';
+  var uploadingClass = f._uploading ? ' uploading' : '';
   var pendingClass = f._pending ? ' pending' : '';
-  var html = '<div class="img-tile'+selectClass+selectedClass+pendingClass+'" data-id="'+ escapeAttr(f.id) +'" onclick="onImgTileClick(event,\''+ escapeAttr(f.id) +'\')">';
-  html += '<img src="'+ escapeAttr(f.thumbnailUrl) +'" alt="'+ escapeAttr(f.name) +'" loading="lazy" onload="this.closest(\'.img-tile\').classList.add(\'loaded\')" onerror="this.style.opacity=0.2">';
-  if (f._pending) {
-    html += '<div class="img-tile-pending-overlay"><div class="img-tile-spinner"></div></div>';
+  var html = '<div class="img-tile'+selectClass+selectedClass+uploadingClass+pendingClass+'" data-id="'+ escapeAttr(f.id) +'"';
+  if (!f._uploading) {
+    html += ' onclick="onImgTileClick(event,\''+ escapeAttr(f.id) +'\')"';
   }
-  if (selectMode) {
-    html += '<div class="img-tile-checkbox">'+ (isSelected ? '✓' : '') +'</div>';
-  } else if (!f._pending) {
-    html += '<button class="img-tile-delete" onclick="event.stopPropagation();confirmDeleteSingle(\''+ escapeAttr(f.id) +'\')">🗑</button>';
+  html += '>';
+  
+  if (f._uploading) {
+    // מצב העלאה - רק spinner ללא תמונה
+    html += '<div class="img-tile-pending-overlay"><div class="img-tile-spinner"></div></div>';
+  } else {
+    html += '<img src="'+ escapeAttr(f.thumbnailUrl) +'" alt="'+ escapeAttr(f.name) +'" loading="lazy" onload="this.closest(\'.img-tile\').classList.add(\'loaded\')" onerror="this.style.opacity=0.2">';
+    if (f._pending) {
+      html += '<div class="img-tile-pending-overlay"><div class="img-tile-spinner"></div></div>';
+    }
+    if (selectMode) {
+      html += '<div class="img-tile-checkbox">'+ (isSelected ? '✓' : '') +'</div>';
+    } else {
+      html += '<button class="img-tile-delete" onclick="event.stopPropagation();confirmDeleteSingle(\''+ escapeAttr(f.id) +'\')">🗑</button>';
+    }
   }
   html += '</div>';
   return html;
@@ -1651,7 +1665,6 @@ function handleUpload(files) {
     showToast('⚠️ '+ nonImageCount +' קבצים שאינם תמונות לא הועלו', true);
   }
 
-  // מגבלה של 20 תמונות בפעם אחת
   var MAX_FILES = 20;
   if (images.length > MAX_FILES) {
     showToast('⚠️ ניתן להעלות עד ' + MAX_FILES + ' תמונות בבת אחת. נסה להעלות פחות תמונות', true);
@@ -1663,44 +1676,85 @@ function handleUpload(files) {
   var currentFolder = folderStack[folderStack.length - 1];
   if (!currentFolder) return;
 
-  showToast('✅ הפעולה התקבלה, התמונות יופיעו בעוד כמה רגעים');
-
-  // שלב 1: ממיר כל תמונה ל-JPEG
-  // שלב 2: מעלה ל-Cloudinary במקביל
-  // שלב 3: מקבל URLs וארגז אותם
-  // שלב 4: שולח ל-n8n רק את ה-URLs דרך GET
+  // ── שלב 1: יוצרים placeholders מיידיים לכל תמונה ── 
+  // כל placeholder מקבל id ייחודי שנוכל למצוא בו ולעדכן כשההעלאה מסתיימת
+  var uploadStartTime = Date.now();
+  var placeholderIds = [];
   
-  var promises = images.map(function(file) {
-    return convertImageToJpeg(file).then(function(base64) {
-      return uploadToCloudinary(base64, file.name);
+  if (!currentFolderData) currentFolderData = { folders: [], files: [] };
+  if (!currentFolderData.files) currentFolderData.files = [];
+  
+  images.forEach(function(file, idx) {
+    var placeholderId = 'uploading-' + uploadStartTime + '-' + idx;
+    placeholderIds.push(placeholderId);
+    currentFolderData.files.push({
+      id:           placeholderId,
+      name:         file.name,
+      mimeType:     file.type,
+      thumbnailUrl: '', // ריק — נציג spinner
+      driveUrl:     '',
+      _uploading:   true
     });
   });
+  renderFolder(currentFolderData);
+  
+  showToast('⬆️ מעלה ' + images.length + ' ' + (images.length === 1 ? 'תמונה' : 'תמונות') + '...');
 
-  Promise.all(promises).then(function(uploadedFiles) {
-    // uploadedFiles = [{ url, name, originalName }, ...]
-    
-    // תצוגה מיידית: מוסיפים את התמונות שעלו ל-Cloudinary ל-state המקומי
-    // (ה-URLs האמיתיים מהדרייב יחליפו אותן בריענון הבא)
-    if (currentFolderData) {
-      if (!currentFolderData.files) currentFolderData.files = [];
-      uploadedFiles.forEach(function(f, idx) {
-        currentFolderData.files.push({
-          id:           'pending-' + Date.now() + '-' + idx, // ID זמני
-          name:         f.name,
-          mimeType:     'image/jpeg',
-          thumbnailUrl: f.url,
-          driveUrl:     f.url,
-          _pending:     true // סימון שזו תמונה ממתינה
-        });
+  // ── שלב 2: ממיר ומעלה כל תמונה, כשמסיימת מעדכן את ה-placeholder שלה ── 
+  var uploadedResults = [];
+  var failedCount = 0;
+  
+  var promises = images.map(function(file, idx) {
+    var placeholderId = placeholderIds[idx];
+    return convertImageToJpeg(file)
+      .then(function(base64) { return uploadToCloudinary(base64, file.name); })
+      .then(function(result) {
+        // מצא את ה-placeholder ועדכן אותו
+        if (currentFolderData && currentFolderData.files) {
+          var item = currentFolderData.files.find(function(f) { return f.id === placeholderId; });
+          if (item) {
+            item.thumbnailUrl = result.url;
+            item.driveUrl     = result.url;
+            item._uploading   = false;
+            item._pending     = true; // עדיין "ממתין" עד שn8n יעלה לדרייב
+            // עדכון ויזואלי של הריבוע הספציפי בלי render מלא (שיאפס scroll)
+            updateTileInPlace(placeholderId, item);
+          }
+        }
+        uploadedResults.push(result);
+        return result;
+      })
+      .catch(function(err) {
+        console.error('upload failed for', file.name, err);
+        failedCount++;
+        // מסיר את ה-placeholder שנכשל
+        if (currentFolderData && currentFolderData.files) {
+          currentFolderData.files = currentFolderData.files.filter(function(f) { return f.id !== placeholderId; });
+        }
+        var tile = document.querySelector('.img-tile[data-id="'+ placeholderId +'"]');
+        if (tile) tile.remove();
+        return null;
       });
-      renderFolder(currentFolderData);
+  });
+
+  Promise.all(promises).then(function() {
+    if (uploadedResults.length === 0) {
+      showToast('❌ ההעלאה נכשלה, נסה שוב', true);
+      return;
     }
 
-    var filesParam = JSON.stringify(uploadedFiles.map(function(f){
+    if (failedCount > 0) {
+      showToast('⚠️ ' + uploadedResults.length + ' הועלו, ' + failedCount + ' נכשלו', true);
+    } else {
+      showToast('✅ הועלו ' + uploadedResults.length + ' ' + (uploadedResults.length === 1 ? 'תמונה' : 'תמונות') + ' בהצלחה');
+    }
+    if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+
+    // שולח ל-n8n רק את התמונות שהצליחו
+    var filesParam = JSON.stringify(uploadedResults.map(function(f){
       return { url: f.url, name: f.name };
     }));
     
-    // שולח ל-n8n דרך GET (בלי POST, בלי CORS preflight)
     var url = SAVE_URL
       + '?sheetsUrl='    + encodeURIComponent(sheetsUrl)
       + '&sheet='        + encodeURIComponent('חומרים אישיים')
@@ -1714,15 +1768,24 @@ function handleUpload(files) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
     });
-  }).then(function() {
-    if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-    // לא קוראים ל-fetchFolderContents כדי לא להחליף את התצוגה המיידית מ-Cloudinary
-    // ברשימה מהדרייב (שייתכן וה-n8n עוד לא סיים לעדכן).
-    // בפעם הבאה שהלקוח ייכנס לתיקייה, התמונות האמיתיות יטענו אוטומטית.
   }).catch(function(err) {
     console.error('upload error:', err);
-    showToast('❌ שגיאה בהעלאה: ' + (err.message || 'נסה שוב'), true);
+    showToast('❌ שגיאה בהעלאה לשרת: ' + (err.message || 'נסה שוב'), true);
   });
+}
+
+/* מעדכן ריבוע של תמונה בודדת במקום (בלי render מלא של המסך) */
+function updateTileInPlace(placeholderId, item) {
+  var tile = document.querySelector('.img-tile[data-id="'+ placeholderId +'"]');
+  if (!tile) return;
+  var newHtml = buildImgTileHtml(item);
+  // יוצר wrapper זמני כדי לקבל Element מה-HTML
+  var temp = document.createElement('div');
+  temp.innerHTML = newHtml;
+  var newTile = temp.firstChild;
+  if (newTile && tile.parentNode) {
+    tile.parentNode.replaceChild(newTile, tile);
+  }
 }
 
 /* מעלה תמונה (base64) ל-Cloudinary ומחזיר Promise עם { url, name } */
