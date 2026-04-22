@@ -131,23 +131,29 @@
   @keyframes spin{to{transform:rotate(360deg)}}
 
   .platforms-scroll{overflow-x:auto;padding:4px 0;touch-action:pan-x pan-y}
-  .platforms-table{width:100%;border-collapse:collapse;min-width:320px}
-  .platforms-table th{font-size:10px;font-weight:700;color:var(--text-dimmer);text-align:center;padding:10px 6px 8px;border-bottom:1px solid var(--border);letter-spacing:.05em;white-space:nowrap}
-  .platforms-table th:first-child{text-align:right;padding-right:16px}
-  .platforms-table td{padding:10px 6px;border-bottom:1px solid var(--border);text-align:center;vertical-align:middle}
-  .platforms-table td:first-child{text-align:right;font-size:12px;font-weight:700;color:var(--text);padding-right:16px;white-space:nowrap}
+  .platforms-scroll::-webkit-scrollbar{height:6px}
+  .platforms-scroll::-webkit-scrollbar-track{background:transparent}
+  .platforms-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2);border-radius:3px}
+  .platforms-scroll::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.3)}
+  /* Firefox */
+  .platforms-scroll{scrollbar-color:rgba(255,255,255,0.2) transparent;scrollbar-width:thin}
+  .platforms-table{width:100%;border-collapse:collapse}
+  .platforms-table th{font-size:9px;font-weight:700;color:var(--text-dimmer);text-align:center;padding:8px 2px 6px;border-bottom:1px solid var(--border);letter-spacing:.03em;white-space:nowrap}
+  .platforms-table th:first-child{text-align:right;padding-right:10px;font-size:10px}
+  .platforms-table td{padding:8px 2px;border-bottom:1px solid var(--border);text-align:center;vertical-align:middle}
+  .platforms-table td:first-child{text-align:right;font-size:11px;font-weight:700;color:var(--text);padding-right:10px;white-space:nowrap}
   .platforms-table tr:last-child td{border-bottom:none}
 
-  .plat-toggle{display:inline-flex;align-items:center;justify-content:center;width:36px;height:22px;border-radius:11px;border:none;cursor:pointer;transition:background .2s;position:relative;flex-shrink:0}
-  .plat-toggle::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
+  .plat-toggle{display:inline-flex;align-items:center;justify-content:center;width:32px;height:20px;border-radius:10px;border:none;cursor:pointer;transition:background .2s;position:relative;flex-shrink:0}
+  .plat-toggle::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .2s}
   .plat-toggle.on{background:var(--green)}
-  .plat-toggle.on::after{transform:translateX(-7px)}
+  .plat-toggle.on::after{transform:translateX(-6px)}
   .plat-toggle.off{background:var(--bg3);border:1px solid var(--border)}
-  .plat-toggle.off::after{transform:translateX(7px)}
+  .plat-toggle.off::after{transform:translateX(6px)}
   .plat-toggle.locked{background:var(--bg3);border:1px solid var(--border);cursor:not-allowed;opacity:.3}
-  .plat-toggle.locked::after{transform:translateX(7px)}
+  .plat-toggle.locked::after{transform:translateX(6px)}
 
-  .tiktok-select{background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Heebo',sans-serif;font-size:10px;font-weight:600;padding:4px 6px;outline:none;cursor:pointer;direction:rtl;max-width:90px}
+  .tiktok-select{background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Heebo',sans-serif;font-size:9px;font-weight:600;padding:3px 4px;outline:none;cursor:pointer;direction:rtl;max-width:74px}
   .tiktok-select:focus{border-color:var(--accent)}
   .tiktok-select.locked{opacity:.3;cursor:not-allowed}
 
