@@ -1042,20 +1042,19 @@ function saveBusinessProfile() {
   btn.disabled = true;
   btn.textContent = 'שומר...';
 
-  // משתמש באותה שיטה בדיוק כמו בפרומפטים - GET עם JSON stringified
-  var payload = {
-    content: newContent,
-    docId:   businessProfileDocId
-  };
-  
+  // URL קצר - הפרמטרים הקטנים בלבד
   var url = SAVE_URL
     + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
     + '&sheet='      + encodeURIComponent('אפיון עסק')
     + '&logSheetId=' + encodeURIComponent(logSheetId)
     + '&action='     + encodeURIComponent('business data')
-    + '&changes='    + encodeURIComponent(JSON.stringify(payload));
+    + '&docId='      + encodeURIComponent(businessProfileDocId);
 
-  fetch(url)
+  // שולח POST עם body טקסטואלי - הדפדפן שולח כ-text/plain אוטומטית (simple request, בלי CORS preflight)
+  fetch(url, {
+    method: 'POST',
+    body: newContent
+  })
     .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
     .then(function(){
       showToast('✅ האפיון נשמר בהצלחה!');
