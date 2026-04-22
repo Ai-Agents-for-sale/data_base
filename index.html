@@ -914,8 +914,7 @@ function fetchBusinessProfile() {
       businessProfileOriginal = (data && data.content) || '';
       businessProfileDocId    = (data && data.docId) || '';
       renderBusinessProfile(businessProfileOriginal);
-    })
-    .catch(function(err){
+    })    .catch(function(err){
       console.error('fetchBusinessProfile error:', err);
       var body = document.getElementById('business-profile-body');
       body.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">שגיאה בטעינת האפיון</div><div class="empty-state-sub">נסה שוב מאוחר יותר</div></div>';
@@ -1043,13 +1042,13 @@ function saveBusinessProfile() {
   btn.disabled = true;
   btn.textContent = 'שומר...';
 
-  // שולח דרך GET כי יכול להיות טקסט ארוך שידרוש POST preflight
-  // אבל הטקסט עדיין סביר ל-URL (עד ~2MB ברוב הדפדפנים)
+  // שולח דרך GET
   var url = SAVE_URL
     + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
     + '&sheet='      + encodeURIComponent('אפיון עסק')
     + '&logSheetId=' + encodeURIComponent(logSheetId)
     + '&action='     + encodeURIComponent('business data')
+    + '&docId='      + encodeURIComponent(businessProfileDocId)
     + '&content='    + encodeURIComponent(newContent);
 
   fetch(url)
