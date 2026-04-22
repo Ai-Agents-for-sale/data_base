@@ -225,6 +225,21 @@
   .reset-btn:disabled{opacity:.3;cursor:default}
   .reset-btn:disabled:hover{border-color:var(--border-h);color:var(--text-dim)}
 
+  .token-counter{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;display:flex;align-items:center;gap:10px;font-size:12px;line-height:1.5}
+  .token-counter-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;box-shadow:0 0 8px currentColor}
+  .token-counter-content{flex:1;min-width:0}
+  .token-counter-count{font-weight:800;color:var(--text);font-size:13px}
+  .token-counter-msg{color:var(--text-dim);margin-top:2px;font-size:11px;line-height:1.5}
+  .token-counter.good{border-color:rgba(22,163,74,0.3);background:rgba(22,163,74,0.06)}
+  .token-counter.good .token-counter-dot{background:var(--green);color:var(--green)}
+  .token-counter.warn{border-color:rgba(250,204,21,0.35);background:rgba(250,204,21,0.06)}
+  .token-counter.warn .token-counter-dot{background:var(--yellow);color:var(--yellow)}
+  .token-counter.danger{border-color:rgba(220,38,38,0.35);background:rgba(220,38,38,0.08)}
+  .token-counter.danger .token-counter-dot{background:var(--red);color:var(--red)}
+  .token-counter.blocked{border-color:var(--red);background:rgba(220,38,38,0.15)}
+  .token-counter.blocked .token-counter-dot{background:var(--red);color:var(--red)}
+  .token-counter.blocked .token-counter-msg{color:var(--red);font-weight:700}
+
   .save-bar{position:fixed;bottom:0;left:0;right:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:var(--bg2);border-top:1px solid var(--border);z-index:50}
   .save-btn{width:100%;background:linear-gradient(135deg,#1a3a8f,#2d5fc4);color:#fff;border:none;border-radius:var(--radius-sm);padding:13px;font-family:'Heebo',sans-serif;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 15px rgba(26,58,143,.3);transition:opacity .2s,transform .15s}
   .save-btn:disabled{opacity:.35;cursor:default;box-shadow:none}
@@ -479,6 +494,23 @@
   </div>
 </div>
 
+<div class="screen" id="screen-business-profile">
+  <div class="screen-topbar">
+    <div class="screen-back" onclick="closeScreen('screen-business-profile')">›</div>
+    <div class="screen-topbar-icon">📋</div>
+    <div class="screen-topbar-title">אפיון עסק</div>
+  </div>
+  <div class="screen-body" id="business-profile-body">
+    <div class="screen-loading" id="business-profile-loading">
+      <div class="spinner"></div>
+      <div>טוען את האפיון שלך...</div>
+    </div>
+  </div>
+  <div class="save-bar">
+    <button class="save-btn" id="business-profile-save-btn" onclick="saveBusinessProfile()" disabled>💾 שמור שינויים</button>
+  </div>
+</div>
+
 <div class="screen" id="screen-scheduled">
   <div class="screen-topbar"><div class="screen-back" onclick="closeScreen('screen-scheduled')">›</div><div class="screen-topbar-icon">📅</div><div class="screen-topbar-title">תכנים מתוזמנים</div></div>
   <div class="screen-body"><div class="coming-soon"><div class="coming-soon-icon">🚧</div><div class="coming-soon-title">בקרוב</div></div></div>
@@ -721,6 +753,18 @@ function renderMaterialsMain() {
   var body = document.getElementById('materials-body');
   var html = '<div class="submenu-question">איזה חומרים תרצה לנהל?</div>';
 
+  // כרטיס אפיון עסק - למעלה
+  html += '<div class="nav-card blue" onclick="openBusinessProfile()">';
+  html += '<div class="nav-card-icon">📋</div>';
+  html += '<div class="nav-card-body">';
+  html += '<div class="nav-card-title-row"><div class="nav-card-title">אפיון עסק</div></div>';
+  html += '<div class="nav-card-desc">המידע העסקי שהסוכן משתמש בו לכתיבת תוכן</div>';
+  html += '</div>';
+  html += '<div class="nav-card-arrow">‹</div>';
+  html += '</div>';
+
+  html += '<div style="height:8px"></div>'; // מפריד קטן
+
   MAIN_FOLDERS.forEach(function(folder) {
     var disabledClass = folder.disabled ? ' disabled' : '';
     var onclick = folder.disabled ? '' : ' onclick="openFolder(\'main\',\''+ escapeAttr(folder.name) +'\',\''+ folder.icon +'\',\''+ escapeAttr(folder.name) +'\')"';
@@ -816,6 +860,213 @@ function openWritingPrompt(type) {
   }
 
   fetchPrompt(cfg);
+}
+
+/* ══════════════════════════════════════
+   BUSINESS PROFILE
+   ══════════════════════════════════════ */
+var businessProfileData = null;
+var businessProfileOriginal = '';
+var businessProfileDocId = '';
+
+/* מגבלות תווים באפיון העסק */
+var CHAR_LIMITS = {
+  good:    55000,  // מתחת = ירוק
+  warn:    90000,  // מתחת = צהוב
+  danger:  150000, // מתחת = אדום אבל עדיין אפשר לשמור, מעל = לא ניתן לשמור
+};
+
+function countChars(text) {
+  return (text || '').length;
+}
+
+function openBusinessProfile() {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+
+  businessProfileData = null;
+  businessProfileOriginal = '';
+  businessProfileDocId = '';
+
+  var body = document.getElementById('business-profile-body');
+  body.innerHTML = '<div class="screen-loading" id="business-profile-loading"><div class="spinner"></div><div>טוען את האפיון שלך...</div></div>';
+
+  var el = document.getElementById('screen-business-profile');
+  el.classList.add('visible');
+  el.scrollTop = 0;
+  if (tg) {
+    tg.BackButton.show();
+    tg.BackButton.offClick();
+    tg.BackButton.onClick(function(){ closeScreen('screen-business-profile'); });
+  }
+
+  fetchBusinessProfile();
+}
+
+function fetchBusinessProfile() {
+  var url = GET_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent('אפיון עסק')
+    + '&logSheetId=' + encodeURIComponent(logSheetId);
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(data){
+      businessProfileOriginal = (data && data.content) || '';
+      businessProfileDocId    = (data && data.docId) || '';
+      renderBusinessProfile(businessProfileOriginal);
+    })
+    .catch(function(err){
+      console.error('fetchBusinessProfile error:', err);
+      var body = document.getElementById('business-profile-body');
+      body.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">שגיאה בטעינת האפיון</div><div class="empty-state-sub">נסה שוב מאוחר יותר</div></div>';
+    });
+}
+
+function renderBusinessProfile(initialValue) {
+  var body = document.getElementById('business-profile-body');
+  body.innerHTML = '';
+
+  var html = '';
+  html += '<div class="instructions-box">';
+  html += '<div class="instructions-title">📋 האפיון העסקי שלך</div>';
+  html += '<div class="instructions-body">';
+  html += '<p>הינה האפיון עסק שלך, תוכלו לערוך/להוסיף כל דבר לאפיון ישירות מכאן, עוד נושאים ותתי נושאים, מידע על מוצרים, סיפורים, אמונות וכו\'. <strong>מומלץ לא לשנות את מבנה התוכן (מבנה הנושאים והתתי נושאים)</strong>. הסוכן עובר עליו בכל פעם שהוא כותב לך תוכן ומלחץ ממנו את המידע הרלוונטי לתוכן המבוקש.</p>';
+  html += '<p>לסוכן יש גישה גם לאינטרנט ולמקורות מידע חיצוניים, לכן אין צורך להכניס מידע כללי לאפיון שקיים באינטרנט. הסוכן מחליט מתי להכניס מידע ממקורות חיצוניים לפי הבקשה/הוק, ולפי המידע המצוי באפיון.</p>';
+  html += '<p><strong>חשוב לדעת:</strong> ככל שהאפיון ארוך יותר = יותר טוקנים.</p>';
+  html += '</div></div>';
+
+  // Token counter (יצטרף דינמית)
+  html += '<div id="token-counter-wrap"></div>';
+
+  html += '<div class="prompt-editor-wrap">';
+  html += '<div class="prompt-editor-header">';
+  html += '<div class="prompt-editor-title">האפיון שלך</div>';
+  html += '<div class="prompt-editor-hint">ערוך בחופשיות</div>';
+  html += '</div>';
+  html += '<textarea class="prompt-textarea" id="business-profile-textarea" oninput="onBusinessProfileInput()" placeholder="טוען..."></textarea>';
+  html += '</div>';
+
+  html += '<div class="reset-btn-wrap">';
+  html += '<button class="reset-btn" id="business-profile-reset-btn" onclick="resetBusinessProfile()" disabled>↺ חזור לגרסה מקורית</button>';
+  html += '</div>';
+
+  body.insertAdjacentHTML('beforeend', html);
+
+  var ta = document.getElementById('business-profile-textarea');
+  if (ta) {
+    ta.value = initialValue;
+    autoResizeTextarea(ta);
+  }
+
+  updateTokenCounter(initialValue);
+  updateBusinessProfileSaveBtn();
+}
+
+function updateTokenCounter(text) {
+  var wrap = document.getElementById('token-counter-wrap');
+  if (!wrap) return;
+
+  var chars = countChars(text);
+  var formatted = chars.toLocaleString('en-US');
+  var level, msg;
+
+  if (chars > CHAR_LIMITS.danger) {
+    level = 'blocked';
+    msg = 'האפיון שלך עבר את האורך המקסימלי (' + (CHAR_LIMITS.danger/1000) + ' אלף תווים). לא ניתן לשמור עד שתקצר.';
+  } else if (chars > CHAR_LIMITS.warn) {
+    level = 'danger';
+    msg = 'האפיון שלך מאוד ארוך, זה ישפיע מאוד על הטוקנים ועל זמני ביצוע של הסוכן, מומלץ לקצר';
+  } else if (chars > CHAR_LIMITS.good) {
+    level = 'warn';
+    msg = 'האפיון עסק שלך מתחיל להיות ארוך, זה עדיין בסדר, רק יקח קצת יותר טוקנים';
+  } else {
+    level = 'good';
+    msg = 'אורך האפיון טוב';
+  }
+
+  wrap.innerHTML =
+    '<div class="token-counter ' + level + '">' +
+      '<div class="token-counter-dot"></div>' +
+      '<div class="token-counter-content">' +
+        '<div class="token-counter-count">' + formatted + ' תווים</div>' +
+        '<div class="token-counter-msg">' + msg + '</div>' +
+      '</div>' +
+    '</div>';
+}
+
+function onBusinessProfileInput() {
+  var ta = document.getElementById('business-profile-textarea');
+  if (!ta) return;
+  autoResizeTextarea(ta);
+  updateTokenCounter(ta.value);
+  updateBusinessProfileSaveBtn();
+}
+
+function resetBusinessProfile() {
+  var ta = document.getElementById('business-profile-textarea');
+  if (!ta) return;
+  if (ta.value === businessProfileOriginal) return;
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+  ta.value = businessProfileOriginal;
+  autoResizeTextarea(ta);
+  updateTokenCounter(ta.value);
+  updateBusinessProfileSaveBtn();
+  showToast('↺ חזרת לגרסה המקורית');
+}
+
+function updateBusinessProfileSaveBtn() {
+  var ta = document.getElementById('business-profile-textarea');
+  var btn = document.getElementById('business-profile-save-btn');
+  var resetBtn = document.getElementById('business-profile-reset-btn');
+  if (!ta || !btn) return;
+  var currentText = ta.value;
+  var hasChanges = currentText !== businessProfileOriginal;
+  var chars = countChars(currentText);
+  var overLimit = chars > CHAR_LIMITS.danger;
+
+  btn.disabled = !hasChanges || overLimit;
+  if (resetBtn) resetBtn.disabled = !hasChanges;
+}
+
+function saveBusinessProfile() {
+  var ta = document.getElementById('business-profile-textarea');
+  var btn = document.getElementById('business-profile-save-btn');
+  if (!ta || !btn) return;
+
+  var newContent = ta.value;
+  var chars = countChars(newContent);
+  if (chars > CHAR_LIMITS.danger) {
+    showToast('❌ האפיון ארוך מדי, לא ניתן לשמור', true);
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'שומר...';
+
+  // שולח דרך GET כי יכול להיות טקסט ארוך שידרוש POST preflight
+  // אבל הטקסט עדיין סביר ל-URL (עד ~2MB ברוב הדפדפנים)
+  var url = SAVE_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent('אפיון עסק')
+    + '&logSheetId=' + encodeURIComponent(logSheetId)
+    + '&action='     + encodeURIComponent('business data')
+    + '&content='    + encodeURIComponent(newContent);
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(){
+      showToast('✅ האפיון נשמר בהצלחה!');
+      businessProfileOriginal = newContent;
+      btn.innerHTML = '💾 שמור שינויים';
+      updateBusinessProfileSaveBtn();
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    })
+    .catch(function(err){
+      console.error('save business profile error:', err);
+      showToast('❌ שגיאה בשמירה, נסה שוב', true);
+      btn.disabled = false;
+      btn.innerHTML = '💾 שמור שינויים';
+    });
 }
 
 function buildGetUrl(sheetName, ranges) {
@@ -951,7 +1202,7 @@ function renderGeneral(data) {
     html += '<div class="setting-row-stacked">';
     html += '<div class="setting-label-wrap">';
     html += '<div class="setting-row-label">אופן בחירת תמונות רקע</div>';
-    html += '<div class="setting-row-sub">תיקייה כללית = הסוכן בוחר רנדומלית מכל התמונות שלך.<br>לפי נושאים = הסוכן ישאל אותך מאיזה תיקיית נושא לבחור את התמונות.</div>';
+    html += '<div class="setting-row-sub">תיקייה כללית = הסוכן בוחר רנדומלית מכל התמונות שיש לך בתיקיית "תמונות רקע כללית".<br>לפי נושאים = הסוכן ישאל אותך מאיזה תיקיית נושא לבחור את התמונות (רלוונטי רק אם חשוב לך שהתמונות רקע יתאימו לנושא התוכן). במידה ובחרת "לפי נושאים" עליך להכניס תמונות לתיקיות תמונות לפי נושאים. מסך ראשי > תמונות ואפיון עסק > תמונות רקע מחולקים לנושאים</div>';
     html += '</div>';
     html += '<select class="setting-select-full" id="sel-bgMode" onchange="changeCarouselApproval(\'bgMode\',this.value)">';
     var bgOptions = [
@@ -1106,7 +1357,7 @@ function renderPrompt(initialValue) {
   html += '<div class="instructions-title">💡 איך זה עובד?</div>';
   html += '<div class="instructions-body">';
   html += '<p>הוראות אילו מכתיבות לסוכן <strong>איך לכתוב</strong> כשהוא כותב ' + cfg.contentLabel + ' (שפה, סגנון וכו\').</p>';
-  html += '<p>תוכלו לערוך / להוסיף מה שתרצו להוראות כתיבה האילו. אין כאן נכון או לא נכון, <strong>הכל לפי העדפה אישית שלכם</strong>, ממש כמו שאתם כותבים לצ\'אט גיפיטי.</p>';
+  html += '<p>תוכלו לערוך / להוסיף מה שתרצו להוראות כתיבה האילו. אין כאן נכון או לא נכון, <strong>הכל לפי העדפה אישית שלכם</strong>, ממש כמו שאתם כותבים לצ\'אט גיפיטי. הסוכן עובר על ההוראות כתיבה האילו בכל פעם שהוא מייצר לך תוכן.</p>';
   html += '</div>';
   html += '<div class="tip-box">';
   html += '<div class="tip-box-title">⚡ טיפ גאוני</div>';
