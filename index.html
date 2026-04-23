@@ -302,6 +302,12 @@
 
   .story-prompt-label{font-size:10px;font-weight:700;color:var(--text-dim);padding-inline-start:3px;line-height:1.3}
 
+  /* Post type select (for posts/carousel sheet) */
+  .story-type-select{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Heebo',sans-serif;font-size:12px;font-weight:600;padding:7px 8px;outline:none;flex:0 0 auto;min-width:110px;cursor:pointer}
+  .story-type-select:focus{border-color:var(--accent)}
+  .story-type-select.carousel{color:#a78bfa;border-color:rgba(167,139,250,0.4);background:rgba(167,139,250,0.08)}
+  .story-type-select.regular{color:#60a5fa;border-color:rgba(96,165,250,0.4);background:rgba(96,165,250,0.08)}
+
   .day-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
   .day-section-header{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(139,92,246,0.04));border-bottom:1px solid var(--border)}
   .day-section-header-title{font-size:14px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px}
@@ -656,15 +662,13 @@
       <div class="nav-card-arrow">‹</div>
     </div>
 
-    <div class="nav-card gray disabled">
+    <div class="nav-card pink" onclick="openPosts()">
       <div class="nav-card-icon">📰</div>
       <div class="nav-card-body">
-        <div class="nav-card-title-row">
-          <div class="nav-card-title">פינות קבועות - פוסטים</div>
-          <div class="nav-card-badge">בבנייה</div>
-        </div>
-        <div class="nav-card-desc">פוסטים/קרוסלות קבועים לפי ימים ושעות</div>
+        <div class="nav-card-title-row"><div class="nav-card-title">פינות קבועות - פוסטים/קרוסלות</div></div>
+        <div class="nav-card-desc">פוסטים וקרוסלות קבועים שיפורסמו לפי ימים ושעות</div>
       </div>
+      <div class="nav-card-arrow">‹</div>
     </div>
 
     <div class="nav-card gray disabled">
@@ -677,6 +681,23 @@
         <div class="nav-card-desc">ניהול ביקורות ועדויות של לקוחות</div>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-posts">
+  <div class="screen-topbar">
+    <div class="screen-back" onclick="closeScreen('screen-posts')">›</div>
+    <div class="screen-topbar-icon">📰</div>
+    <div class="screen-topbar-title">פינות קבועות - פוסטים/קרוסלות</div>
+  </div>
+  <div class="screen-body" id="posts-body">
+    <div class="screen-loading" id="posts-loading">
+      <div class="spinner"></div>
+      <div>טוען פוסטים...</div>
+    </div>
+  </div>
+  <div class="save-bar" id="posts-save-bar" style="display:none">
+    <button class="save-btn" id="posts-save-btn" onclick="savePosts()">💾 שמור שינויים</button>
   </div>
 </div>
 
@@ -1900,6 +1921,365 @@ function saveStories() {
     })
     .catch(function(err){
       console.error('saveStories error:', err);
+      showToast('❌ שגיאה בשמירה, נסה שוב', true);
+      if (btn) { btn.disabled = false; btn.innerHTML = '💾 שמור שינויים'; }
+    });
+}
+
+/* ══════════════════════════════════════
+   FIXED POSTS/CAROUSELS - פינות קבועות פוסטים/קרוסלות
+   Pool of 21 rows (row 4-24); day is determined by column A value
+   ══════════════════════════════════════ */
+
+var POST_DAYS = STORY_DAYS; // אותה תצוגה לפי 7 ימים
+var POST_ROW_START = 4;
+var POST_ROW_END   = 24;
+
+var POST_HOUR_OPTIONS = [
+  '08:15','09:15','10:15','11:15','12:15','13:15','14:15','15:15',
+  '16:15','17:15','18:15','19:15','20:15','21:15','22:15','23:15'
+];
+
+var POST_TYPE_OPTIONS = ['פוסט קרוסלה', 'פוסט רגיל'];
+
+var POST_DAY_EN_MAP = {
+  sunday: 'Sunday', monday: 'Monday', tuesday: 'Tuesday',
+  wednesday: 'Wednesday', thursday: 'Thursday',
+  friday: 'Friday', saturday: 'Saturday'
+};
+
+/* postsData[dayKey] = array of {row, day(english), type, time, prompt, status, isNew} */
+var postsData  = {};
+var postsDirty = {};
+
+function openPosts() {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  postsData  = {};
+  postsDirty = {};
+
+  var body = document.getElementById('posts-body');
+  body.innerHTML = '<div class="screen-loading" id="posts-loading"><div class="spinner"></div><div>טוען פוסטים...</div></div>';
+  updatePostsSaveBtn();
+
+  var el = document.getElementById('screen-posts');
+  el.classList.add('visible');
+  el.scrollTop = 0;
+  if (tg) {
+    tg.BackButton.show();
+    tg.BackButton.offClick();
+    tg.BackButton.onClick(function(){ closeScreen('screen-posts'); });
+  }
+
+  fetchPosts();
+}
+
+function fetchPosts() {
+  var url = GET_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent('פינות קבועות')
+    + '&sheetName='  + encodeURIComponent('פינות קבועות - פוסטים/קרוסלות')
+    + '&logSheetId=' + encodeURIComponent(logSheetId);
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(data){
+      // מבנה צפוי: { stories: { sunday: [{row, time, prompt, status, type}], ... } }
+      postsData = (data && data.stories) || {};
+      renderPosts();
+    })
+    .catch(function(err){
+      console.error('fetchPosts error:', err);
+      var body = document.getElementById('posts-body');
+      body.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">שגיאה בטעינה</div><div class="empty-state-sub">נסה שוב מאוחר יותר</div></div>';
+    });
+}
+
+function renderPosts() {
+  var body = document.getElementById('posts-body');
+  body.innerHTML = '';
+
+  var html = '';
+  html += '<div class="stories-intro">';
+  html += 'פינה זו נועדה כדי לעזור לכם לנהל את כל הפוסטים שלכם במהלך השבוע, ולראות ממבט על את הנושאים שאתם הולכים לדבר עליהם בכל פוסט. על מנת להפעיל פינה יש לסמן <strong>"פעיל"</strong>, ניתן לשנות את נושא הפינה לכל נושא שתרצו, הנושא זה הפרומפט שיכנס לסוכן. הסוכן יכתוב את הפוסט לפי הפרומפט וישלח לכם אותו לאישור בטלגרם בשעה שהגדרתם. <strong>שום דבר לא יעלה ללא אישור שלכם</strong> (אלא אם תגדירו כך בהגדרות הכלליות).';
+  html += '</div>';
+  html += '<div class="stories-warning">';
+  html += '<strong>⚠️ שימו לב:</strong> פינה קבועה פעילה גורמת לסוכן לכתוב לכם תוכן - מה שדורש טוקנים. כל פוסט שנשלח אליכם לאישור דורש טוקנים בין אם בסוף העלתם או לא. לכן כדאי להפעיל התראות בטלגרם כדי לא לפספס תכנים שהסוכן שלח אליכם לאישור.';
+  html += '</div>';
+
+  // סך כל הפוסטים הפנויים (מסך שלם, לא לפי יום)
+  var totalUsed = countTotalPostsUsed();
+
+  POST_DAYS.forEach(function(day){
+    html += renderPostDaySection(day, totalUsed);
+  });
+
+  body.innerHTML = html;
+  updatePostsSaveBtn();
+}
+
+function countTotalPostsUsed() {
+  var count = 0;
+  Object.keys(postsData).forEach(function(dayKey){
+    if (dayKey === '_deleted') return;
+    (postsData[dayKey] || []).forEach(function(r){
+      if ((r.prompt && r.prompt.trim() !== '') || r.isNew) count++;
+    });
+  });
+  return count;
+}
+
+function renderPostDaySection(day, totalUsed) {
+  var rows = postsData[day.key] || [];
+  var visibleRows = rows.filter(function(r){ return (r.prompt && r.prompt.trim() !== '') || r.isNew; });
+  var canAdd = totalUsed < (POST_ROW_END - POST_ROW_START + 1); // סך כולל, לא לפי יום
+
+  var html = '<div class="day-section">';
+  html += '<div class="day-section-header">';
+  html += '<div class="day-section-header-title">';
+  html += '<div class="day-section-header-icon">' + day.emoji + '</div>';
+  html += day.label;
+  html += '</div>';
+  html += '<div class="day-section-header-count">' + visibleRows.length + '</div>';
+  html += '</div>';
+
+  html += '<div class="day-section-body">';
+
+  if (visibleRows.length === 0) {
+    html += '<div style="text-align:center;padding:16px 8px;color:var(--text-dimmer);font-size:12px">אין פוסטים מוגדרים ליום זה</div>';
+  } else {
+    visibleRows.forEach(function(row){
+      html += renderPostRow(day.key, row);
+    });
+  }
+
+  html += '<button class="add-story-btn" onclick="addPost(\'' + day.key + '\')"' + (canAdd ? '' : ' disabled') + '>';
+  html += '➕ הוסף פוסט' + (canAdd ? '' : ' (אזל המקום)');
+  html += '</button>';
+
+  html += '</div></div>';
+  return html;
+}
+
+function renderPostRow(dayKey, row) {
+  var type   = row.type   || '';
+  var time   = row.time   || '';
+  var prompt = row.prompt || '';
+  var status = row.status === 'פעיל';
+  var rowId  = 'post_' + dayKey + '_' + row.row;
+  var typeClass = type === 'פוסט קרוסלה' ? 'carousel' : (type === 'פוסט רגיל' ? 'regular' : '');
+
+  var html = '<div class="story-row" id="row-' + rowId + '" data-day="' + dayKey + '" data-row="' + row.row + '">';
+  html += '<div class="story-row-top">';
+
+  // Type select (פוסט קרוסלה / פוסט רגיל)
+  html += '<select class="story-type-select ' + typeClass + '" onchange="onPostTypeChange(\'' + dayKey + '\',' + row.row + ',this)">';
+  html += '<option value="">בחר סוג</option>';
+  POST_TYPE_OPTIONS.forEach(function(t){
+    html += '<option value="' + t + '"' + (type === t ? ' selected' : '') + '>' + t + '</option>';
+  });
+  html += '</select>';
+
+  // Status toggle
+  html += '<div class="story-status-toggle' + (status ? ' active' : '') + '" onclick="onPostStatusToggle(\'' + dayKey + '\',' + row.row + ')">';
+  html += '<div class="story-status-toggle-label on">פעיל</div>';
+  html += '<div class="story-status-toggle-label off">לא פעיל</div>';
+  html += '<div class="story-status-toggle-dot"></div>';
+  html += '</div>';
+
+  // Delete
+  html += '<button class="story-delete-btn" onclick="onPostDelete(\'' + dayKey + '\',' + row.row + ')" title="מחק פוסט">🗑</button>';
+  html += '</div>';
+
+  // Time select (שורה שנייה לבדה כי יש צפיפות)
+  html += '<div class="story-row-top">';
+  html += '<select class="story-time-select" onchange="onPostTimeChange(\'' + dayKey + '\',' + row.row + ',this.value)">';
+  html += '<option value="">בחר שעה</option>';
+  POST_HOUR_OPTIONS.forEach(function(h){
+    html += '<option value="' + h + '"' + (time === h ? ' selected' : '') + '>' + h + '</option>';
+  });
+  html += '</select>';
+  html += '</div>';
+
+  // Prompt
+  html += '<div class="story-prompt-label">נושא הפינה / פרומפט שיכנס לסוכן</div>';
+  html += '<textarea class="story-textarea" placeholder="הפרומפט לסוכן..." oninput="onPostPromptInput(\'' + dayKey + '\',' + row.row + ',this)">' + escapeHtml(prompt) + '</textarea>';
+
+  html += '</div>';
+  return html;
+}
+
+function findPostRow(dayKey, rowNum) {
+  var rows = postsData[dayKey] || [];
+  for (var i = 0; i < rows.length; i++) {
+    if (rows[i].row === rowNum) return rows[i];
+  }
+  return null;
+}
+
+function markPostDirty(rowNum) {
+  postsDirty[rowNum] = true;
+  updatePostsSaveBtn();
+}
+
+function onPostTypeChange(dayKey, rowNum, selectEl) {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+  var row = findPostRow(dayKey, rowNum);
+  if (!row) return;
+  row.type = selectEl.value;
+  // עדכון צבע של ה-select
+  selectEl.classList.remove('carousel','regular');
+  if (row.type === 'פוסט קרוסלה') selectEl.classList.add('carousel');
+  else if (row.type === 'פוסט רגיל') selectEl.classList.add('regular');
+  markPostDirty(rowNum);
+}
+
+function onPostTimeChange(dayKey, rowNum, newTime) {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+  var row = findPostRow(dayKey, rowNum);
+  if (!row) return;
+  row.time = newTime;
+  markPostDirty(rowNum);
+}
+
+function onPostStatusToggle(dayKey, rowNum) {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+  var row = findPostRow(dayKey, rowNum);
+  if (!row) return;
+  row.status = row.status === 'פעיל' ? 'לא פעיל' : 'פעיל';
+  var toggle = document.querySelector('#row-post_' + dayKey + '_' + rowNum + ' .story-status-toggle');
+  if (toggle) toggle.classList.toggle('active', row.status === 'פעיל');
+  markPostDirty(rowNum);
+}
+
+function onPostPromptInput(dayKey, rowNum, textarea) {
+  autoResizeTextarea(textarea);
+  var row = findPostRow(dayKey, rowNum);
+  if (!row) return;
+  row.prompt = textarea.value;
+  if (row.isNew && textarea.value.trim() !== '') delete row.isNew;
+  markPostDirty(rowNum);
+}
+
+function onPostDelete(dayKey, rowNum) {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+  var row = findPostRow(dayKey, rowNum);
+  if (!row) return;
+
+  row.type = '';
+  row.time = '';
+  row.prompt = '';
+  row.status = 'לא פעיל';
+  delete row.isNew;
+
+  markPostDirty(rowNum);
+
+  postsData[dayKey] = (postsData[dayKey] || []).filter(function(r){ return r.row !== rowNum; });
+  if (!postsData['_deleted']) postsData['_deleted'] = [];
+  postsData['_deleted'].push({ row: rowNum, day: '', type: '', time: '', prompt: '', status: 'לא פעיל' });
+
+  renderPosts();
+}
+
+function addPost(dayKey) {
+  // מוצאים את השורה הפיזית הפנויה הבאה בפול (4-24) מכל 7 הימים יחד
+  var allRowsInUse = {};
+  Object.keys(postsData).forEach(function(dk){
+    if (dk === '_deleted') return;
+    (postsData[dk] || []).forEach(function(r){ allRowsInUse[r.row] = true; });
+  });
+
+  var freeRow = null;
+  for (var rn = POST_ROW_START; rn <= POST_ROW_END; rn++) {
+    if (!allRowsInUse[rn]) { freeRow = rn; break; }
+  }
+  if (freeRow === null) {
+    showToast('אזל המקום - יש ' + (POST_ROW_END - POST_ROW_START + 1) + ' פוסטים בסך הכל בשבוע', true);
+    return;
+  }
+
+  if (!postsData[dayKey]) postsData[dayKey] = [];
+  postsData[dayKey].push({
+    row:    freeRow,
+    day:    POST_DAY_EN_MAP[dayKey] || '',
+    type:   '',
+    time:   '',
+    prompt: '',
+    status: 'לא פעיל',
+    isNew:  true
+  });
+  postsData[dayKey].sort(function(a,b){ return a.row - b.row; });
+
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  renderPosts();
+
+  setTimeout(function(){
+    var rowEl = document.getElementById('row-post_' + dayKey + '_' + freeRow);
+    if (rowEl) {
+      var ta = rowEl.querySelector('.story-textarea');
+      if (ta) { ta.focus(); rowEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    }
+  }, 50);
+}
+
+function updatePostsSaveBtn() {
+  var bar = document.getElementById('posts-save-bar');
+  if (!bar) return;
+  bar.style.display = Object.keys(postsDirty).length > 0 ? 'block' : 'none';
+}
+
+function collectPostsDirtyChanges() {
+  var rowData = {};
+  Object.keys(postsData).forEach(function(dayKey){
+    (postsData[dayKey] || []).forEach(function(r){
+      rowData[r.row] = {
+        day:    r.day    || POST_DAY_EN_MAP[dayKey] || '',
+        type:   r.type   || '',
+        time:   r.time   || '',
+        prompt: r.prompt || '',
+        status: r.status || 'לא פעיל'
+      };
+    });
+  });
+
+  // מבנה עמודות: A=יום, B=סוג, C=שעה, D=נושא, E=סטטוס
+  var changes = {};
+  Object.keys(postsDirty).forEach(function(rowNum){
+    var r = rowData[rowNum] || { day:'', type:'', time:'', prompt:'', status:'לא פעיל' };
+    changes['A' + rowNum] = r.day;
+    changes['B' + rowNum] = r.type;
+    changes['C' + rowNum] = r.time;
+    changes['D' + rowNum] = r.prompt;
+    changes['E' + rowNum] = r.status;
+  });
+
+  return changes;
+}
+
+function savePosts() {
+  var changes = collectPostsDirtyChanges();
+  if (Object.keys(changes).length === 0) return;
+
+  var btn = document.getElementById('posts-save-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'שומר...'; }
+
+  var url = SAVE_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent('פינות קבועות - פוסטים/קרוסלות')
+    + '&logSheetId=' + encodeURIComponent(logSheetId)
+    + '&changes='    + encodeURIComponent(JSON.stringify(changes));
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json().catch(function(){ return {}; }); })
+    .then(function(){
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      showToast('✅ השינויים נשמרו בהצלחה!');
+      postsDirty = {};
+      delete postsData['_deleted'];
+      if (btn) { btn.disabled = false; btn.innerHTML = '💾 שמור שינויים'; }
+      updatePostsSaveBtn();
+    })
+    .catch(function(err){
+      console.error('savePosts error:', err);
       showToast('❌ שגיאה בשמירה, נסה שוב', true);
       if (btn) { btn.disabled = false; btn.innerHTML = '💾 שמור שינויים'; }
     });
