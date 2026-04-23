@@ -1257,32 +1257,37 @@ function renderTokens() {
       'כנסו לאתר <strong>openrouter.com</strong> ותוודאו שאתם מחוברים לחשבון שלכם. ' +
       '<br>אם לא, תבצעו חיבור עם המייל שאיתו ביצעתם את הרכישה של הטוקנים. ' +
       '<br>אם מופיע לכם <strong>Sign in</strong> בחלק העליון בצד ימין, סימן שאתם לא מחוברים.',
-      'https://res.cloudinary.com/dpe5hzwcg/image/upload/f_auto,q_auto,w_800/v1/zero_work_tutorial/step1.png',
+      'https://res.cloudinary.com/dpe5hzwcg/image/fetch/f_auto,q_auto,w_800/' + encodeURIComponent('https://drive.google.com/uc?export=view&id=1gdD7aNxW_1Snw3jCc9O4jw262BmhXjmS'),
       'arrow-top-right'
     );
     html += buildTutorialStep(2,
       'הניחו את העכבר על איזור התמונת פרופיל בצד ימין למעלה של המסך, ולחצו על <strong>Credits</strong>.',
-      'https://res.cloudinary.com/dpe5hzwcg/image/upload/f_auto,q_auto,w_800/v1/zero_work_tutorial/step2.png',
+      'https://res.cloudinary.com/dpe5hzwcg/image/fetch/f_auto,q_auto,w_800/' + encodeURIComponent('https://drive.google.com/uc?export=view&id=1jXzWxFZCZnzlCHsnhkfQ0P9cec4m2KdO'),
       'arrow-credits'
     );
     html += buildTutorialStep(3,
       'אחרי שאתם במסך ה-Credits, לחצו על <strong>Management keys</strong> בתפריט בצד שמאל.',
-      'https://res.cloudinary.com/dpe5hzwcg/image/upload/f_auto,q_auto,w_800/v1/zero_work_tutorial/step3.png',
+      'https://res.cloudinary.com/dpe5hzwcg/image/fetch/f_auto,q_auto,w_800/' + encodeURIComponent('https://drive.google.com/uc?export=view&id=1ztBOZSFrwR-0-CCECLpj63dXIov6YK9q'),
       'arrow-management-keys'
     );
     html += buildTutorialStep(4,
       'אחרי שאתם במסך Management keys, לחצו על כפתור ה-<strong>Create</strong> בצד ימין למעלה, ותנו שם למפתח.',
-      'https://res.cloudinary.com/dpe5hzwcg/image/upload/f_auto,q_auto,w_800/v1/zero_work_tutorial/step4.png',
+      'https://res.cloudinary.com/dpe5hzwcg/image/fetch/f_auto,q_auto,w_800/' + encodeURIComponent('https://drive.google.com/uc?export=view&id=18bpZToTobxjk3ueMjIBiuJpeqeENe_2i'),
       ''
     );
     html += buildTutorialStep(5,
-      'אחרי שנתתם שם למפתח, לחצו <strong>Create</strong>, והעתיקו את המפתח בעזרת הכפתור הקטן בצד ימין למפתח.',
-      'https://res.cloudinary.com/dpe5hzwcg/image/upload/f_auto,q_auto,w_800/v1/zero_work_tutorial/step5.png',
+      'נתנו שם למפתח, ולחצנו על <strong>Create</strong>.',
+      'https://res.cloudinary.com/dpe5hzwcg/image/fetch/f_auto,q_auto,w_800/' + encodeURIComponent('https://drive.google.com/uc?export=view&id=1KUA7ecp-g7U9NDzF07mkMB67QqIj7SHv'),
+      ''
+    );
+    html += buildTutorialStep(6,
+      'העתיקו את המפתח שהתקבל בעזרת הכפתור הקטן בצד ימין למפתח.',
+      'https://res.cloudinary.com/dpe5hzwcg/image/fetch/f_auto,q_auto,w_800/' + encodeURIComponent('https://drive.google.com/uc?export=view&id=1opev8g9JdCzWQTQaBmhheOASWqzRPiwn'),
       'circle-copy'
     );
     html += '<div class="admin-key-input-wrap">';
     html += '<div class="admin-key-input-label">';
-    html += '<strong>שלב 6:</strong> הדביקו כאן את המפתח Management key שעכשיו הנפקתם';
+    html += '<strong>שלב 7:</strong> הדביקו כאן את המפתח Management key שעכשיו הנפקתם';
     html += '<div class="admin-key-input-label-sub">הדבקת המפתח תאפשר להציג את היתרה שלך בפעם הבאה שתכנס למסך הזה.</div>';
     html += '</div>';
     html += '<input type="text" class="admin-key-input" id="admin-key-input" placeholder="sk-or-v1-..." oninput="onAdminKeyInput()">';
