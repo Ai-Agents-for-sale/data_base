@@ -308,17 +308,17 @@
   .story-row{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;display:flex;flex-direction:column;gap:8px;transition:border-color .15s,opacity .2s}
   .story-row.saving{opacity:.6;pointer-events:none}
   .story-row-top{display:flex;gap:8px;align-items:center}
-  .story-time-select{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Heebo',sans-serif;font-size:12px;font-weight:600;padding:7px 8px;outline:none;flex:0 0 auto;min-width:90px;direction:ltr;text-align:center;cursor:pointer}
+  .story-time-select{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Heebo',sans-serif;font-size:12px;font-weight:600;padding:7px 8px;outline:none;flex:0 0 auto;min-width:100px;cursor:pointer}
   .story-time-select:focus{border-color:var(--accent)}
-  .story-status-toggle{position:relative;width:88px;height:30px;background:rgba(220,38,38,0.12);border:1px solid rgba(220,38,38,0.45);border-radius:16px;cursor:pointer;transition:background .2s,border-color .2s;flex:0 0 auto;overflow:hidden}
-  .story-status-toggle.active{background:var(--green-s);border-color:var(--green)}
-  .story-status-toggle-label{position:absolute;top:50%;transform:translateY(-50%);font-size:10px;font-weight:800;padding:0;transition:opacity .2s;line-height:1;white-space:nowrap}
-  .story-status-toggle-label.off{right:10px;color:var(--red)}
-  .story-status-toggle-label.on{left:10px;color:var(--green);opacity:0}
+  .story-status-toggle{position:relative;width:72px;height:26px;background:rgba(220,38,38,0.15);border:1px solid rgba(220,38,38,0.45);border-radius:14px;cursor:pointer;transition:background .2s,border-color .2s;flex:0 0 auto;overflow:hidden;user-select:none}
+  .story-status-toggle.active{background:rgba(22,163,74,0.18);border-color:var(--green)}
+  .story-status-toggle-label{position:absolute;top:50%;transform:translateY(-50%);font-size:10px;font-weight:800;line-height:1;white-space:nowrap;transition:opacity .15s;pointer-events:none}
+  .story-status-toggle-label.off{left:8px;color:#f87171}
+  .story-status-toggle-label.on{right:8px;color:#22c55e;opacity:0}
   .story-status-toggle.active .story-status-toggle-label.off{opacity:0}
   .story-status-toggle.active .story-status-toggle-label.on{opacity:1}
-  .story-status-toggle-dot{position:absolute;top:3px;right:3px;width:22px;height:22px;background:var(--red);border-radius:50%;transition:all .25s cubic-bezier(.4,.0,.2,1);box-shadow:0 1px 3px rgba(0,0,0,.3)}
-  .story-status-toggle.active .story-status-toggle-dot{right:auto;left:3px;background:var(--green)}
+  .story-status-toggle-dot{position:absolute;top:2px;right:2px;width:20px;height:20px;background:#ef4444;border-radius:50%;transition:all .25s cubic-bezier(.4,.0,.2,1);box-shadow:0 1px 3px rgba(0,0,0,.35)}
+  .story-status-toggle.active .story-status-toggle-dot{right:auto;left:2px;background:#22c55e}
 
   .story-delete-btn{background:transparent;border:1px solid var(--border);color:var(--text-dim);border-radius:6px;padding:6px 9px;cursor:pointer;font-size:13px;transition:all .15s;flex:0 0 auto;margin-inline-start:auto}
   .story-delete-btn:hover{border-color:var(--red);color:var(--red);background:rgba(220,38,38,.06)}
@@ -1725,7 +1725,7 @@ function renderStoryRow(dayKey, row) {
 
   // Time select
   html += '<select class="story-time-select" onchange="onStoryTimeChange(\'' + dayKey + '\',' + row.row + ',this.value)">';
-  html += '<option value="">שעה</option>';
+  html += '<option value="">בחר שעה</option>';
   STORY_HOUR_OPTIONS.forEach(function(h){
     html += '<option value="' + h + '"' + (time === h ? ' selected' : '') + '>' + h + '</option>';
   });
