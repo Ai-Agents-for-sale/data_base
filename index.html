@@ -310,15 +310,15 @@
   .story-row-top{display:flex;gap:8px;align-items:center}
   .story-time-select{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Heebo',sans-serif;font-size:12px;font-weight:600;padding:7px 8px;outline:none;flex:0 0 auto;min-width:90px;direction:ltr;text-align:center;cursor:pointer}
   .story-time-select:focus{border-color:var(--accent)}
-  .story-status-toggle{position:relative;width:58px;height:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;cursor:pointer;transition:background .2s,border-color .2s;flex:0 0 auto}
+  .story-status-toggle{position:relative;width:88px;height:30px;background:rgba(220,38,38,0.12);border:1px solid rgba(220,38,38,0.45);border-radius:16px;cursor:pointer;transition:background .2s,border-color .2s;flex:0 0 auto;overflow:hidden}
   .story-status-toggle.active{background:var(--green-s);border-color:var(--green)}
-  .story-status-toggle-label{position:absolute;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;color:var(--text-dim);padding:0 6px;transition:color .2s}
-  .story-status-toggle-label.off{right:4px}
-  .story-status-toggle-label.on{left:4px;color:var(--green);opacity:0}
+  .story-status-toggle-label{position:absolute;top:50%;transform:translateY(-50%);font-size:10px;font-weight:800;padding:0;transition:opacity .2s;line-height:1;white-space:nowrap}
+  .story-status-toggle-label.off{right:10px;color:var(--red)}
+  .story-status-toggle-label.on{left:10px;color:var(--green);opacity:0}
   .story-status-toggle.active .story-status-toggle-label.off{opacity:0}
   .story-status-toggle.active .story-status-toggle-label.on{opacity:1}
-  .story-status-toggle-dot{position:absolute;top:2px;right:2px;width:20px;height:20px;background:var(--text-dim);border-radius:50%;transition:all .25s cubic-bezier(.4,.0,.2,1)}
-  .story-status-toggle.active .story-status-toggle-dot{right:auto;left:2px;background:var(--green)}
+  .story-status-toggle-dot{position:absolute;top:3px;right:3px;width:22px;height:22px;background:var(--red);border-radius:50%;transition:all .25s cubic-bezier(.4,.0,.2,1);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+  .story-status-toggle.active .story-status-toggle-dot{right:auto;left:3px;background:var(--green)}
 
   .story-delete-btn{background:transparent;border:1px solid var(--border);color:var(--text-dim);border-radius:6px;padding:6px 9px;cursor:pointer;font-size:13px;transition:all .15s;flex:0 0 auto;margin-inline-start:auto}
   .story-delete-btn:hover{border-color:var(--red);color:var(--red);background:rgba(220,38,38,.06)}
@@ -1682,8 +1682,8 @@ function renderStories() {
 
 function renderDaySection(day) {
   var rows = storiesData[day.key] || [];
-  // filter: only rows that have a prompt
-  var visibleRows = rows.filter(function(r){ return r.prompt && r.prompt.trim() !== ''; });
+  // מציגים שורות שיש להן פרומפט, או שורות חדשות שעוד לא מלאו
+  var visibleRows = rows.filter(function(r){ return (r.prompt && r.prompt.trim() !== '') || r.isNew; });
   var canAdd = visibleRows.length < 9;
 
   var html = '<div class="day-section">';
@@ -1782,38 +1782,34 @@ function onStoryPromptInput(dayKey, rowNum, textarea) {
   var row = findStoryRow(dayKey, rowNum);
   if (!row) return;
   row.prompt = textarea.value;
+  if (row.isNew && textarea.value.trim() !== '') delete row.isNew;
   queueSaveStory(dayKey, rowNum, { prompt: textarea.value });
 }
 
 function onStoryDelete(dayKey, rowNum) {
-  if (!confirm('למחוק את הסטורי? הפעולה תנקה את השורה.')) return;
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 
   var row = findStoryRow(dayKey, rowNum);
   if (!row) return;
 
-  // Optimistic UI - remove immediately
-  row.prompt = '';
-  row.time = '';
-  row.status = 'לא פעיל';
-
-  // Save deletion (send empty values)
+  // שולחים שמירה ריקה לגוגל שיטס
   saveStoryRow(dayKey, rowNum, { prompt: '', time: '', status: 'לא פעיל' }, true);
 
-  // re-render the day section only
+  // מסירים את השורה מה-state כדי שתעלם מהתצוגה ושהמקום יהיה פנוי להוספה
+  storiesData[dayKey] = (storiesData[dayKey] || []).filter(function(r){ return r.row !== rowNum; });
+
   renderStories();
 }
 
 function addStory(dayKey) {
   var day = STORY_DAYS.find(function(d){ return d.key === dayKey; });
   if (!day) return;
-  var rows = storiesData[dayKey] || [];
+  if (!storiesData[dayKey]) storiesData[dayKey] = [];
+  var rows = storiesData[dayKey];
 
-  // find the first physical row (rowStart..rowEnd) not in use
+  // שורות פנויות בטווח הפיזי של היום
   var usedRows = {};
-  rows.forEach(function(r){
-    if (r.prompt && r.prompt.trim() !== '') usedRows[r.row] = true;
-  });
+  rows.forEach(function(r){ usedRows[r.row] = true; });
 
   var freeRow = null;
   for (var rn = day.rowStart; rn <= day.rowEnd; rn++) {
@@ -1824,30 +1820,19 @@ function addStory(dayKey) {
     return;
   }
 
-  // Add to state
-  if (!storiesData[dayKey]) storiesData[dayKey] = [];
-  var existing = findStoryRow(dayKey, freeRow);
-  if (existing) {
-    existing.prompt = ' '; // placeholder so it shows up
-  } else {
-    storiesData[dayKey].push({ row: freeRow, time: '', prompt: ' ', status: 'לא פעיל' });
-    storiesData[dayKey].sort(function(a,b){ return a.row - b.row; });
-  }
+  // מוסיפים שורה חדשה ריקה עם flag isNew
+  rows.push({ row: freeRow, time: '', prompt: '', status: 'לא פעיל', isNew: true });
+  rows.sort(function(a,b){ return a.row - b.row; });
 
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
   renderStories();
 
-  // focus the new textarea and clear the placeholder
+  // פוקוס על ה-textarea של השורה החדשה
   setTimeout(function(){
     var rowEl = document.getElementById('row-' + dayKey + '_' + freeRow);
     if (rowEl) {
       var ta = rowEl.querySelector('.story-textarea');
-      if (ta) {
-        ta.value = '';
-        var state = findStoryRow(dayKey, freeRow);
-        if (state) state.prompt = '';
-        ta.focus();
-        rowEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
+      if (ta) { ta.focus(); rowEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
     }
   }, 50);
 }
