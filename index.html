@@ -105,8 +105,11 @@
   .settings-section-sub{font-size:11px;color:var(--text-dim);margin-top:2px}
 
   .submenu-question{font-size:14px;font-weight:800;color:var(--text);padding:4px 4px 2px;line-height:1.4}
-  .submenu-separator{height:1px;background:var(--border);margin:10px 0 6px;position:relative}
-  .submenu-separator::after{content:'או';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg);padding:0 10px;font-size:10px;font-weight:700;color:var(--text-dim);letter-spacing:.05em}
+
+  /* Grouped card section - visual frame around related cards */
+  .card-group{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 12px 12px;display:flex;flex-direction:column;gap:8px;position:relative}
+  .card-group-label{font-size:11px;font-weight:800;color:var(--text-dim);letter-spacing:.03em;padding:0 4px 2px;text-transform:none}
+  .card-group .nav-card{margin:0}
 
   /* Long videos queue */
   .lv-intro{background:rgba(234,179,8,0.08);border:1px solid rgba(234,179,8,0.3);border-radius:var(--radius);padding:12px 14px;font-size:11px;line-height:1.7;color:var(--text-dim);margin-bottom:6px}
@@ -809,42 +812,48 @@
   <div class="screen-body">
     <div class="submenu-question">איזה הגדרות תרצה לנהל?</div>
 
-    <div class="nav-card purple" onclick="openVideoSettings()">
-      <div class="nav-card-icon">🎥</div>
-      <div class="nav-card-body">
-        <div class="nav-card-title-row"><div class="nav-card-title">הגדרות עריכה של סרטונים רגילים</div></div>
-        <div class="nav-card-desc">עריכת פרימיום - זומים, בירולים, קאטים אוטומטיים ועוד</div>
+    <div class="card-group">
+      <div class="card-group-label">הגדרות עריכה</div>
+
+      <div class="nav-card purple" onclick="openVideoSettings()">
+        <div class="nav-card-icon">🎥</div>
+        <div class="nav-card-body">
+          <div class="nav-card-title-row"><div class="nav-card-title">הגדרות עריכה של סרטונים רגילים</div></div>
+          <div class="nav-card-desc">עריכת פרימיום - זומים, בירולים, קאטים אוטומטיים ועוד</div>
+        </div>
+        <div class="nav-card-arrow">‹</div>
       </div>
-      <div class="nav-card-arrow">‹</div>
+
+      <div class="nav-card pink" onclick="openClipSettings()">
+        <div class="nav-card-icon">✂️</div>
+        <div class="nav-card-body">
+          <div class="nav-card-title-row"><div class="nav-card-title">הגדרות עריכה של קליפים מסרטונים ארוכים</div></div>
+          <div class="nav-card-desc">הגדרות חיתוך קליפים קצרים מסרטונים ארוכים</div>
+        </div>
+        <div class="nav-card-arrow">‹</div>
+      </div>
+
+      <div class="nav-card blue" onclick="openCaptionStyles()">
+        <div class="nav-card-icon">💬</div>
+        <div class="nav-card-body">
+          <div class="nav-card-title-row"><div class="nav-card-title">סגנון כתוביות</div></div>
+          <div class="nav-card-desc">בחירת סגנון כתוביות לסרטונים (תקף ל-2 סוגי העריכות)</div>
+        </div>
+        <div class="nav-card-arrow">‹</div>
+      </div>
     </div>
 
-    <div class="nav-card pink" onclick="openClipSettings()">
-      <div class="nav-card-icon">✂️</div>
-      <div class="nav-card-body">
-        <div class="nav-card-title-row"><div class="nav-card-title">הגדרות עריכה של קליפים מסרטונים ארוכים</div></div>
-        <div class="nav-card-desc">הגדרות חיתוך קליפים קצרים מסרטונים ארוכים</div>
-      </div>
-      <div class="nav-card-arrow">‹</div>
-    </div>
+    <div class="card-group" style="margin-top:24px">
+      <div class="card-group-label">ניהול סרטונים ארוכים</div>
 
-    <div class="nav-card blue" onclick="openCaptionStyles()">
-      <div class="nav-card-icon">💬</div>
-      <div class="nav-card-body">
-        <div class="nav-card-title-row"><div class="nav-card-title">סגנון כתוביות</div></div>
-        <div class="nav-card-desc">בחירת סגנון כתוביות לסרטונים (תקף ל-2 סוגי העריכות)</div>
+      <div class="nav-card gold" onclick="openLongVideos()">
+        <div class="nav-card-icon">📹</div>
+        <div class="nav-card-body">
+          <div class="nav-card-title-row"><div class="nav-card-title">סרטונים ארוכים לערוך לקליפים קצרים</div></div>
+          <div class="nav-card-desc">ניהול תור של סרטוני יוטיוב ארוכים שממתינים לעריכה</div>
+        </div>
+        <div class="nav-card-arrow">‹</div>
       </div>
-      <div class="nav-card-arrow">‹</div>
-    </div>
-
-    <div class="submenu-separator"></div>
-
-    <div class="nav-card gold" onclick="openLongVideos()">
-      <div class="nav-card-icon">📹</div>
-      <div class="nav-card-body">
-        <div class="nav-card-title-row"><div class="nav-card-title">סרטונים ארוכים לערוך לקליפים קצרים</div></div>
-        <div class="nav-card-desc">ניהול תור של סרטוני יוטיוב ארוכים שממתינים לעריכה</div>
-      </div>
-      <div class="nav-card-arrow">‹</div>
     </div>
   </div>
 </div>
@@ -2929,7 +2938,7 @@ function saveVsBlock(target) {
    Data starts at row 3 (rows 1-2 are headers)
    ══════════════════════════════════════ */
 
-var LV_SHEET_NAME = 'סרטונים ארוכים לערוך';
+var LV_SHEET_NAME = 'סרטונים *ארוכים* לערוך';
 var LV_DATA_START_ROW = 3;
 
 /* longVideos = array of {row, name, url, isNew} — sorted by row asc */
@@ -2962,7 +2971,7 @@ function openLongVideos() {
 function fetchLongVideos() {
   var url = GET_URL
     + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
-    + '&sheet='      + encodeURIComponent('סרטונים ארוכים')
+    + '&sheet='      + encodeURIComponent('סרטונים *ארוכים* לערוך')
     + '&sheetName='  + encodeURIComponent(LV_SHEET_NAME)
     + '&logSheetId=' + encodeURIComponent(logSheetId);
 
