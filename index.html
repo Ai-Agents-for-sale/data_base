@@ -687,6 +687,9 @@
       <div>טוען סטורים...</div>
     </div>
   </div>
+  <div class="save-bar" id="stories-save-bar" style="display:none">
+    <button class="save-btn" id="stories-save-btn" onclick="saveStories()">💾 שמור שינויים</button>
+  </div>
 </div>
 <div class="screen" id="screen-videos">
   <div class="screen-topbar"><div class="screen-back" onclick="closeScreen('screen-videos')">›</div><div class="screen-topbar-icon">🎬</div><div class="screen-topbar-title">הגדרות סרטונים</div></div>
@@ -1606,17 +1609,19 @@ var STORY_HOUR_OPTIONS = [
   '16:30','17:30','18:30','19:30','20:30','21:30','22:30','23:30'
 ];
 
-/* storiesData[dayKey] = array of {row, time, prompt, status} objects, indexed by array position */
-var storiesData  = {};
-var saveTimers   = {}; // debounce timers per row key "day:row"
-var savingCount  = 0;  // how many saves in progress
+/* storiesData[dayKey] = array of {row, time, prompt, status, isNew} */
+var storiesData   = {};
+/* storiesDirty[row] = true — שורות שהשתנו מאז הטעינה */
+var storiesDirty  = {};
 
 function openStories() {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-  storiesData = {};
+  storiesData  = {};
+  storiesDirty = {};
 
   var body = document.getElementById('stories-body');
   body.innerHTML = '<div class="screen-loading" id="stories-loading"><div class="spinner"></div><div>טוען סטורים...</div></div>';
+  updateStoriesSaveBtn();
 
   var el = document.getElementById('screen-stories');
   el.classList.add('visible');
@@ -1640,8 +1645,6 @@ function fetchStories() {
   fetch(url)
     .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
     .then(function(data){
-      // מבנה המצופה מהוובהוק:
-      // { stories: { sunday: [{row:5,time:'09:30',prompt:'...',status:'פעיל'}, ...], monday: [...], ... } }
       storiesData = (data && data.stories) || {};
       renderStories();
     })
@@ -1660,8 +1663,7 @@ function renderStories() {
   html += '<div class="stories-intro">';
   html += '<strong>✨ פינות קבועות - סטורי</strong><br>';
   html += 'הסטורים המוגדרים כאן יפורסמו אוטומטית בימים ובשעות שתבחרו. ';
-  html += 'הסוכן יכתוב את התוכן לפי הפרומפט, וישלח אליכם לאישור בטלגרם לפני העלאה.<br>';
-  html += '<strong>כל שינוי נשמר אוטומטית.</strong>';
+  html += 'הסוכן יכתוב את התוכן לפי הפרומפט, וישלח אליכם לאישור בטלגרם לפני העלאה.';
   html += '</div>';
 
   STORY_DAYS.forEach(function(day){
@@ -1669,20 +1671,12 @@ function renderStories() {
   });
 
   body.innerHTML = html;
-
-  // saving indicator
-  if (!document.getElementById('story-saving-indicator')) {
-    var ind = document.createElement('div');
-    ind.id = 'story-saving-indicator';
-    ind.className = 'story-saving-indicator';
-    ind.innerHTML = '<div class="mini-spinner"></div><div>שומר...</div>';
-    document.body.appendChild(ind);
-  }
+  updateStoriesSaveBtn();
 }
 
 function renderDaySection(day) {
   var rows = storiesData[day.key] || [];
-  // מציגים שורות שיש להן פרומפט, או שורות חדשות שעוד לא מלאו
+  // מציגים שורות שיש להן פרומפט או שהן חדשות
   var visibleRows = rows.filter(function(r){ return (r.prompt && r.prompt.trim() !== '') || r.isNew; });
   var canAdd = visibleRows.length < 9;
 
@@ -1705,7 +1699,6 @@ function renderDaySection(day) {
     });
   }
 
-  // Add button
   html += '<button class="add-story-btn" onclick="addStory(\'' + day.key + '\')"' + (canAdd ? '' : ' disabled') + '>';
   html += '➕ הוסף סטורי' + (canAdd ? '' : ' (הגעת למקסימום)');
   html += '</button>';
@@ -1723,7 +1716,6 @@ function renderStoryRow(dayKey, row) {
   var html = '<div class="story-row" id="row-' + rowId + '" data-day="' + dayKey + '" data-row="' + row.row + '">';
   html += '<div class="story-row-top">';
 
-  // Time select
   html += '<select class="story-time-select" onchange="onStoryTimeChange(\'' + dayKey + '\',' + row.row + ',this.value)">';
   html += '<option value="">בחר שעה</option>';
   STORY_HOUR_OPTIONS.forEach(function(h){
@@ -1731,18 +1723,15 @@ function renderStoryRow(dayKey, row) {
   });
   html += '</select>';
 
-  // Status toggle
   html += '<div class="story-status-toggle' + (status ? ' active' : '') + '" onclick="onStoryStatusToggle(\'' + dayKey + '\',' + row.row + ')">';
   html += '<div class="story-status-toggle-label on">פעיל</div>';
-  html += '<div class="story-status-toggle-label off">כבוי</div>';
+  html += '<div class="story-status-toggle-label off">לא פעיל</div>';
   html += '<div class="story-status-toggle-dot"></div>';
   html += '</div>';
 
-  // Delete button
   html += '<button class="story-delete-btn" onclick="onStoryDelete(\'' + dayKey + '\',' + row.row + ')" title="מחק סטורי">🗑</button>';
   html += '</div>';
 
-  // Prompt textarea (auto-resize)
   html += '<textarea class="story-textarea" placeholder="הפרומפט לסוכן..." oninput="onStoryPromptInput(\'' + dayKey + '\',' + row.row + ',this)">' + escapeHtml(prompt) + '</textarea>';
 
   html += '</div>';
@@ -1757,24 +1746,27 @@ function findStoryRow(dayKey, rowNum) {
   return null;
 }
 
+function markStoryDirty(rowNum) {
+  storiesDirty[rowNum] = true;
+  updateStoriesSaveBtn();
+}
+
 function onStoryTimeChange(dayKey, rowNum, newTime) {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
   var row = findStoryRow(dayKey, rowNum);
   if (!row) return;
   row.time = newTime;
-  queueSaveStory(dayKey, rowNum, { time: newTime });
+  markStoryDirty(rowNum);
 }
 
 function onStoryStatusToggle(dayKey, rowNum) {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
   var row = findStoryRow(dayKey, rowNum);
   if (!row) return;
-  var newStatus = row.status === 'פעיל' ? 'לא פעיל' : 'פעיל';
-  row.status = newStatus;
-  // update UI immediately
+  row.status = row.status === 'פעיל' ? 'לא פעיל' : 'פעיל';
   var toggle = document.querySelector('#row-' + dayKey + '_' + rowNum + ' .story-status-toggle');
-  if (toggle) toggle.classList.toggle('active', newStatus === 'פעיל');
-  queueSaveStory(dayKey, rowNum, { status: newStatus });
+  if (toggle) toggle.classList.toggle('active', row.status === 'פעיל');
+  markStoryDirty(rowNum);
 }
 
 function onStoryPromptInput(dayKey, rowNum, textarea) {
@@ -1783,20 +1775,28 @@ function onStoryPromptInput(dayKey, rowNum, textarea) {
   if (!row) return;
   row.prompt = textarea.value;
   if (row.isNew && textarea.value.trim() !== '') delete row.isNew;
-  queueSaveStory(dayKey, rowNum, { prompt: textarea.value });
+  markStoryDirty(rowNum);
 }
 
 function onStoryDelete(dayKey, rowNum) {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-
   var row = findStoryRow(dayKey, rowNum);
   if (!row) return;
 
-  // שולחים שמירה ריקה לגוגל שיטס
-  saveStoryRow(dayKey, rowNum, { prompt: '', time: '', status: 'לא פעיל' }, true);
+  // מנקים את כל השדות של השורה
+  row.time = '';
+  row.prompt = '';
+  row.status = 'לא פעיל';
+  delete row.isNew;
 
-  // מסירים את השורה מה-state כדי שתעלם מהתצוגה ושהמקום יהיה פנוי להוספה
+  // מסמנים dirty כדי שהשמירה תנקה את הערכים בגיליון
+  markStoryDirty(rowNum);
+
+  // מסירים מהתצוגה (אבל משאירים ב-state כי יש dirty flag)
   storiesData[dayKey] = (storiesData[dayKey] || []).filter(function(r){ return r.row !== rowNum; });
+  // מוסיפים שורה "רפאים" כדי שה-dirty ישמר בזמן השמירה
+  if (!storiesData['_deleted']) storiesData['_deleted'] = [];
+  storiesData['_deleted'].push({ row: rowNum, time: '', prompt: '', status: 'לא פעיל' });
 
   renderStories();
 }
@@ -1807,7 +1807,6 @@ function addStory(dayKey) {
   if (!storiesData[dayKey]) storiesData[dayKey] = [];
   var rows = storiesData[dayKey];
 
-  // שורות פנויות בטווח הפיזי של היום
   var usedRows = {};
   rows.forEach(function(r){ usedRows[r.row] = true; });
 
@@ -1820,14 +1819,12 @@ function addStory(dayKey) {
     return;
   }
 
-  // מוסיפים שורה חדשה ריקה עם flag isNew
   rows.push({ row: freeRow, time: '', prompt: '', status: 'לא פעיל', isNew: true });
   rows.sort(function(a,b){ return a.row - b.row; });
 
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
   renderStories();
 
-  // פוקוס על ה-textarea של השורה החדשה
   setTimeout(function(){
     var rowEl = document.getElementById('row-' + dayKey + '_' + freeRow);
     if (rowEl) {
@@ -1837,61 +1834,68 @@ function addStory(dayKey) {
   }, 50);
 }
 
-function queueSaveStory(dayKey, rowNum, patch) {
-  var key = dayKey + ':' + rowNum;
-  if (saveTimers[key]) clearTimeout(saveTimers[key]);
-  saveTimers[key] = setTimeout(function(){
-    delete saveTimers[key];
-    // send current state (all 3 fields) to be safe
-    var row = findStoryRow(dayKey, rowNum);
-    if (!row) return;
-    saveStoryRow(dayKey, rowNum, {
-      time:   row.time   || '',
-      prompt: row.prompt || '',
-      status: row.status || 'לא פעיל'
-    });
-  }, 500);
+function updateStoriesSaveBtn() {
+  var bar = document.getElementById('stories-save-bar');
+  if (!bar) return;
+  bar.style.display = Object.keys(storiesDirty).length > 0 ? 'block' : 'none';
 }
 
-function saveStoryRow(dayKey, rowNum, payload, silent) {
-  savingCount++;
-  updateSavingIndicator();
+function collectDirtyChanges() {
+  // בונים מפה: rowNum → {time, prompt, status}
+  var rowData = {};
 
-  var rowEl = document.getElementById('row-' + dayKey + '_' + rowNum);
-  if (rowEl) rowEl.classList.add('saving');
+  // עוברים על כל הימים + _deleted ואוספים את השורות הנוכחיות
+  Object.keys(storiesData).forEach(function(dayKey){
+    var rows = storiesData[dayKey] || [];
+    rows.forEach(function(r){
+      rowData[r.row] = {
+        time:   r.time   || '',
+        prompt: r.prompt || '',
+        status: r.status || 'לא פעיל'
+      };
+    });
+  });
+
+  // בונים changes object בפורמט שהפלואו מצפה: { 'B5': 'val', 'C5': 'val', 'D5': 'val', ... }
+  var changes = {};
+  Object.keys(storiesDirty).forEach(function(rowNum){
+    var r = rowData[rowNum] || { time: '', prompt: '', status: 'לא פעיל' };
+    changes['B' + rowNum] = r.time;
+    changes['C' + rowNum] = r.prompt;
+    changes['D' + rowNum] = r.status;
+  });
+
+  return changes;
+}
+
+function saveStories() {
+  var changes = collectDirtyChanges();
+  if (Object.keys(changes).length === 0) return;
+
+  var btn = document.getElementById('stories-save-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'שומר...'; }
 
   var url = SAVE_URL
     + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
-    + '&sheet='      + encodeURIComponent('פינות קבועות')
-    + '&sheetName='  + encodeURIComponent('פינות קבועות - סטורי')
+    + '&sheet='      + encodeURIComponent('פינות קבועות - סטורי')
     + '&logSheetId=' + encodeURIComponent(logSheetId)
-    + '&action='     + encodeURIComponent('save row')
-    + '&rowNum='     + encodeURIComponent(rowNum)
-    + '&time='       + encodeURIComponent(payload.time   || '')
-    + '&status='     + encodeURIComponent(payload.status || '')
-    + '&prompt='     + encodeURIComponent(payload.prompt || '');
+    + '&changes='    + encodeURIComponent(JSON.stringify(changes));
 
   fetch(url)
     .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json().catch(function(){ return {}; }); })
     .then(function(){
-      savingCount--;
-      updateSavingIndicator();
-      if (rowEl) rowEl.classList.remove('saving');
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      showToast('✅ השינויים נשמרו בהצלחה!');
+      storiesDirty = {};
+      delete storiesData['_deleted'];
+      if (btn) { btn.disabled = false; btn.innerHTML = '💾 שמור שינויים'; }
+      updateStoriesSaveBtn();
     })
     .catch(function(err){
-      savingCount--;
-      updateSavingIndicator();
-      if (rowEl) rowEl.classList.remove('saving');
-      console.error('saveStoryRow error:', err);
-      if (!silent) showToast('❌ שגיאה בשמירה', true);
+      console.error('saveStories error:', err);
+      showToast('❌ שגיאה בשמירה, נסה שוב', true);
+      if (btn) { btn.disabled = false; btn.innerHTML = '💾 שמור שינויים'; }
     });
-}
-
-function updateSavingIndicator() {
-  var ind = document.getElementById('story-saving-indicator');
-  if (!ind) return;
-  if (savingCount > 0) ind.classList.add('visible');
-  else ind.classList.remove('visible');
 }
 
 function buildGetUrl(sheetName, ranges) {
