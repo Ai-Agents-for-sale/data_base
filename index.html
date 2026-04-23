@@ -240,6 +240,59 @@
   .token-counter.blocked .token-counter-dot{background:var(--red);color:var(--red)}
   .token-counter.blocked .token-counter-msg{color:var(--red);font-weight:700}
 
+  /* Tokens / API screen */
+  .tokens-stats{display:flex;flex-direction:column;gap:10px}
+  .token-stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;align-items:center;gap:14px}
+  .token-stat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+  .token-stat-icon.balance{background:var(--green-s);border:1px solid var(--green)}
+  .token-stat-icon.used{background:var(--accent-s);border:1px solid var(--accent)}
+  .token-stat-icon.total{background:var(--purple-s);border:1px solid var(--purple)}
+  .token-stat-icon.current{background:var(--orange-s);border:1px solid var(--orange)}
+  .token-stat-body{flex:1;min-width:0}
+  .token-stat-label{font-size:11px;color:var(--text-dim);margin-bottom:3px;line-height:1.4}
+  .token-stat-value{font-size:20px;font-weight:800;color:var(--text);font-family:'Heebo',sans-serif}
+  .token-stat-value .currency{font-size:14px;font-weight:600;color:var(--text-dim)}
+
+  .no-admin-notice{background:rgba(234,88,12,0.08);border:1px solid rgba(234,88,12,0.25);border-radius:var(--radius);padding:14px 16px;font-size:12px;line-height:1.7;color:var(--text-dim)}
+  .no-admin-notice strong{color:var(--text)}
+  .no-admin-notice-btn{display:block;width:100%;margin-top:12px;background:var(--orange);border:none;color:#fff;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;padding:11px;border-radius:var(--radius-sm);cursor:pointer;transition:opacity .15s,transform .12s;text-align:center}
+  .no-admin-notice-btn:active{transform:scale(.98);opacity:.9}
+
+  .tutorial-steps{display:none;flex-direction:column;gap:12px;animation:fadeSlideIn .35s ease both}
+  .tutorial-steps.visible{display:flex}
+  .tutorial-step{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+  .tutorial-step-header{padding:14px 16px;display:flex;align-items:flex-start;gap:10px;border-bottom:1px solid var(--border)}
+  .tutorial-step-num{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .tutorial-step-text{flex:1;font-size:12px;color:var(--text);line-height:1.6}
+  .tutorial-step-text strong{color:var(--text);font-weight:700}
+  .tutorial-step-img-wrap{position:relative;background:#fff;display:flex;align-items:center;justify-content:center;padding:0;overflow:hidden}
+  .tutorial-step-img-wrap img{width:100%;display:block}
+  .tutorial-arrow{position:absolute;font-size:32px;color:var(--red);filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));animation:arrow-bounce 1s infinite}
+  .tutorial-circle{position:absolute;border:3px solid var(--red);border-radius:50%;box-shadow:0 0 0 2px rgba(220,38,38,0.25);animation:pulse-circle 1.2s infinite}
+  @keyframes arrow-bounce{0%,100%{transform:translateX(0)}50%{transform:translateX(-5px)}}
+  @keyframes pulse-circle{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.05)}}
+
+  .admin-key-input-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;gap:10px}
+  .admin-key-input-label{font-size:12px;font-weight:700;color:var(--text);line-height:1.5}
+  .admin-key-input-label-sub{font-size:11px;color:var(--text-dim);margin-top:2px;line-height:1.5}
+  .admin-key-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Heebo',sans-serif;font-size:12px;font-weight:500;padding:11px 12px;outline:none;direction:ltr;text-align:left}
+  .admin-key-input:focus{border-color:var(--accent)}
+  .admin-key-save-btn{width:100%;background:linear-gradient(135deg,#1a3a8f,#2d5fc4);color:#fff;border:none;border-radius:var(--radius-sm);padding:12px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:opacity .2s,transform .15s;box-shadow:0 4px 12px rgba(26,58,143,.25)}
+  .admin-key-save-btn:disabled{opacity:.35;cursor:default;box-shadow:none}
+  .admin-key-save-btn:not(:disabled):active{transform:scale(.98);opacity:.88}
+  .admin-key-success{background:var(--green-s);border:1px solid var(--green);border-radius:var(--radius-sm);padding:12px 14px;font-size:12px;color:var(--text);line-height:1.6;margin-top:8px}
+  .admin-key-success strong{color:var(--green)}
+
+  /* Section heading inside tokens screen */
+  .tokens-section-label{font-size:11px;font-weight:700;color:var(--text-dimmer);letter-spacing:.1em;text-transform:uppercase;padding:0 4px;margin-top:4px;margin-bottom:-2px}
+
+  /* Current API key display */
+  .api-key-display{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+  .api-key-display-label{font-size:11px;font-weight:700;color:var(--text-dim);display:flex;align-items:center;gap:5px}
+  .api-key-display-value{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-family:monospace;font-size:12px;color:var(--text);direction:ltr;text-align:left;word-break:break-all;letter-spacing:.02em}
+  .api-key-reveal-btn{background:transparent;border:1px solid var(--border-h);color:var(--text-dim);font-family:'Heebo',sans-serif;font-size:11px;font-weight:600;padding:6px 10px;border-radius:6px;cursor:pointer;align-self:flex-start;transition:all .15s}
+  .api-key-reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+
   .save-bar{position:fixed;bottom:0;left:0;right:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:var(--bg2);border-top:1px solid var(--border);z-index:50}
   .save-btn{width:100%;background:linear-gradient(135deg,#1a3a8f,#2d5fc4);color:#fff;border:none;border-radius:var(--radius-sm);padding:13px;font-family:'Heebo',sans-serif;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 15px rgba(26,58,143,.3);transition:opacity .2s,transform .15s}
   .save-btn:disabled{opacity:.35;cursor:default;box-shadow:none}
@@ -344,6 +397,11 @@
     <div class="nav-card blue" onclick="openScreen('screen-general','הגדרות כלליות')">
       <div class="nav-card-icon">⚙️</div>
       <div class="nav-card-body"><div class="nav-card-title-row"><div class="nav-card-title">הגדרות כלליות</div></div><div class="nav-card-desc">מודל שכותב, פלטפורמות, אישורים לפני פרסום,<br>פרטים אישיים</div></div>
+      <div class="nav-card-arrow">‹</div>
+    </div>
+    <div class="nav-card orange" onclick="openTokens()">
+      <div class="nav-card-icon">🪙</div>
+      <div class="nav-card-body"><div class="nav-card-title-row"><div class="nav-card-title">טוקנים ומפתח API</div></div><div class="nav-card-desc-compact">מעקב שימוש טוקנים, יתרה, החלפת מפתח API</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
     <div class="nav-card green" onclick="openMaterials()">
@@ -490,6 +548,20 @@
     <div class="screen-loading" id="folder-loading">
       <div class="spinner"></div>
       <div>טוען חומרים...</div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-tokens">
+  <div class="screen-topbar">
+    <div class="screen-back" onclick="closeScreen('screen-tokens')">›</div>
+    <div class="screen-topbar-icon">🪙</div>
+    <div class="screen-topbar-title">טוקנים ומפתח API</div>
+  </div>
+  <div class="screen-body screen-body-no-save" id="tokens-body">
+    <div class="screen-loading" id="tokens-loading">
+      <div class="spinner"></div>
+      <div>טוען נתונים...</div>
     </div>
   </div>
 </div>
@@ -1069,6 +1141,265 @@ function saveBusinessProfile() {
       btn.disabled = false;
       btn.innerHTML = '💾 שמור שינויים';
     });
+}
+
+/* ══════════════════════════════════════
+   TOKENS & API KEY
+   ══════════════════════════════════════ */
+var tokensData = null;
+var apiKeyRevealed = false;
+
+function openTokens() {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  tokensData = null;
+  apiKeyRevealed = false;
+
+  var body = document.getElementById('tokens-body');
+  body.innerHTML = '<div class="screen-loading" id="tokens-loading"><div class="spinner"></div><div>טוען נתונים...</div></div>';
+
+  var el = document.getElementById('screen-tokens');
+  el.classList.add('visible');
+  el.scrollTop = 0;
+  if (tg) {
+    tg.BackButton.show();
+    tg.BackButton.offClick();
+    tg.BackButton.onClick(function(){ closeScreen('screen-tokens'); });
+  }
+
+  fetchTokens();
+}
+
+function fetchTokens() {
+  var url = GET_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent('טוקנים')
+    + '&logSheetId=' + encodeURIComponent(logSheetId);
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(data){
+      tokensData = data || {};
+      renderTokens();
+    })
+    .catch(function(err){
+      console.error('fetchTokens error:', err);
+      var body = document.getElementById('tokens-body');
+      body.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">שגיאה בטעינת הנתונים</div><div class="empty-state-sub">נסה שוב מאוחר יותר</div></div>';
+    });
+}
+
+function renderTokens() {
+  var body = document.getElementById('tokens-body');
+  body.innerHTML = '';
+
+  var data         = tokensData || {};
+  var hasAdmin     = !!data.hasAdmin;
+  var totalCredits = data.totalCredits;
+  var totalUsage   = data.totalUsage;
+  var balance      = data.balance;
+  var usage        = data.usage;
+  var usageDaily   = data.usageDaily;
+  var usageWeekly  = data.usageWeekly;
+  var usageMonthly = data.usageMonthly;
+  var apiKey       = data.apiKey || '';
+
+  var html = '';
+
+  // ── טבלה 1: רמת החשבון (רק אם יש אדמין) ──
+  if (hasAdmin) {
+    html += '<div class="tokens-section-label">💼 נתוני חשבון OpenRouter</div>';
+    html += '<div class="tokens-stats">';
+    html += buildStatCard('balance', '💰', 'נותר לך ביתרה', balance);
+    html += buildStatCard('total',   '📦', 'סך הכל נקנה בחשבון', totalCredits);
+    html += buildStatCard('used',    '📈', 'סך הכל נוצל בחשבון', totalUsage);
+    html += '</div>';
+  }
+
+  // ── טבלה 2: רמת המפתח (תמיד מוצגת) ──
+  html += '<div class="tokens-section-label"' + (hasAdmin ? ' style="margin-top:8px"' : '') + '>🔑 נתוני המפתח המחובר לסוכן</div>';
+  html += '<div class="tokens-stats">';
+  html += buildStatCard('current', '💸', 'סך הכל בוזבז במפתח הזה', usage);
+  html += buildStatCard('current', '📅', 'בוזבז היום',  usageDaily);
+  html += buildStatCard('current', '📆', 'בוזבז השבוע', usageWeekly);
+  html += buildStatCard('current', '🗓️', 'בוזבז החודש', usageMonthly);
+  html += '</div>';
+
+  // אם אין מפתח אדמין - הודעה + כפתור + הדרכה
+  if (!hasAdmin) {
+    html += '<div class="no-admin-notice">';
+    html += '<strong>שים לב:</strong><br>';
+    html += 'כרגע מוצג לך רק כמה כסף בזבזת על המפתח API הנוכחי שמחובר לסוכן, ולא כמה כסף נשאר לך ביתרת הטוקנים.<br><br>';
+    html += 'אם תרצה שתהיה כאן גם הצגה של הסכום המדויק שנותר לך ביתרה, נדרש להנפיק עוד מפתח ב-OpenRouter, מסוג "Management Key".';
+    html += '<button class="no-admin-notice-btn" onclick="toggleAdminTutorial()">';
+    html += '📖 הדרכה להנפקת מפתח מנהל שיציג כמות טוקנים נוכחית ביתרה';
+    html += '</button>';
+    html += '</div>';
+
+    html += '<div class="tutorial-steps" id="admin-tutorial">';
+    html += buildTutorialStep(1,
+      'כנסו לאתר <strong>openrouter.com</strong> ותוודאו שאתם מחוברים לחשבון שלכם. ' +
+      '<br>אם לא, תבצעו חיבור עם המייל שאיתו ביצעתם את הרכישה של הטוקנים. ' +
+      '<br>אם מופיע לכם <strong>Sign in</strong> בחלק העליון בצד ימין, סימן שאתם לא מחוברים.',
+      'https://ai-agents-for-sale.github.io/data_base/tutorial/step1.png',
+      'arrow-top-right'
+    );
+    html += buildTutorialStep(2,
+      'הניחו את העכבר על איזור התמונת פרופיל בצד ימין למעלה של המסך, ולחצו על <strong>Credits</strong>.',
+      'https://ai-agents-for-sale.github.io/data_base/tutorial/step2.png',
+      'arrow-credits'
+    );
+    html += buildTutorialStep(3,
+      'אחרי שאתם במסך ה-Credits, לחצו על <strong>Management keys</strong> בתפריט בצד שמאל.',
+      'https://ai-agents-for-sale.github.io/data_base/tutorial/step3.png',
+      'arrow-management-keys'
+    );
+    html += buildTutorialStep(4,
+      'אחרי שאתם במסך Management keys, לחצו על כפתור ה-<strong>Create</strong> בצד ימין למעלה, ותנו שם למפתח.',
+      'https://ai-agents-for-sale.github.io/data_base/tutorial/step4.png',
+      ''
+    );
+    html += buildTutorialStep(5,
+      'אחרי שנתתם שם למפתח, לחצו <strong>Create</strong>, והעתיקו את המפתח בעזרת הכפתור הקטן בצד ימין למפתח.',
+      'https://ai-agents-for-sale.github.io/data_base/tutorial/step5.png',
+      'circle-copy'
+    );
+    html += '<div class="admin-key-input-wrap">';
+    html += '<div class="admin-key-input-label">';
+    html += '<strong>שלב 6:</strong> הדביקו כאן את המפתח Management key שעכשיו הנפקתם';
+    html += '<div class="admin-key-input-label-sub">הדבקת המפתח תאפשר להציג את היתרה שלך בפעם הבאה שתכנס למסך הזה.</div>';
+    html += '</div>';
+    html += '<input type="text" class="admin-key-input" id="admin-key-input" placeholder="sk-or-v1-..." oninput="onAdminKeyInput()">';
+    html += '<button class="admin-key-save-btn" id="admin-key-save-btn" onclick="saveAdminKey()" disabled>💾 שמור מפתח מנהל</button>';
+    html += '<div id="admin-key-success-wrap"></div>';
+    html += '</div>';
+    html += '</div>';
+  }
+
+  // איזור הצגת המפתח הרגיל
+  if (apiKey) {
+    html += '<div class="tokens-section-label" style="margin-top:8px">🔐 מפתח API נוכחי</div>';
+    html += '<div class="api-key-display">';
+    html += '<div class="api-key-display-label">המפתח המחובר לסוכן כרגע</div>';
+    html += '<div class="api-key-display-value" id="api-key-value">' + maskApiKey(apiKey) + '</div>';
+    html += '<button class="api-key-reveal-btn" id="api-key-reveal-btn" onclick="toggleApiKeyReveal()">👁️ הצג מפתח מלא</button>';
+    html += '</div>';
+  }
+
+  body.innerHTML = html;
+}
+
+function buildStatCard(type, icon, label, value) {
+  var displayValue;
+  if (value === null || value === undefined || isNaN(value)) {
+    displayValue = '—';
+  } else {
+    var num = Number(value);
+    displayValue = '<span class="currency">$</span>' + num.toFixed(2);
+  }
+  var html = '<div class="token-stat-card">';
+  html += '<div class="token-stat-icon ' + type + '">' + icon + '</div>';
+  html += '<div class="token-stat-body">';
+  html += '<div class="token-stat-label">' + label + '</div>';
+  html += '<div class="token-stat-value">' + displayValue + '</div>';
+  html += '</div></div>';
+  return html;
+}
+
+function buildTutorialStep(num, text, imgUrl, markerType) {
+  var html = '<div class="tutorial-step">';
+  html += '<div class="tutorial-step-header">';
+  html += '<div class="tutorial-step-num">' + num + '</div>';
+  html += '<div class="tutorial-step-text">' + text + '</div>';
+  html += '</div>';
+  html += '<div class="tutorial-step-img-wrap">';
+  html += '<img src="' + imgUrl + '" alt="שלב ' + num + '" loading="lazy" onerror="this.style.display=\'none\'">';
+  // סימנים על התמונה לפי סוג
+  if (markerType === 'arrow-top-right') {
+    html += '<div class="tutorial-arrow" style="top:8px;right:10%">←</div>';
+  } else if (markerType === 'arrow-credits') {
+    html += '<div class="tutorial-arrow" style="top:30%;right:5%">←</div>';
+  } else if (markerType === 'arrow-management-keys') {
+    html += '<div class="tutorial-arrow" style="top:50%;left:15%">→</div>';
+  } else if (markerType === 'circle-copy') {
+    html += '<div class="tutorial-circle" style="top:30%;right:5%;width:40px;height:40px"></div>';
+  }
+  html += '</div></div>';
+  return html;
+}
+
+function toggleAdminTutorial() {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+  var steps = document.getElementById('admin-tutorial');
+  if (steps) {
+    steps.classList.toggle('visible');
+    if (steps.classList.contains('visible')) {
+      setTimeout(function(){ steps.scrollIntoView({behavior:'smooth', block:'start'}); }, 100);
+    }
+  }
+}
+
+function onAdminKeyInput() {
+  var inp = document.getElementById('admin-key-input');
+  var btn = document.getElementById('admin-key-save-btn');
+  if (!inp || !btn) return;
+  var val = inp.value.trim();
+  btn.disabled = val.length < 10;
+}
+
+function saveAdminKey() {
+  var inp = document.getElementById('admin-key-input');
+  var btn = document.getElementById('admin-key-save-btn');
+  if (!inp || !btn) return;
+  var key = inp.value.trim();
+  if (!key) return;
+
+  btn.disabled = true;
+  btn.textContent = 'שומר...';
+
+  var url = SAVE_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent('טוקנים')
+    + '&logSheetId=' + encodeURIComponent(logSheetId)
+    + '&action='     + encodeURIComponent('save admin key')
+    + '&adminKey='   + encodeURIComponent(key);
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(){
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      var wrap = document.getElementById('admin-key-success-wrap');
+      if (wrap) {
+        wrap.innerHTML = '<div class="admin-key-success"><strong>✅ מצוין!</strong><br>מעכשיו בפעם הבאה שתכנסו לכאן תוכלו לראות גם כמה כסף נשאר לכם ביתרה. תרעננו ותבדקו.</div>';
+      }
+      inp.disabled = true;
+      btn.innerHTML = '✓ נשמר בהצלחה';
+    })
+    .catch(function(err){
+      console.error('save admin key error:', err);
+      showToast('❌ שגיאה בשמירה, נסה שוב', true);
+      btn.disabled = false;
+      btn.innerHTML = '💾 שמור מפתח מנהל';
+    });
+}
+
+function maskApiKey(key) {
+  if (!key || key.length < 12) return key;
+  return key.substring(0, 10) + '••••••••••••••' + key.substring(key.length - 4);
+}
+
+function toggleApiKeyReveal() {
+  if (!tokensData || !tokensData.apiKey) return;
+  var el = document.getElementById('api-key-value');
+  var btn = document.getElementById('api-key-reveal-btn');
+  if (!el || !btn) return;
+  apiKeyRevealed = !apiKeyRevealed;
+  if (apiKeyRevealed) {
+    el.textContent = tokensData.apiKey;
+    btn.textContent = '🙈 הסתר מפתח';
+  } else {
+    el.textContent = maskApiKey(tokensData.apiKey);
+    btn.textContent = '👁️ הצג מפתח מלא';
+  }
 }
 
 function buildGetUrl(sheetName, ranges) {
