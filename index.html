@@ -293,6 +293,49 @@
   .api-key-reveal-btn{background:transparent;border:1px solid var(--border-h);color:var(--text-dim);font-family:'Heebo',sans-serif;font-size:11px;font-weight:600;padding:6px 10px;border-radius:6px;cursor:pointer;align-self:flex-start;transition:all .15s}
   .api-key-reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
 
+  /* Stories / Fixed Stories Screen */
+  .stories-intro{background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.25);border-radius:var(--radius);padding:12px 14px;font-size:11px;line-height:1.7;color:var(--text-dim);margin-bottom:6px}
+  .stories-intro strong{color:var(--text)}
+
+  .day-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+  .day-section-header{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(139,92,246,0.04));border-bottom:1px solid var(--border)}
+  .day-section-header-title{font-size:14px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px}
+  .day-section-header-icon{width:28px;height:28px;border-radius:50%;background:var(--purple-s);border:1px solid var(--purple);display:flex;align-items:center;justify-content:center;font-size:13px}
+  .day-section-header-count{font-size:10px;font-weight:700;color:var(--text-dim);background:var(--bg3);padding:3px 8px;border-radius:10px;border:1px solid var(--border)}
+
+  .day-section-body{padding:10px;display:flex;flex-direction:column;gap:8px}
+
+  .story-row{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;display:flex;flex-direction:column;gap:8px;transition:border-color .15s,opacity .2s}
+  .story-row.saving{opacity:.6;pointer-events:none}
+  .story-row-top{display:flex;gap:8px;align-items:center}
+  .story-time-select{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Heebo',sans-serif;font-size:12px;font-weight:600;padding:7px 8px;outline:none;flex:0 0 auto;min-width:90px;direction:ltr;text-align:center;cursor:pointer}
+  .story-time-select:focus{border-color:var(--accent)}
+  .story-status-toggle{position:relative;width:58px;height:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;cursor:pointer;transition:background .2s,border-color .2s;flex:0 0 auto}
+  .story-status-toggle.active{background:var(--green-s);border-color:var(--green)}
+  .story-status-toggle-label{position:absolute;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;color:var(--text-dim);padding:0 6px;transition:color .2s}
+  .story-status-toggle-label.off{right:4px}
+  .story-status-toggle-label.on{left:4px;color:var(--green);opacity:0}
+  .story-status-toggle.active .story-status-toggle-label.off{opacity:0}
+  .story-status-toggle.active .story-status-toggle-label.on{opacity:1}
+  .story-status-toggle-dot{position:absolute;top:2px;right:2px;width:20px;height:20px;background:var(--text-dim);border-radius:50%;transition:all .25s cubic-bezier(.4,.0,.2,1)}
+  .story-status-toggle.active .story-status-toggle-dot{right:auto;left:2px;background:var(--green)}
+
+  .story-delete-btn{background:transparent;border:1px solid var(--border);color:var(--text-dim);border-radius:6px;padding:6px 9px;cursor:pointer;font-size:13px;transition:all .15s;flex:0 0 auto;margin-inline-start:auto}
+  .story-delete-btn:hover{border-color:var(--red);color:var(--red);background:rgba(220,38,38,.06)}
+
+  .story-textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Heebo',sans-serif;font-size:12px;line-height:1.6;padding:9px 10px;outline:none;resize:none;min-height:60px;transition:border-color .15s}
+  .story-textarea:focus{border-color:var(--accent)}
+  .story-textarea::placeholder{color:var(--text-dimmer)}
+
+  .add-story-btn{background:transparent;border:1.5px dashed var(--border-h);color:var(--text-dim);border-radius:var(--radius-sm);padding:12px;cursor:pointer;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:6px}
+  .add-story-btn:hover{border-color:var(--purple);color:var(--purple);background:rgba(139,92,246,.05)}
+  .add-story-btn:disabled{opacity:.4;cursor:default;border-style:solid}
+  .add-story-btn:disabled:hover{border-color:var(--border-h);color:var(--text-dim);background:transparent}
+
+  .story-saving-indicator{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:8px 16px;font-size:11px;color:var(--text-dim);box-shadow:0 4px 12px rgba(0,0,0,.3);z-index:9999;display:flex;align-items:center;gap:8px;opacity:0;transition:opacity .2s;pointer-events:none}
+  .story-saving-indicator.visible{opacity:1}
+  .story-saving-indicator .mini-spinner{width:12px;height:12px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+
   .save-bar{position:fixed;bottom:0;left:0;right:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:var(--bg2);border-top:1px solid var(--border);z-index:50}
   .save-btn{width:100%;background:linear-gradient(135deg,#1a3a8f,#2d5fc4);color:#fff;border:none;border-radius:var(--radius-sm);padding:13px;font-family:'Heebo',sans-serif;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 15px rgba(26,58,143,.3);transition:opacity .2s,transform .15s}
   .save-btn:disabled{opacity:.35;cursor:default;box-shadow:none}
@@ -585,7 +628,65 @@
 
 <div class="screen" id="screen-scheduled">
   <div class="screen-topbar"><div class="screen-back" onclick="closeScreen('screen-scheduled')">›</div><div class="screen-topbar-icon">📅</div><div class="screen-topbar-title">תכנים מתוזמנים</div></div>
-  <div class="screen-body"><div class="coming-soon"><div class="coming-soon-icon">🚧</div><div class="coming-soon-title">בקרוב</div></div></div>
+  <div class="screen-body">
+    <div class="submenu-question">איזה סוג תוכן מתוזמן תרצה לנהל?</div>
+
+    <div class="nav-card gray disabled">
+      <div class="nav-card-icon">📋</div>
+      <div class="nav-card-body">
+        <div class="nav-card-title-row">
+          <div class="nav-card-title">תכנים מתוזמנים</div>
+          <div class="nav-card-badge">בבנייה</div>
+        </div>
+        <div class="nav-card-desc">תוכן שתוזמן מראש ועוד לא פורסם</div>
+      </div>
+    </div>
+
+    <div class="nav-card purple" onclick="openStories()">
+      <div class="nav-card-icon">📱</div>
+      <div class="nav-card-body">
+        <div class="nav-card-title-row"><div class="nav-card-title">פינות קבועות - סטורי</div></div>
+        <div class="nav-card-desc">סטורים קבועים שיפורסמו בשעות קבועות, לפי ימים בשבוע</div>
+      </div>
+      <div class="nav-card-arrow">‹</div>
+    </div>
+
+    <div class="nav-card gray disabled">
+      <div class="nav-card-icon">📰</div>
+      <div class="nav-card-body">
+        <div class="nav-card-title-row">
+          <div class="nav-card-title">פינות קבועות - פוסטים</div>
+          <div class="nav-card-badge">בבנייה</div>
+        </div>
+        <div class="nav-card-desc">פוסטים/קרוסלות קבועים לפי ימים ושעות</div>
+      </div>
+    </div>
+
+    <div class="nav-card gray disabled">
+      <div class="nav-card-icon">⭐</div>
+      <div class="nav-card-body">
+        <div class="nav-card-title-row">
+          <div class="nav-card-title">פינת ביקורות/עדויות</div>
+          <div class="nav-card-badge">בבנייה</div>
+        </div>
+        <div class="nav-card-desc">ניהול ביקורות ועדויות של לקוחות</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-stories">
+  <div class="screen-topbar">
+    <div class="screen-back" onclick="closeScreen('screen-stories')">›</div>
+    <div class="screen-topbar-icon">📱</div>
+    <div class="screen-topbar-title">פינות קבועות - סטורי</div>
+  </div>
+  <div class="screen-body" id="stories-body">
+    <div class="screen-loading" id="stories-loading">
+      <div class="spinner"></div>
+      <div>טוען סטורים...</div>
+    </div>
+  </div>
 </div>
 <div class="screen" id="screen-videos">
   <div class="screen-topbar"><div class="screen-back" onclick="closeScreen('screen-videos')">›</div><div class="screen-topbar-icon">🎬</div><div class="screen-topbar-title">הגדרות סרטונים</div></div>
@@ -1483,6 +1584,327 @@ function saveNewApiKey() {
       btn.disabled = false;
       btn.innerHTML = '💾 שמור מפתח חדש';
     });
+}
+
+/* ══════════════════════════════════════
+   FIXED STORIES - פינות קבועות סטורי
+   ══════════════════════════════════════ */
+
+/* מיקומי השורות לכל יום - 9 שורות ליום */
+var STORY_DAYS = [
+  { key: 'sunday',    label: 'יום ראשון',  emoji: '☀️', rowStart: 5,  rowEnd: 13, englishName: 'Sunday'    },
+  { key: 'monday',    label: 'יום שני',    emoji: '🌙', rowStart: 17, rowEnd: 25, englishName: 'Monday'    },
+  { key: 'tuesday',   label: 'יום שלישי',  emoji: '🌿', rowStart: 29, rowEnd: 37, englishName: 'Tuesday'   },
+  { key: 'wednesday', label: 'יום רביעי',  emoji: '💫', rowStart: 41, rowEnd: 49, englishName: 'Wednesday' },
+  { key: 'thursday',  label: 'יום חמישי',  emoji: '🌊', rowStart: 53, rowEnd: 61, englishName: 'Thursday'  },
+  { key: 'friday',    label: 'יום שישי',   emoji: '🕊️', rowStart: 65, rowEnd: 73, englishName: 'Friday'    },
+  { key: 'saturday',  label: 'יום שבת',    emoji: '✨', rowStart: 77, rowEnd: 85, englishName: 'Saturday'  }
+];
+
+var STORY_HOUR_OPTIONS = [
+  '08:30','09:30','10:30','11:30','12:30','13:30','14:30','15:30',
+  '16:30','17:30','18:30','19:30','20:30','21:30','22:30','23:30'
+];
+
+/* storiesData[dayKey] = array of {row, time, prompt, status} objects, indexed by array position */
+var storiesData  = {};
+var saveTimers   = {}; // debounce timers per row key "day:row"
+var savingCount  = 0;  // how many saves in progress
+
+function openStories() {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  storiesData = {};
+
+  var body = document.getElementById('stories-body');
+  body.innerHTML = '<div class="screen-loading" id="stories-loading"><div class="spinner"></div><div>טוען סטורים...</div></div>';
+
+  var el = document.getElementById('screen-stories');
+  el.classList.add('visible');
+  el.scrollTop = 0;
+  if (tg) {
+    tg.BackButton.show();
+    tg.BackButton.offClick();
+    tg.BackButton.onClick(function(){ closeScreen('screen-stories'); });
+  }
+
+  fetchStories();
+}
+
+function fetchStories() {
+  var url = GET_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent('פינות קבועות - סטורי')
+    + '&logSheetId=' + encodeURIComponent(logSheetId);
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(data){
+      // מבנה המצופה מהוובהוק:
+      // { stories: { sunday: [{row:5,time:'09:30',prompt:'...',status:'פעיל'}, ...], monday: [...], ... } }
+      storiesData = (data && data.stories) || {};
+      renderStories();
+    })
+    .catch(function(err){
+      console.error('fetchStories error:', err);
+      var body = document.getElementById('stories-body');
+      body.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">שגיאה בטעינה</div><div class="empty-state-sub">נסה שוב מאוחר יותר</div></div>';
+    });
+}
+
+function renderStories() {
+  var body = document.getElementById('stories-body');
+  body.innerHTML = '';
+
+  var html = '';
+  html += '<div class="stories-intro">';
+  html += '<strong>✨ פינות קבועות - סטורי</strong><br>';
+  html += 'הסטורים המוגדרים כאן יפורסמו אוטומטית בימים ובשעות שתבחרו. ';
+  html += 'הסוכן יכתוב את התוכן לפי הפרומפט, וישלח אליכם לאישור בטלגרם לפני העלאה.<br>';
+  html += '<strong>כל שינוי נשמר אוטומטית.</strong>';
+  html += '</div>';
+
+  STORY_DAYS.forEach(function(day){
+    html += renderDaySection(day);
+  });
+
+  body.innerHTML = html;
+
+  // saving indicator
+  if (!document.getElementById('story-saving-indicator')) {
+    var ind = document.createElement('div');
+    ind.id = 'story-saving-indicator';
+    ind.className = 'story-saving-indicator';
+    ind.innerHTML = '<div class="mini-spinner"></div><div>שומר...</div>';
+    document.body.appendChild(ind);
+  }
+}
+
+function renderDaySection(day) {
+  var rows = storiesData[day.key] || [];
+  // filter: only rows that have a prompt
+  var visibleRows = rows.filter(function(r){ return r.prompt && r.prompt.trim() !== ''; });
+  var canAdd = visibleRows.length < 9;
+
+  var html = '<div class="day-section">';
+  html += '<div class="day-section-header">';
+  html += '<div class="day-section-header-title">';
+  html += '<div class="day-section-header-icon">' + day.emoji + '</div>';
+  html += day.label;
+  html += '</div>';
+  html += '<div class="day-section-header-count">' + visibleRows.length + ' / 9</div>';
+  html += '</div>';
+
+  html += '<div class="day-section-body" id="day-body-' + day.key + '">';
+
+  if (visibleRows.length === 0) {
+    html += '<div style="text-align:center;padding:16px 8px;color:var(--text-dimmer);font-size:12px">אין סטורים מוגדרים ליום זה</div>';
+  } else {
+    visibleRows.forEach(function(row){
+      html += renderStoryRow(day.key, row);
+    });
+  }
+
+  // Add button
+  html += '<button class="add-story-btn" onclick="addStory(\'' + day.key + '\')"' + (canAdd ? '' : ' disabled') + '>';
+  html += '➕ הוסף סטורי' + (canAdd ? '' : ' (הגעת למקסימום)');
+  html += '</button>';
+
+  html += '</div></div>';
+  return html;
+}
+
+function renderStoryRow(dayKey, row) {
+  var time   = row.time   || '';
+  var prompt = row.prompt || '';
+  var status = row.status === 'פעיל';
+  var rowId  = dayKey + '_' + row.row;
+
+  var html = '<div class="story-row" id="row-' + rowId + '" data-day="' + dayKey + '" data-row="' + row.row + '">';
+  html += '<div class="story-row-top">';
+
+  // Time select
+  html += '<select class="story-time-select" onchange="onStoryTimeChange(\'' + dayKey + '\',' + row.row + ',this.value)">';
+  html += '<option value="">שעה</option>';
+  STORY_HOUR_OPTIONS.forEach(function(h){
+    html += '<option value="' + h + '"' + (time === h ? ' selected' : '') + '>' + h + '</option>';
+  });
+  html += '</select>';
+
+  // Status toggle
+  html += '<div class="story-status-toggle' + (status ? ' active' : '') + '" onclick="onStoryStatusToggle(\'' + dayKey + '\',' + row.row + ')">';
+  html += '<div class="story-status-toggle-label on">פעיל</div>';
+  html += '<div class="story-status-toggle-label off">כבוי</div>';
+  html += '<div class="story-status-toggle-dot"></div>';
+  html += '</div>';
+
+  // Delete button
+  html += '<button class="story-delete-btn" onclick="onStoryDelete(\'' + dayKey + '\',' + row.row + ')" title="מחק סטורי">🗑</button>';
+  html += '</div>';
+
+  // Prompt textarea (auto-resize)
+  html += '<textarea class="story-textarea" placeholder="הפרומפט לסוכן..." oninput="onStoryPromptInput(\'' + dayKey + '\',' + row.row + ',this)">' + escapeHtml(prompt) + '</textarea>';
+
+  html += '</div>';
+  return html;
+}
+
+function findStoryRow(dayKey, rowNum) {
+  var rows = storiesData[dayKey] || [];
+  for (var i = 0; i < rows.length; i++) {
+    if (rows[i].row === rowNum) return rows[i];
+  }
+  return null;
+}
+
+function onStoryTimeChange(dayKey, rowNum, newTime) {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+  var row = findStoryRow(dayKey, rowNum);
+  if (!row) return;
+  row.time = newTime;
+  queueSaveStory(dayKey, rowNum, { time: newTime });
+}
+
+function onStoryStatusToggle(dayKey, rowNum) {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+  var row = findStoryRow(dayKey, rowNum);
+  if (!row) return;
+  var newStatus = row.status === 'פעיל' ? 'לא פעיל' : 'פעיל';
+  row.status = newStatus;
+  // update UI immediately
+  var toggle = document.querySelector('#row-' + dayKey + '_' + rowNum + ' .story-status-toggle');
+  if (toggle) toggle.classList.toggle('active', newStatus === 'פעיל');
+  queueSaveStory(dayKey, rowNum, { status: newStatus });
+}
+
+function onStoryPromptInput(dayKey, rowNum, textarea) {
+  autoResizeTextarea(textarea);
+  var row = findStoryRow(dayKey, rowNum);
+  if (!row) return;
+  row.prompt = textarea.value;
+  queueSaveStory(dayKey, rowNum, { prompt: textarea.value });
+}
+
+function onStoryDelete(dayKey, rowNum) {
+  if (!confirm('למחוק את הסטורי? הפעולה תנקה את השורה.')) return;
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+
+  var row = findStoryRow(dayKey, rowNum);
+  if (!row) return;
+
+  // Optimistic UI - remove immediately
+  row.prompt = '';
+  row.time = '';
+  row.status = 'לא פעיל';
+
+  // Save deletion (send empty values)
+  saveStoryRow(dayKey, rowNum, { prompt: '', time: '', status: 'לא פעיל' }, true);
+
+  // re-render the day section only
+  renderStories();
+}
+
+function addStory(dayKey) {
+  var day = STORY_DAYS.find(function(d){ return d.key === dayKey; });
+  if (!day) return;
+  var rows = storiesData[dayKey] || [];
+
+  // find the first physical row (rowStart..rowEnd) not in use
+  var usedRows = {};
+  rows.forEach(function(r){
+    if (r.prompt && r.prompt.trim() !== '') usedRows[r.row] = true;
+  });
+
+  var freeRow = null;
+  for (var rn = day.rowStart; rn <= day.rowEnd; rn++) {
+    if (!usedRows[rn]) { freeRow = rn; break; }
+  }
+  if (freeRow === null) {
+    showToast('הגעת למקסימום של 9 סטורים ביום', true);
+    return;
+  }
+
+  // Add to state
+  if (!storiesData[dayKey]) storiesData[dayKey] = [];
+  var existing = findStoryRow(dayKey, freeRow);
+  if (existing) {
+    existing.prompt = ' '; // placeholder so it shows up
+  } else {
+    storiesData[dayKey].push({ row: freeRow, time: '', prompt: ' ', status: 'לא פעיל' });
+    storiesData[dayKey].sort(function(a,b){ return a.row - b.row; });
+  }
+
+  renderStories();
+
+  // focus the new textarea and clear the placeholder
+  setTimeout(function(){
+    var rowEl = document.getElementById('row-' + dayKey + '_' + freeRow);
+    if (rowEl) {
+      var ta = rowEl.querySelector('.story-textarea');
+      if (ta) {
+        ta.value = '';
+        var state = findStoryRow(dayKey, freeRow);
+        if (state) state.prompt = '';
+        ta.focus();
+        rowEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }, 50);
+}
+
+function queueSaveStory(dayKey, rowNum, patch) {
+  var key = dayKey + ':' + rowNum;
+  if (saveTimers[key]) clearTimeout(saveTimers[key]);
+  saveTimers[key] = setTimeout(function(){
+    delete saveTimers[key];
+    // send current state (all 3 fields) to be safe
+    var row = findStoryRow(dayKey, rowNum);
+    if (!row) return;
+    saveStoryRow(dayKey, rowNum, {
+      time:   row.time   || '',
+      prompt: row.prompt || '',
+      status: row.status || 'לא פעיל'
+    });
+  }, 500);
+}
+
+function saveStoryRow(dayKey, rowNum, payload, silent) {
+  savingCount++;
+  updateSavingIndicator();
+
+  var rowEl = document.getElementById('row-' + dayKey + '_' + rowNum);
+  if (rowEl) rowEl.classList.add('saving');
+
+  var url = SAVE_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent('פינות קבועות - סטורי')
+    + '&logSheetId=' + encodeURIComponent(logSheetId)
+    + '&action='     + encodeURIComponent('save story row')
+    + '&rowNum='     + encodeURIComponent(rowNum)
+    + '&time='       + encodeURIComponent(payload.time   || '')
+    + '&status='     + encodeURIComponent(payload.status || '')
+    + '&prompt='     + encodeURIComponent(payload.prompt || '');
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json().catch(function(){ return {}; }); })
+    .then(function(){
+      savingCount--;
+      updateSavingIndicator();
+      if (rowEl) rowEl.classList.remove('saving');
+    })
+    .catch(function(err){
+      savingCount--;
+      updateSavingIndicator();
+      if (rowEl) rowEl.classList.remove('saving');
+      console.error('saveStoryRow error:', err);
+      if (!silent) showToast('❌ שגיאה בשמירה', true);
+    });
+}
+
+function updateSavingIndicator() {
+  var ind = document.getElementById('story-saving-indicator');
+  if (!ind) return;
+  if (savingCount > 0) ind.classList.add('visible');
+  else ind.classList.remove('visible');
 }
 
 function buildGetUrl(sheetName, ranges) {
