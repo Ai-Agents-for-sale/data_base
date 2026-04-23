@@ -1205,9 +1205,26 @@ function renderTokens() {
 
   var html = '';
 
+  // ── איזור מפתח API (בראש) ──
+  html += '<div class="tokens-section-label">🔐 מפתח API המחובר לסוכן</div>';
+  html += '<div class="api-key-display">';
+  if (apiKey) {
+    html += '<div class="api-key-display-label">המפתח הנוכחי</div>';
+    html += '<div class="api-key-display-value" id="api-key-value">' + maskApiKey(apiKey) + '</div>';
+    html += '<div style="display:flex;gap:8px;flex-wrap:wrap">';
+    html += '<button class="api-key-reveal-btn" id="api-key-reveal-btn" onclick="toggleApiKeyReveal()">👁️ הצג מפתח מלא</button>';
+    html += '<button class="api-key-reveal-btn" onclick="toggleReplaceApiKey()" id="api-key-replace-btn">🔄 החלף מפתח</button>';
+    html += '</div>';
+  } else {
+    html += '<div class="api-key-display-label">אין מפתח שמור. הוסף מפתח כדי שהסוכן יוכל לפעול.</div>';
+    html += '<button class="api-key-reveal-btn" onclick="toggleReplaceApiKey()" id="api-key-replace-btn" style="align-self:flex-start">➕ הוסף מפתח</button>';
+  }
+  html += '<div id="api-key-replace-wrap"></div>';
+  html += '</div>';
+
   // ── טבלה 1: רמת החשבון (רק אם יש אדמין) ──
   if (hasAdmin) {
-    html += '<div class="tokens-section-label">💼 נתוני חשבון OpenRouter</div>';
+    html += '<div class="tokens-section-label" style="margin-top:8px">💼 נתוני חשבון OpenRouter</div>';
     html += '<div class="tokens-stats">';
     html += buildStatCard('balance', '💰', 'נותר לך ביתרה', balance);
     html += buildStatCard('total',   '📦', 'סך הכל נקנה בחשבון', totalCredits);
@@ -1216,19 +1233,19 @@ function renderTokens() {
   }
 
   // ── טבלה 2: רמת המפתח (תמיד מוצגת) ──
-  html += '<div class="tokens-section-label"' + (hasAdmin ? ' style="margin-top:8px"' : '') + '>🔑 נתוני המפתח המחובר לסוכן</div>';
+  html += '<div class="tokens-section-label" style="margin-top:8px">🔑 נתוני המפתח המחובר לסוכן</div>';
   html += '<div class="tokens-stats">';
-  html += buildStatCard('current', '💸', 'סך הכל בוזבז במפתח הזה', usage);
-  html += buildStatCard('current', '📅', 'בוזבז היום',  usageDaily);
-  html += buildStatCard('current', '📆', 'בוזבז השבוע', usageWeekly);
-  html += buildStatCard('current', '🗓️', 'בוזבז החודש', usageMonthly);
+  html += buildStatCard('current', '💸', 'סך הכל נוצל במפתח הזה', usage);
+  html += buildStatCard('current', '📅', 'נוצל היום',  usageDaily);
+  html += buildStatCard('current', '📆', 'נוצל השבוע', usageWeekly);
+  html += buildStatCard('current', '🗓️', 'נוצל החודש', usageMonthly);
   html += '</div>';
 
   // אם אין מפתח אדמין - הודעה + כפתור + הדרכה
   if (!hasAdmin) {
     html += '<div class="no-admin-notice">';
     html += '<strong>שים לב:</strong><br>';
-    html += 'כרגע מוצג לך רק כמה כסף בזבזת על המפתח API הנוכחי שמחובר לסוכן, ולא כמה כסף נשאר לך ביתרת הטוקנים.<br><br>';
+    html += 'כרגע מוצג לך רק כמה כסף השתמשת במפתח API הנוכחי שמחובר לסוכן, ולא כמה כסף נשאר לך ביתרת הטוקנים.<br><br>';
     html += 'אם תרצה שתהיה כאן גם הצגה של הסכום המדויק שנותר לך ביתרה, נדרש להנפיק עוד מפתח ב-OpenRouter, מסוג "Management Key".';
     html += '<button class="no-admin-notice-btn" onclick="toggleAdminTutorial()">';
     html += '📖 הדרכה להנפקת מפתח מנהל שיציג כמות טוקנים נוכחית ביתרה';
@@ -1240,27 +1257,27 @@ function renderTokens() {
       'כנסו לאתר <strong>openrouter.com</strong> ותוודאו שאתם מחוברים לחשבון שלכם. ' +
       '<br>אם לא, תבצעו חיבור עם המייל שאיתו ביצעתם את הרכישה של הטוקנים. ' +
       '<br>אם מופיע לכם <strong>Sign in</strong> בחלק העליון בצד ימין, סימן שאתם לא מחוברים.',
-      'https://ai-agents-for-sale.github.io/data_base/tutorial/step1.png',
+      'https://res.cloudinary.com/dpe5hzwcg/image/upload/f_auto,q_auto,w_800/v1/zero_work_tutorial/step1.png',
       'arrow-top-right'
     );
     html += buildTutorialStep(2,
       'הניחו את העכבר על איזור התמונת פרופיל בצד ימין למעלה של המסך, ולחצו על <strong>Credits</strong>.',
-      'https://ai-agents-for-sale.github.io/data_base/tutorial/step2.png',
+      'https://res.cloudinary.com/dpe5hzwcg/image/upload/f_auto,q_auto,w_800/v1/zero_work_tutorial/step2.png',
       'arrow-credits'
     );
     html += buildTutorialStep(3,
       'אחרי שאתם במסך ה-Credits, לחצו על <strong>Management keys</strong> בתפריט בצד שמאל.',
-      'https://ai-agents-for-sale.github.io/data_base/tutorial/step3.png',
+      'https://res.cloudinary.com/dpe5hzwcg/image/upload/f_auto,q_auto,w_800/v1/zero_work_tutorial/step3.png',
       'arrow-management-keys'
     );
     html += buildTutorialStep(4,
       'אחרי שאתם במסך Management keys, לחצו על כפתור ה-<strong>Create</strong> בצד ימין למעלה, ותנו שם למפתח.',
-      'https://ai-agents-for-sale.github.io/data_base/tutorial/step4.png',
+      'https://res.cloudinary.com/dpe5hzwcg/image/upload/f_auto,q_auto,w_800/v1/zero_work_tutorial/step4.png',
       ''
     );
     html += buildTutorialStep(5,
       'אחרי שנתתם שם למפתח, לחצו <strong>Create</strong>, והעתיקו את המפתח בעזרת הכפתור הקטן בצד ימין למפתח.',
-      'https://ai-agents-for-sale.github.io/data_base/tutorial/step5.png',
+      'https://res.cloudinary.com/dpe5hzwcg/image/upload/f_auto,q_auto,w_800/v1/zero_work_tutorial/step5.png',
       'circle-copy'
     );
     html += '<div class="admin-key-input-wrap">';
@@ -1272,16 +1289,6 @@ function renderTokens() {
     html += '<button class="admin-key-save-btn" id="admin-key-save-btn" onclick="saveAdminKey()" disabled>💾 שמור מפתח מנהל</button>';
     html += '<div id="admin-key-success-wrap"></div>';
     html += '</div>';
-    html += '</div>';
-  }
-
-  // איזור הצגת המפתח הרגיל
-  if (apiKey) {
-    html += '<div class="tokens-section-label" style="margin-top:8px">🔐 מפתח API נוכחי</div>';
-    html += '<div class="api-key-display">';
-    html += '<div class="api-key-display-label">המפתח המחובר לסוכן כרגע</div>';
-    html += '<div class="api-key-display-value" id="api-key-value">' + maskApiKey(apiKey) + '</div>';
-    html += '<button class="api-key-reveal-btn" id="api-key-reveal-btn" onclick="toggleApiKeyReveal()">👁️ הצג מפתח מלא</button>';
     html += '</div>';
   }
 
@@ -1360,7 +1367,7 @@ function saveAdminKey() {
     + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
     + '&sheet='      + encodeURIComponent('טוקנים')
     + '&logSheetId=' + encodeURIComponent(logSheetId)
-    + '&action='     + encodeURIComponent('save admin key')
+    + '&action='     + encodeURIComponent('api key')
     + '&adminKey='   + encodeURIComponent(key);
 
   fetch(url)
@@ -1400,6 +1407,77 @@ function toggleApiKeyReveal() {
     el.textContent = maskApiKey(tokensData.apiKey);
     btn.textContent = '👁️ הצג מפתח מלא';
   }
+}
+
+function toggleReplaceApiKey() {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+  var wrap = document.getElementById('api-key-replace-wrap');
+  var btn  = document.getElementById('api-key-replace-btn');
+  if (!wrap) return;
+  if (wrap.innerHTML) {
+    // כבר פתוח - סגור
+    wrap.innerHTML = '';
+    if (btn) btn.textContent = tokensData && tokensData.apiKey ? '🔄 החלף מפתח' : '➕ הוסף מפתח';
+    return;
+  }
+  // פתח שדה הזנה
+  var html = '<div style="margin-top:12px;display:flex;flex-direction:column;gap:10px">';
+  html += '<div class="admin-key-input-label-sub">הדביקו כאן את המפתח החדש מ-OpenRouter:</div>';
+  html += '<input type="text" class="admin-key-input" id="new-api-key-input" placeholder="sk-or-v1-..." oninput="onNewApiKeyInput()">';
+  html += '<button class="admin-key-save-btn" id="new-api-key-save-btn" onclick="saveNewApiKey()" disabled>💾 שמור מפתח חדש</button>';
+  html += '<div id="new-api-key-success-wrap"></div>';
+  html += '</div>';
+  wrap.innerHTML = html;
+  if (btn) btn.textContent = '✕ ביטול';
+}
+
+function onNewApiKeyInput() {
+  var inp = document.getElementById('new-api-key-input');
+  var btn = document.getElementById('new-api-key-save-btn');
+  if (!inp || !btn) return;
+  btn.disabled = inp.value.trim().length < 10;
+}
+
+function saveNewApiKey() {
+  var inp = document.getElementById('new-api-key-input');
+  var btn = document.getElementById('new-api-key-save-btn');
+  if (!inp || !btn) return;
+  var key = inp.value.trim();
+  if (!key) return;
+
+  btn.disabled = true;
+  btn.textContent = 'שומר...';
+
+  var url = SAVE_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent('טוקנים')
+    + '&logSheetId=' + encodeURIComponent(logSheetId)
+    + '&action='     + encodeURIComponent('api key')
+    + '&apiKey='     + encodeURIComponent(key);
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(){
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      // מעדכן את ה-state המקומי
+      if (tokensData) tokensData.apiKey = key;
+      var wrap = document.getElementById('new-api-key-success-wrap');
+      if (wrap) {
+        wrap.innerHTML = '<div class="admin-key-success"><strong>✅ מצוין!</strong><br>המפתח עודכן בהצלחה. הוא כבר מחובר לסוכן שלך.</div>';
+      }
+      inp.disabled = true;
+      btn.innerHTML = '✓ נשמר בהצלחה';
+      // מרענן את המסך אחרי 1.5 שניות כדי להציג את הנתונים עם המפתח החדש
+      setTimeout(function(){
+        fetchTokens();
+      }, 1500);
+    })
+    .catch(function(err){
+      console.error('save api key error:', err);
+      showToast('❌ שגיאה בשמירה, נסה שוב', true);
+      btn.disabled = false;
+      btn.innerHTML = '💾 שמור מפתח חדש';
+    });
 }
 
 function buildGetUrl(sheetName, ranges) {
