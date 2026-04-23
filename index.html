@@ -308,6 +308,54 @@
   .story-type-select.carousel{color:#a78bfa;border-color:rgba(167,139,250,0.4);background:rgba(167,139,250,0.08)}
   .story-type-select.regular{color:#60a5fa;border-color:rgba(96,165,250,0.4);background:rgba(96,165,250,0.08)}
 
+  /* Video/Clip Settings */
+  .vs-intro{background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.25);border-radius:var(--radius);padding:12px 14px;font-size:11px;line-height:1.7;color:var(--text-dim);margin-bottom:6px}
+  .vs-intro strong{color:var(--text)}
+
+  .vs-setting{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:62px}
+  .vs-setting-body{flex:1;min-width:0}
+  .vs-setting-label{font-size:13px;font-weight:700;color:var(--text);line-height:1.4}
+  .vs-setting-sub{font-size:11px;color:var(--text-dim);margin-top:3px;line-height:1.5}
+  .vs-setting-control{flex-shrink:0}
+
+  /* iOS-style toggle for boolean values */
+  .vs-toggle{position:relative;width:48px;height:28px;background:var(--bg3);border:1px solid var(--border);border-radius:14px;cursor:pointer;transition:background .2s,border-color .2s;flex-shrink:0}
+  .vs-toggle.on{background:rgba(22,163,74,0.25);border-color:var(--green)}
+  .vs-toggle-dot{position:absolute;top:2px;right:2px;width:22px;height:22px;background:var(--text-dim);border-radius:50%;transition:all .25s cubic-bezier(.4,.0,.2,1);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+  .vs-toggle.on .vs-toggle-dot{right:auto;left:2px;background:var(--green)}
+
+  /* Number input and dropdown */
+  .vs-number-input{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;padding:8px 10px;outline:none;width:72px;text-align:center;direction:ltr}
+  .vs-number-input:focus{border-color:var(--accent)}
+  .vs-select{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Heebo',sans-serif;font-size:12px;font-weight:600;padding:8px 10px;outline:none;cursor:pointer;min-width:120px}
+  .vs-select:focus{border-color:var(--accent)}
+
+  .vs-slider-wrap{display:flex;align-items:center;gap:10px;flex-shrink:0;width:160px}
+  .vs-slider{flex:1;-webkit-appearance:none;appearance:none;height:5px;background:var(--bg3);border-radius:3px;outline:none}
+  .vs-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;background:var(--accent);border-radius:50%;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+  .vs-slider::-moz-range-thumb{width:18px;height:18px;background:var(--accent);border-radius:50%;cursor:pointer;border:none;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+  .vs-slider-value{font-size:12px;font-weight:800;color:var(--accent);min-width:36px;text-align:center;direction:ltr}
+
+  /* Caption Styles */
+  .caption-style-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:border-color .15s,transform .12s}
+  .caption-style-card:active{transform:scale(.99)}
+  .caption-style-card.active{border-color:var(--green);background:rgba(22,163,74,0.05);box-shadow:0 0 0 3px rgba(22,163,74,0.15)}
+  .caption-style-video-wrap{position:relative;background:#000;aspect-ratio:9/16;max-height:220px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .caption-style-video-wrap video{width:100%;height:100%;object-fit:cover}
+  .caption-style-video-wrap .video-placeholder{color:var(--text-dim);font-size:30px}
+  .caption-style-active-badge{position:absolute;top:8px;left:8px;background:var(--green);color:#fff;font-size:10px;font-weight:800;padding:4px 8px;border-radius:10px;letter-spacing:.02em;box-shadow:0 2px 6px rgba(0,0,0,.3);display:flex;align-items:center;gap:4px}
+  .caption-style-body{padding:10px 12px 12px}
+  .caption-style-name{font-size:13px;font-weight:800;color:var(--text);line-height:1.3;margin-bottom:3px}
+  .caption-style-desc{font-size:10px;color:var(--text-dim);line-height:1.5}
+  .caption-style-actions{display:flex;gap:6px;margin-top:10px;align-items:center}
+  .caption-style-activate-btn{flex:1;background:var(--accent);color:#fff;border:none;border-radius:6px;font-family:'Heebo',sans-serif;font-size:12px;font-weight:700;padding:8px;cursor:pointer;transition:opacity .15s}
+  .caption-style-activate-btn:active{opacity:.8}
+  .caption-style-activate-btn.active{background:var(--green);pointer-events:none}
+  .caption-style-preview-btn{background:transparent;border:1px solid var(--border);color:var(--text-dim);border-radius:6px;padding:8px 10px;cursor:pointer;font-size:13px;transition:all .15s}
+  .caption-style-preview-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .caption-styles-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media (max-width:380px){ .caption-styles-grid{grid-template-columns:1fr} }
+
   .day-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
   .day-section-header{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(139,92,246,0.04));border-bottom:1px solid var(--border)}
   .day-section-header-title{font-size:14px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px}
@@ -719,7 +767,84 @@
 </div>
 <div class="screen" id="screen-videos">
   <div class="screen-topbar"><div class="screen-back" onclick="closeScreen('screen-videos')">›</div><div class="screen-topbar-icon">🎬</div><div class="screen-topbar-title">הגדרות סרטונים</div></div>
-  <div class="screen-body"><div class="coming-soon"><div class="coming-soon-icon">🚧</div><div class="coming-soon-title">בקרוב</div></div></div>
+  <div class="screen-body">
+    <div class="submenu-question">איזה הגדרות תרצה לנהל?</div>
+
+    <div class="nav-card purple" onclick="openVideoSettings()">
+      <div class="nav-card-icon">🎥</div>
+      <div class="nav-card-body">
+        <div class="nav-card-title-row"><div class="nav-card-title">הגדרות עריכה של סרטונים רגילים</div></div>
+        <div class="nav-card-desc">עריכת פרימיום - זומים, בירולים, קאטים אוטומטיים ועוד</div>
+      </div>
+      <div class="nav-card-arrow">‹</div>
+    </div>
+
+    <div class="nav-card pink" onclick="openClipSettings()">
+      <div class="nav-card-icon">✂️</div>
+      <div class="nav-card-body">
+        <div class="nav-card-title-row"><div class="nav-card-title">הגדרות עריכה של קליפים מסרטונים ארוכים</div></div>
+        <div class="nav-card-desc">הגדרות חיתוך קליפים קצרים מסרטונים ארוכים</div>
+      </div>
+      <div class="nav-card-arrow">‹</div>
+    </div>
+
+    <div class="nav-card blue" onclick="openCaptionStyles()">
+      <div class="nav-card-icon">💬</div>
+      <div class="nav-card-body">
+        <div class="nav-card-title-row"><div class="nav-card-title">סגנון כתוביות</div></div>
+        <div class="nav-card-desc">בחירת סגנון כתוביות לסרטונים (תקף ל-2 סוגי העריכות)</div>
+      </div>
+      <div class="nav-card-arrow">‹</div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-video-settings">
+  <div class="screen-topbar">
+    <div class="screen-back" onclick="closeScreen('screen-video-settings')">›</div>
+    <div class="screen-topbar-icon">🎥</div>
+    <div class="screen-topbar-title">עריכת סרטונים רגילים</div>
+  </div>
+  <div class="screen-body" id="video-settings-body">
+    <div class="screen-loading" id="video-settings-loading">
+      <div class="spinner"></div>
+      <div>טוען הגדרות...</div>
+    </div>
+  </div>
+  <div class="save-bar" id="video-settings-save-bar" style="display:none">
+    <button class="save-btn" id="video-settings-save-btn" onclick="saveVideoSettings()">💾 שמור שינויים</button>
+  </div>
+</div>
+
+<div class="screen" id="screen-clip-settings">
+  <div class="screen-topbar">
+    <div class="screen-back" onclick="closeScreen('screen-clip-settings')">›</div>
+    <div class="screen-topbar-icon">✂️</div>
+    <div class="screen-topbar-title">עריכת קליפים מסרטונים ארוכים</div>
+  </div>
+  <div class="screen-body" id="clip-settings-body">
+    <div class="screen-loading" id="clip-settings-loading">
+      <div class="spinner"></div>
+      <div>טוען הגדרות...</div>
+    </div>
+  </div>
+  <div class="save-bar" id="clip-settings-save-bar" style="display:none">
+    <button class="save-btn" id="clip-settings-save-btn" onclick="saveClipSettings()">💾 שמור שינויים</button>
+  </div>
+</div>
+
+<div class="screen" id="screen-caption-styles">
+  <div class="screen-topbar">
+    <div class="screen-back" onclick="closeScreen('screen-caption-styles')">›</div>
+    <div class="screen-topbar-icon">💬</div>
+    <div class="screen-topbar-title">סגנון כתוביות</div>
+  </div>
+  <div class="screen-body" id="caption-styles-body">
+    <div class="screen-loading" id="caption-styles-loading">
+      <div class="spinner"></div>
+      <div>טוען סגנונות...</div>
+    </div>
+  </div>
 </div>
 <div class="screen" id="screen-competitors">
   <div class="screen-topbar"><div class="screen-back" onclick="closeScreen('screen-competitors')">›</div><div class="screen-topbar-icon">📊</div><div class="screen-topbar-title">מתחרים ודוחות</div></div>
@@ -2280,6 +2405,414 @@ function savePosts() {
     })
     .catch(function(err){
       console.error('savePosts error:', err);
+      showToast('❌ שגיאה בשמירה, נסה שוב', true);
+      if (btn) { btn.disabled = false; btn.innerHTML = '💾 שמור שינויים'; }
+    });
+}
+
+/* ══════════════════════════════════════
+   VIDEO EDITING SETTINGS
+   Sheet: הגדרות לסגנון עריכה
+   Block 1 (video settings): cells A3-I3
+   Block 2 (clip settings):  cells J3-L3
+   Block 3 (caption styles): cells N3:S16 (rows 3-16)
+   ══════════════════════════════════════ */
+
+var VS_SHEET_NAME = 'הגדרות לסגנון עריכה';
+
+/* state */
+var vsData          = null;   // raw response from server
+var vsVideoDirty    = {};     // cells that were edited in video settings
+var vsClipDirty     = {};
+var captionStyles   = [];     // array of style rows 3-16
+var captionActiveRow = null;  // which row is currently active
+var captionPendingActivation = null; // row user wants to activate (not saved yet)
+
+function openVideoSettings() {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  vsVideoDirty = {};
+  var body = document.getElementById('video-settings-body');
+  body.innerHTML = '<div class="screen-loading"><div class="spinner"></div><div>טוען הגדרות...</div></div>';
+  updateVsSaveBtn('video');
+  var el = document.getElementById('screen-video-settings');
+  el.classList.add('visible'); el.scrollTop = 0;
+  if (tg) { tg.BackButton.show(); tg.BackButton.offClick(); tg.BackButton.onClick(function(){ closeScreen('screen-video-settings'); }); }
+  fetchVsData('video');
+}
+
+function openClipSettings() {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  vsClipDirty = {};
+  var body = document.getElementById('clip-settings-body');
+  body.innerHTML = '<div class="screen-loading"><div class="spinner"></div><div>טוען הגדרות...</div></div>';
+  updateVsSaveBtn('clip');
+  var el = document.getElementById('screen-clip-settings');
+  el.classList.add('visible'); el.scrollTop = 0;
+  if (tg) { tg.BackButton.show(); tg.BackButton.offClick(); tg.BackButton.onClick(function(){ closeScreen('screen-clip-settings'); }); }
+  fetchVsData('clip');
+}
+
+function openCaptionStyles() {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  captionPendingActivation = null;
+  var body = document.getElementById('caption-styles-body');
+  body.innerHTML = '<div class="screen-loading"><div class="spinner"></div><div>טוען סגנונות...</div></div>';
+  var el = document.getElementById('screen-caption-styles');
+  el.classList.add('visible'); el.scrollTop = 0;
+  if (tg) { tg.BackButton.show(); tg.BackButton.offClick(); tg.BackButton.onClick(function(){ closeScreen('screen-caption-styles'); }); }
+  fetchVsData('caption');
+}
+
+function fetchVsData(target) {
+  var url = GET_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent('הגדרות עריכה')
+    + '&sheetName='  + encodeURIComponent(VS_SHEET_NAME)
+    + '&logSheetId=' + encodeURIComponent(logSheetId);
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(data){
+      vsData = data || {};
+      // ה-n8n יחזיר: { videoSettings: {...}, clipSettings: {...}, captionStyles: [...] }
+      captionStyles = vsData.captionStyles || [];
+      // מזהה את הסגנון הפעיל
+      captionActiveRow = null;
+      captionStyles.forEach(function(s){ if (s.status === 'פעיל') captionActiveRow = s.row; });
+
+      if (target === 'video')   renderVideoSettings();
+      if (target === 'clip')    renderClipSettings();
+      if (target === 'caption') renderCaptionStyles();
+    })
+    .catch(function(err){
+      console.error('fetchVsData error:', err);
+      var bodyId = target === 'video' ? 'video-settings-body' :
+                   target === 'clip' ? 'clip-settings-body' : 'caption-styles-body';
+      var body = document.getElementById(bodyId);
+      if (body) body.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">שגיאה בטעינה</div><div class="empty-state-sub">נסה שוב מאוחר יותר</div></div>';
+    });
+}
+
+/* ── Block 1: Video Settings (cells A3-I3) ── */
+function renderVideoSettings() {
+  var body = document.getElementById('video-settings-body');
+  var vs = (vsData && vsData.videoSettings) || {};
+
+  var html = '';
+  html += '<div class="vs-intro">';
+  html += 'הגדרות האילו תקפות לסרטונים רגילים שאתם מעלים בתפריט של סרטונים - עריכת פרמיום. ניתן לשנות ולעדכן את ההגדרות בכל עת, השינוי יתקף בעריכות הבאות.';
+  html += '</div>';
+
+  html += '<div style="display:flex;flex-direction:column;gap:8px">';
+
+  // Language
+  html += buildVsDropdown('language', 'שפת הסרטונים', 'שפה שבה הסרטונים מדוברים - משפיעה על הכתוביות והעריכה',
+    vs.language || 'he', [{v:'he',l:'עברית'},{v:'en',l:'אנגלית'}], 'video', 'C3');
+
+  // Auto zooms (D3 boolean)
+  html += buildVsToggle('autoZooms', 'זומים אוטומטיים',
+    'הוספת זומים אוטומטיים ברגעים דרמטיים בסרטון',
+    vs.autoZooms === true || vs.autoZooms === 'true', 'video', 'D3');
+
+  // B-roll insert (E3 boolean)
+  html += buildVsToggle('brollEnabled', 'הכנסת סרטוני רקע (בירולים)',
+    'הוספה אוטומטית של סרטוני רקע רלוונטיים במהלך הסרטון',
+    vs.brollEnabled === true || vs.brollEnabled === 'true', 'video', 'E3');
+
+  // B-roll percentage (F3 number 0-100) - slider
+  html += buildVsSlider('brollPercent', 'אחוז בירולים בסרטון',
+    '0 = ללא סרטוני רקע, 100 = כל הסרטון. מומלץ 20-40.',
+    typeof vs.brollPercent === 'number' ? vs.brollPercent : (parseInt(vs.brollPercent) || 30),
+    'video', 'F3');
+
+  // Auto cuts & duplicates (G3 boolean)
+  html += buildVsToggle('autoCuts', 'קאטים אוטומטיים והסרת כפילויות',
+    'הסוכן יקצר משפטים שחוזרים על עצמם ויוריד מילים מיותרות',
+    vs.autoCuts === true || vs.autoCuts === 'true', 'video', 'G3');
+
+  // Remove silent moments (H3 boolean)
+  html += buildVsToggle('removeSilent', 'הורדת רגעים שקטים',
+    'הסרה אוטומטית של שקט ממושך בסרטון',
+    vs.removeSilent === true || vs.removeSilent === 'true', 'video', 'H3');
+
+  // Silence aggressiveness (I3 dropdown)
+  html += buildVsDropdown('silenceLevel', 'עד כמה אגרסיביים הקאטים?',
+    'natural = מינימליסטי, fast = בינוני, extra fast = אגרסיבי מאוד',
+    vs.silenceLevel || 'fast',
+    [{v:'natural',l:'natural'},{v:'fast',l:'fast'},{v:'extra fast',l:'extra fast'}],
+    'video', 'I3');
+
+  html += '</div>';
+
+  body.innerHTML = html;
+  updateVsSaveBtn('video');
+}
+
+/* ── Block 2: Clip Settings (cells J3-L3) ── */
+function renderClipSettings() {
+  var body = document.getElementById('clip-settings-body');
+  var cs = (vsData && vsData.clipSettings) || {};
+
+  var html = '';
+  html += '<div class="vs-intro">';
+  html += 'הגדרות האילו תקפות לקליפים קצרים שנחתכים אוטומטית מסרטונים ארוכים.';
+  html += '</div>';
+
+  html += '<div style="display:flex;flex-direction:column;gap:8px">';
+
+  // Max seconds (J3 number)
+  html += buildVsNumber('clipMax', 'כמות שניות מקסימלית לקליפ',
+    'קליפים לא יהיו ארוכים משניות אילו', typeof cs.clipMax === 'number' ? cs.clipMax : (parseInt(cs.clipMax) || 90),
+    'clip', 'J3', 10, 600);
+
+  // Min seconds (K3 number)
+  html += buildVsNumber('clipMin', 'כמות שניות מינימלית לקליפ',
+    'קליפים לא יהיו קצרים משניות אילו', typeof cs.clipMin === 'number' ? cs.clipMin : (parseInt(cs.clipMin) || 15),
+    'clip', 'K3', 5, 300);
+
+  // Face tracking (L3 boolean) - מעקב פנים
+  html += buildVsToggle('faceTracking', 'מעקב אוטומטי של המובלט על הפנים',
+    'המצלמה הווירטואלית תעקב אוטומטית אחרי הפנים בסרטון',
+    cs.faceTracking === true || cs.faceTracking === 'true', 'clip', 'L3');
+
+  html += '</div>';
+
+  body.innerHTML = html;
+  updateVsSaveBtn('clip');
+}
+
+/* ── Block 3: Caption Styles (rows 3-16, cols N-S) ── */
+function renderCaptionStyles() {
+  var body = document.getElementById('caption-styles-body');
+
+  var html = '';
+  html += '<div class="vs-intro">';
+  html += 'בחרו סגנון כתוביות אחד לסרטונים שלכם. הסגנון הנבחר יחול על עריכת סרטונים רגילים וגם על קליפים קצרים. <strong>רק סגנון אחד יכול להיות פעיל בכל פעם.</strong>';
+  html += '</div>';
+
+  html += '<div class="caption-styles-grid">';
+  captionStyles.forEach(function(style){
+    html += renderCaptionStyleCard(style);
+  });
+  html += '</div>';
+
+  body.innerHTML = html;
+}
+
+function renderCaptionStyleCard(style) {
+  var isActive  = captionActiveRow === style.row;
+  var isPending = captionPendingActivation === style.row;
+  var videoUrl  = driveToPreview(style.videoUrl);
+
+  var html = '<div class="caption-style-card' + (isActive ? ' active' : '') + '">';
+
+  html += '<div class="caption-style-video-wrap">';
+  if (videoUrl) {
+    html += '<video src="' + videoUrl + '" muted loop playsinline preload="metadata" onclick="toggleCaptionVideo(this,event)"></video>';
+  } else {
+    html += '<div class="video-placeholder">🎬</div>';
+  }
+  if (isActive) {
+    html += '<div class="caption-style-active-badge">✓ פעיל</div>';
+  }
+  html += '</div>';
+
+  html += '<div class="caption-style-body">';
+  html += '<div class="caption-style-name">' + escapeHtml(style.name || '') + '</div>';
+  if (style.description) {
+    html += '<div class="caption-style-desc">' + escapeHtml(style.description) + '</div>';
+  }
+  html += '<div class="caption-style-actions">';
+  if (isActive) {
+    html += '<button class="caption-style-activate-btn active">✓ זה הסגנון הפעיל</button>';
+  } else {
+    var btnLabel = isPending ? 'שומר...' : 'הפעל סגנון זה';
+    html += '<button class="caption-style-activate-btn" onclick="activateCaptionStyle(' + style.row + ')"' + (isPending ? ' disabled' : '') + '>' + btnLabel + '</button>';
+  }
+  html += '</div>';
+  html += '</div>';
+
+  html += '</div>';
+  return html;
+}
+
+/* Convert a Google Drive preview/share URL to a direct-view one that can load in <video> */
+function driveToPreview(url) {
+  if (!url) return '';
+  var m = url.match(/\/file\/d\/([^\/]+)/);
+  if (!m) return url;
+  return 'https://drive.google.com/uc?export=download&id=' + m[1];
+}
+
+function toggleCaptionVideo(videoEl, e) {
+  if (e) e.stopPropagation();
+  if (videoEl.paused) videoEl.play().catch(function(){});
+  else videoEl.pause();
+}
+
+function activateCaptionStyle(newRow) {
+  if (captionPendingActivation) return; // already saving
+  captionPendingActivation = newRow;
+  renderCaptionStyles();
+
+  var oldRow = captionActiveRow;
+  var changes = {};
+  // מכבה את הסגנון הקודם
+  if (oldRow && oldRow !== newRow) {
+    changes['P' + oldRow] = 'לא פעיל';
+  }
+  // מפעיל את החדש
+  changes['P' + newRow] = 'פעיל';
+
+  // שליחה
+  var url = SAVE_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent(VS_SHEET_NAME)
+    + '&logSheetId=' + encodeURIComponent(logSheetId)
+    + '&changes='    + encodeURIComponent(JSON.stringify(changes));
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json().catch(function(){ return {}; }); })
+    .then(function(){
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      // עדכון state מקומי
+      captionStyles.forEach(function(s){
+        if (s.row === oldRow) s.status = 'לא פעיל';
+        if (s.row === newRow) s.status = 'פעיל';
+      });
+      captionActiveRow = newRow;
+      captionPendingActivation = null;
+      showToast('✅ הסגנון הופעל בהצלחה!');
+      renderCaptionStyles();
+    })
+    .catch(function(err){
+      console.error('activateCaptionStyle error:', err);
+      captionPendingActivation = null;
+      showToast('❌ שגיאה בהפעלת הסגנון', true);
+      renderCaptionStyles();
+    });
+}
+
+/* ── UI builders for settings ── */
+function buildVsToggle(key, label, sub, value, target, cell) {
+  var html = '<div class="vs-setting">';
+  html += '<div class="vs-setting-body">';
+  html += '<div class="vs-setting-label">' + escapeHtml(label) + '</div>';
+  if (sub) html += '<div class="vs-setting-sub">' + escapeHtml(sub) + '</div>';
+  html += '</div>';
+  html += '<div class="vs-setting-control">';
+  html += '<div class="vs-toggle' + (value ? ' on' : '') + '" onclick="onVsToggle(\'' + target + '\',\'' + cell + '\',this)">';
+  html += '<div class="vs-toggle-dot"></div>';
+  html += '</div>';
+  html += '</div></div>';
+  return html;
+}
+
+function buildVsDropdown(key, label, sub, value, options, target, cell) {
+  var html = '<div class="vs-setting">';
+  html += '<div class="vs-setting-body">';
+  html += '<div class="vs-setting-label">' + escapeHtml(label) + '</div>';
+  if (sub) html += '<div class="vs-setting-sub">' + escapeHtml(sub) + '</div>';
+  html += '</div>';
+  html += '<div class="vs-setting-control">';
+  html += '<select class="vs-select" onchange="onVsDropdown(\'' + target + '\',\'' + cell + '\',this.value)">';
+  options.forEach(function(opt){
+    html += '<option value="' + opt.v + '"' + (value === opt.v ? ' selected' : '') + '>' + escapeHtml(opt.l) + '</option>';
+  });
+  html += '</select>';
+  html += '</div></div>';
+  return html;
+}
+
+function buildVsSlider(key, label, sub, value, target, cell) {
+  var html = '<div class="vs-setting">';
+  html += '<div class="vs-setting-body">';
+  html += '<div class="vs-setting-label">' + escapeHtml(label) + '</div>';
+  if (sub) html += '<div class="vs-setting-sub">' + escapeHtml(sub) + '</div>';
+  html += '</div>';
+  html += '<div class="vs-setting-control">';
+  html += '<div class="vs-slider-wrap">';
+  html += '<input type="range" class="vs-slider" min="0" max="100" value="' + value + '" oninput="onVsSlider(\'' + target + '\',\'' + cell + '\',this.value,this)">';
+  html += '<div class="vs-slider-value" id="sliderval-' + target + '-' + cell + '">' + value + '%</div>';
+  html += '</div>';
+  html += '</div></div>';
+  return html;
+}
+
+function buildVsNumber(key, label, sub, value, target, cell, min, max) {
+  var html = '<div class="vs-setting">';
+  html += '<div class="vs-setting-body">';
+  html += '<div class="vs-setting-label">' + escapeHtml(label) + '</div>';
+  if (sub) html += '<div class="vs-setting-sub">' + escapeHtml(sub) + '</div>';
+  html += '</div>';
+  html += '<div class="vs-setting-control">';
+  html += '<input type="number" class="vs-number-input" value="' + value + '" min="' + min + '" max="' + max + '" oninput="onVsNumber(\'' + target + '\',\'' + cell + '\',this.value)">';
+  html += '</div></div>';
+  return html;
+}
+
+/* ── Event handlers for vs controls ── */
+function onVsToggle(target, cell, el) {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+  var on = !el.classList.contains('on');
+  el.classList.toggle('on', on);
+  setVsDirty(target, cell, on ? 'TRUE' : 'FALSE');
+}
+function onVsDropdown(target, cell, value) {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+  setVsDirty(target, cell, value);
+}
+function onVsSlider(target, cell, value, el) {
+  var label = document.getElementById('sliderval-' + target + '-' + cell);
+  if (label) label.textContent = value + '%';
+  setVsDirty(target, cell, value);
+}
+function onVsNumber(target, cell, value) {
+  setVsDirty(target, cell, value);
+}
+
+function setVsDirty(target, cell, value) {
+  if (target === 'video') vsVideoDirty[cell] = value;
+  else if (target === 'clip') vsClipDirty[cell] = value;
+  updateVsSaveBtn(target);
+}
+
+function updateVsSaveBtn(target) {
+  var bar = document.getElementById((target === 'video' ? 'video' : 'clip') + '-settings-save-bar');
+  if (!bar) return;
+  var dirty = target === 'video' ? vsVideoDirty : vsClipDirty;
+  bar.style.display = Object.keys(dirty).length > 0 ? 'block' : 'none';
+}
+
+function saveVideoSettings() { saveVsBlock('video'); }
+function saveClipSettings()  { saveVsBlock('clip'); }
+
+function saveVsBlock(target) {
+  var changes = target === 'video' ? vsVideoDirty : vsClipDirty;
+  if (Object.keys(changes).length === 0) return;
+
+  var btnId = (target === 'video' ? 'video' : 'clip') + '-settings-save-btn';
+  var btn = document.getElementById(btnId);
+  if (btn) { btn.disabled = true; btn.textContent = 'שומר...'; }
+
+  var url = SAVE_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent(VS_SHEET_NAME)
+    + '&logSheetId=' + encodeURIComponent(logSheetId)
+    + '&changes='    + encodeURIComponent(JSON.stringify(changes));
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json().catch(function(){ return {}; }); })
+    .then(function(){
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      showToast('✅ השינויים נשמרו בהצלחה!');
+      if (target === 'video') vsVideoDirty = {};
+      else                    vsClipDirty  = {};
+      if (btn) { btn.disabled = false; btn.innerHTML = '💾 שמור שינויים'; }
+      updateVsSaveBtn(target);
+    })
+    .catch(function(err){
+      console.error('saveVsBlock error:', err);
       showToast('❌ שגיאה בשמירה, נסה שוב', true);
       if (btn) { btn.disabled = false; btn.innerHTML = '💾 שמור שינויים'; }
     });
