@@ -359,13 +359,14 @@
   .caption-styles-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
   /* Video modal for full-screen preview */
-  .video-modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease both}
+  .video-modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:9999;display:none;align-items:center;justify-content:center;padding:60px 20px 20px;animation:fadeIn .2s ease both;cursor:zoom-out}
   .video-modal-backdrop.visible{display:flex}
-  .video-modal-inner{position:relative;width:100%;max-width:420px;aspect-ratio:9/16;max-height:85vh;background:#000;border-radius:18px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+  .video-modal-inner{position:relative;width:100%;max-width:320px;aspect-ratio:9/16;max-height:68vh;background:#000;border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6);cursor:default}
   .video-modal-inner iframe{position:absolute;top:0;left:50%;transform:translateX(-50%);height:100%;width:200%;border:0}
-  .video-modal-close{position:absolute;top:-48px;left:50%;transform:translateX(-50%);width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.25);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
-  .video-modal-close:hover{background:rgba(255,255,255,0.25);transform:translateX(-50%) scale(1.05)}
-  .video-modal-title{position:absolute;top:-40px;right:0;color:#fff;font-size:13px;font-weight:700;padding:0 8px}
+  .video-modal-back{position:absolute;top:16px;right:16px;display:flex;align-items:center;gap:6px;padding:8px 14px 8px 10px;border-radius:22px;background:rgba(0,0,0,0.65);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.2);color:#fff;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;z-index:10000;transition:all .15s;box-shadow:0 4px 12px rgba(0,0,0,0.4)}
+  .video-modal-back:hover{background:rgba(0,0,0,0.8);transform:scale(1.03)}
+  .video-modal-back-arrow{font-size:18px;line-height:1}
+  .video-modal-title{position:absolute;top:18px;left:20px;right:120px;color:#fff;font-size:13px;font-weight:700;z-index:10000;text-shadow:0 2px 8px rgba(0,0,0,0.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
   .day-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
@@ -875,9 +876,12 @@
 </div>
 
 <div class="video-modal-backdrop" id="video-modal" onclick="closeVideoModal(event)">
+  <div class="video-modal-title" id="video-modal-title"></div>
+  <button class="video-modal-back" onclick="closeVideoModal()">
+    <span class="video-modal-back-arrow">←</span>
+    <span>חזרה</span>
+  </button>
   <div class="video-modal-inner" onclick="event.stopPropagation()">
-    <div class="video-modal-title" id="video-modal-title"></div>
-    <button class="video-modal-close" onclick="closeVideoModal()" aria-label="סגור">✕</button>
     <div id="video-modal-iframe-wrap"></div>
   </div>
 </div>
@@ -2630,7 +2634,6 @@ function renderCaptionStyleCard(style) {
   html += '<div class="caption-style-video-wrap"' + (driveId ? ' onclick="openVideoModal(\'' + driveId + '\',\'' + nameEsc + '\')"' : '') + '>';
   if (driveId) {
     html += '<iframe src="https://drive.google.com/file/d/' + driveId + '/preview" allow="autoplay" loading="lazy"></iframe>';
-    html += '<div class="video-tap-overlay">▶</div>';
   } else {
     html += '<div class="video-placeholder">🎬</div>';
   }
@@ -2671,7 +2674,9 @@ function openVideoModal(driveId, name) {
 }
 
 function closeVideoModal(e) {
-  if (e && e.target && e.target.closest && e.target.closest('.video-modal-inner') && !e.target.classList.contains('video-modal-close')) return;
+  // אם נקרא מאירוע - סגור רק אם הקליק היה על ה-backdrop עצמו או על כפתור החזרה
+  if (e && e.target && e.target.closest && e.target.closest('.video-modal-inner')) return;
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
   var wrap  = document.getElementById('video-modal-iframe-wrap');
   var modal = document.getElementById('video-modal');
   if (modal) modal.classList.remove('visible');
