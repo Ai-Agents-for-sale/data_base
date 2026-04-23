@@ -1633,7 +1633,8 @@ function openStories() {
 function fetchStories() {
   var url = GET_URL
     + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
-    + '&sheet='      + encodeURIComponent('פינות קבועות - סטורי')
+    + '&sheet='      + encodeURIComponent('פינות קבועות')
+    + '&sheetName='  + encodeURIComponent('פינות קבועות - סטורי')
     + '&logSheetId=' + encodeURIComponent(logSheetId);
 
   fetch(url)
@@ -1876,9 +1877,10 @@ function saveStoryRow(dayKey, rowNum, payload, silent) {
 
   var url = SAVE_URL
     + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
-    + '&sheet='      + encodeURIComponent('פינות קבועות - סטורי')
+    + '&sheet='      + encodeURIComponent('פינות קבועות')
+    + '&sheetName='  + encodeURIComponent('פינות קבועות - סטורי')
     + '&logSheetId=' + encodeURIComponent(logSheetId)
-    + '&action='     + encodeURIComponent('save story row')
+    + '&action='     + encodeURIComponent('save row')
     + '&rowNum='     + encodeURIComponent(rowNum)
     + '&time='       + encodeURIComponent(payload.time   || '')
     + '&status='     + encodeURIComponent(payload.status || '')
