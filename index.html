@@ -105,6 +105,32 @@
   .settings-section-sub{font-size:11px;color:var(--text-dim);margin-top:2px}
 
   .submenu-question{font-size:14px;font-weight:800;color:var(--text);padding:4px 4px 2px;line-height:1.4}
+  .submenu-separator{height:1px;background:var(--border);margin:10px 0 6px;position:relative}
+  .submenu-separator::after{content:'או';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg);padding:0 10px;font-size:10px;font-weight:700;color:var(--text-dim);letter-spacing:.05em}
+
+  /* Long videos queue */
+  .lv-intro{background:rgba(234,179,8,0.08);border:1px solid rgba(234,179,8,0.3);border-radius:var(--radius);padding:12px 14px;font-size:11px;line-height:1.7;color:var(--text-dim);margin-bottom:6px}
+  .lv-intro strong{color:#fbbf24}
+
+  .lv-count-pill{display:inline-flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:6px 12px;font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px}
+  .lv-count-pill-num{background:var(--accent);color:#fff;border-radius:10px;padding:1px 8px;font-size:11px;font-weight:800}
+
+  .lv-row{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;display:flex;flex-direction:column;gap:8px;position:relative;transition:border-color .15s}
+  .lv-row-header{display:flex;align-items:center;gap:8px}
+  .lv-row-num{width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .lv-row-delete{background:transparent;border:1px solid var(--border);color:var(--text-dim);border-radius:6px;padding:6px 9px;cursor:pointer;font-size:13px;transition:all .15s;flex:0 0 auto;margin-inline-start:auto}
+  .lv-row-delete:hover{border-color:var(--red);color:var(--red);background:rgba(220,38,38,.06)}
+  .lv-input-label{font-size:10px;font-weight:700;color:var(--text-dim);padding-inline-start:3px;line-height:1.3}
+  .lv-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Heebo',sans-serif;font-size:12px;padding:9px 10px;outline:none;transition:border-color .15s;box-sizing:border-box}
+  .lv-input:focus{border-color:var(--accent)}
+  .lv-input::placeholder{color:var(--text-dimmer)}
+  .lv-input-url{direction:ltr;text-align:left}
+
+  .lv-add-btn{background:transparent;border:1.5px dashed var(--border-h);color:var(--text-dim);border-radius:var(--radius-sm);padding:14px;cursor:pointer;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:6px;width:100%}
+  .lv-add-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(234,179,8,.05)}
+
+  .lv-empty{text-align:center;padding:32px 16px;color:var(--text-dim);font-size:13px;background:var(--bg2);border:1px dashed var(--border);border-radius:var(--radius);margin-bottom:8px}
+  .lv-empty-icon{font-size:40px;opacity:.5;margin-bottom:8px}
 
   /* ── Info box (explanations above sub-folders) ── */
   .info-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;gap:12px}
@@ -809,6 +835,17 @@
       </div>
       <div class="nav-card-arrow">‹</div>
     </div>
+
+    <div class="submenu-separator"></div>
+
+    <div class="nav-card gold" onclick="openLongVideos()">
+      <div class="nav-card-icon">📹</div>
+      <div class="nav-card-body">
+        <div class="nav-card-title-row"><div class="nav-card-title">סרטונים ארוכים לערוך לקליפים קצרים</div></div>
+        <div class="nav-card-desc">ניהול תור של סרטוני יוטיוב ארוכים שממתינים לעריכה</div>
+      </div>
+      <div class="nav-card-arrow">‹</div>
+    </div>
   </div>
 </div>
 
@@ -857,6 +894,23 @@
       <div class="spinner"></div>
       <div>טוען סגנונות...</div>
     </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-long-videos">
+  <div class="screen-topbar">
+    <div class="screen-back" onclick="closeScreen('screen-long-videos')">›</div>
+    <div class="screen-topbar-icon">📹</div>
+    <div class="screen-topbar-title">סרטונים ארוכים לעריכה</div>
+  </div>
+  <div class="screen-body" id="long-videos-body">
+    <div class="screen-loading" id="long-videos-loading">
+      <div class="spinner"></div>
+      <div>טוען סרטונים...</div>
+    </div>
+  </div>
+  <div class="save-bar" id="long-videos-save-bar" style="display:none">
+    <button class="save-btn" id="long-videos-save-btn" onclick="saveLongVideos()">💾 שמור שינויים</button>
   </div>
 </div>
 <div class="screen" id="screen-competitors">
@@ -2863,6 +2917,227 @@ function saveVsBlock(target) {
     })
     .catch(function(err){
       console.error('saveVsBlock error:', err);
+      showToast('❌ שגיאה בשמירה, נסה שוב', true);
+      if (btn) { btn.disabled = false; btn.innerHTML = '💾 שמור שינויים'; }
+    });
+}
+
+/* ══════════════════════════════════════
+   LONG VIDEOS QUEUE - סרטונים ארוכים לערוך
+   Sheet: סרטונים ארוכים לערוך
+   Column A = name, Column B = YouTube URL
+   Data starts at row 3 (rows 1-2 are headers)
+   ══════════════════════════════════════ */
+
+var LV_SHEET_NAME = 'סרטונים ארוכים לערוך';
+var LV_DATA_START_ROW = 3;
+
+/* longVideos = array of {row, name, url, isNew} — sorted by row asc */
+var longVideos   = [];
+var longVidsInitial = [];    // snapshot מהטעינה, לזיהוי מחיקות
+var lvDirty      = false;    // האם יש שינויים
+
+function openLongVideos() {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  longVideos = [];
+  longVidsInitial = [];
+  lvDirty = false;
+
+  var body = document.getElementById('long-videos-body');
+  body.innerHTML = '<div class="screen-loading"><div class="spinner"></div><div>טוען סרטונים...</div></div>';
+  updateLvSaveBtn();
+
+  var el = document.getElementById('screen-long-videos');
+  el.classList.add('visible');
+  el.scrollTop = 0;
+  if (tg) {
+    tg.BackButton.show();
+    tg.BackButton.offClick();
+    tg.BackButton.onClick(function(){ closeScreen('screen-long-videos'); });
+  }
+
+  fetchLongVideos();
+}
+
+function fetchLongVideos() {
+  var url = GET_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent('סרטונים ארוכים')
+    + '&sheetName='  + encodeURIComponent(LV_SHEET_NAME)
+    + '&logSheetId=' + encodeURIComponent(logSheetId);
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(data){
+      longVideos = (data && data.videos) || [];
+      longVidsInitial = JSON.parse(JSON.stringify(longVideos)); // deep clone
+      renderLongVideos();
+    })
+    .catch(function(err){
+      console.error('fetchLongVideos error:', err);
+      var body = document.getElementById('long-videos-body');
+      body.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">שגיאה בטעינה</div><div class="empty-state-sub">נסה שוב מאוחר יותר</div></div>';
+    });
+}
+
+function renderLongVideos() {
+  var body = document.getElementById('long-videos-body');
+
+  var html = '';
+  html += '<div class="lv-intro">';
+  html += '<strong>📹 תור סרטונים ארוכים</strong><br>';
+  html += 'כל הקישורים של סרטוני יוטיוב ארוכים שישלחו לעריכה לקליפים קצרים. תוכלו להדביק כאן את כל הקישורים שלכם בפעם אחת במקום להעלות קישור לסוכן בכל פעם. כשתלחצו על "עריכת סרטון ארוך לקליפים" בסוכן - הוא ייקח את הסרטון הבא מהרשימה ויעבוד עליו.';
+  html += '</div>';
+
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px">';
+  html += '<div class="lv-count-pill">';
+  html += 'סרטונים בתור <span class="lv-count-pill-num">' + longVideos.length + '</span>';
+  html += '</div>';
+  html += '</div>';
+
+  html += '<div style="display:flex;flex-direction:column;gap:8px">';
+
+  if (longVideos.length === 0) {
+    html += '<div class="lv-empty">';
+    html += '<div class="lv-empty-icon">🎬</div>';
+    html += 'אין סרטונים בתור.<br>לחץ על "הוסף סרטון" להתחיל';
+    html += '</div>';
+  } else {
+    longVideos.forEach(function(v, idx){
+      html += renderLongVideoRow(v, idx);
+    });
+  }
+
+  html += '<button class="lv-add-btn" onclick="addLongVideo()">➕ הוסף סרטון</button>';
+
+  html += '</div>';
+
+  body.innerHTML = html;
+  updateLvSaveBtn();
+}
+
+function renderLongVideoRow(video, idx) {
+  var rowId = 'lvrow_' + idx;
+  var html = '<div class="lv-row" id="' + rowId + '" data-idx="' + idx + '">';
+
+  html += '<div class="lv-row-header">';
+  html += '<div class="lv-row-num">' + (idx + 1) + '</div>';
+  html += '<div style="font-size:12px;color:var(--text-dim);font-weight:700">סרטון בתור</div>';
+  html += '<button class="lv-row-delete" onclick="deleteLongVideo(' + idx + ')" title="מחק">🗑</button>';
+  html += '</div>';
+
+  html += '<div>';
+  html += '<div class="lv-input-label">שם הסרטון</div>';
+  html += '<input type="text" class="lv-input" placeholder="שם הסרטון (לזיהוי)" value="' + escapeAttr(video.name || '') + '" oninput="onLongVideoInput(' + idx + ',\'name\',this.value)">';
+  html += '</div>';
+
+  html += '<div>';
+  html += '<div class="lv-input-label">קישור יוטיוב</div>';
+  html += '<input type="url" class="lv-input lv-input-url" placeholder="https://youtube.com/watch?v=..." value="' + escapeAttr(video.url || '') + '" oninput="onLongVideoInput(' + idx + ',\'url\',this.value)">';
+  html += '</div>';
+
+  html += '</div>';
+  return html;
+}
+
+function onLongVideoInput(idx, field, value) {
+  if (!longVideos[idx]) return;
+  longVideos[idx][field] = value;
+  markLvDirty();
+}
+
+function markLvDirty() {
+  lvDirty = true;
+  updateLvSaveBtn();
+}
+
+function deleteLongVideo(idx) {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+  longVideos.splice(idx, 1);
+  markLvDirty();
+  renderLongVideos();
+}
+
+function addLongVideo() {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  longVideos.push({ row: null, name: '', url: '', isNew: true });
+  markLvDirty();
+  renderLongVideos();
+
+  // focus new row
+  setTimeout(function(){
+    var rowEl = document.getElementById('lvrow_' + (longVideos.length - 1));
+    if (rowEl) {
+      var input = rowEl.querySelector('.lv-input');
+      if (input) { input.focus(); rowEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    }
+  }, 50);
+}
+
+function updateLvSaveBtn() {
+  var bar = document.getElementById('long-videos-save-bar');
+  if (!bar) return;
+  bar.style.display = lvDirty ? 'block' : 'none';
+}
+
+function collectLongVideoChanges() {
+  /*
+    אסטרטגיה: לא רוצים "diff" חכם - במקום זה פשוט כותבים את כל הרשימה
+    מ-שורה 3 ואילך. שורות מ-longVidsInitial שכבר לא קיימות, נמחק את
+    התאים שלהן (כותבים מחרוזת ריקה).
+  */
+  var changes = {};
+  var maxRow = LV_DATA_START_ROW - 1;
+
+  // כותבים את הרשימה הנוכחית
+  longVideos.forEach(function(v, i){
+    var r = LV_DATA_START_ROW + i;
+    changes['A' + r] = v.name || '';
+    changes['B' + r] = v.url  || '';
+    if (r > maxRow) maxRow = r;
+  });
+
+  // מנקים שורות שהיו קיימות במקור ואינן עוד ברשימה
+  longVidsInitial.forEach(function(v){
+    if (v.row && v.row > maxRow) {
+      changes['A' + v.row] = '';
+      changes['B' + v.row] = '';
+    }
+  });
+
+  return changes;
+}
+
+function saveLongVideos() {
+  var changes = collectLongVideoChanges();
+  if (Object.keys(changes).length === 0) { lvDirty = false; updateLvSaveBtn(); return; }
+
+  var btn = document.getElementById('long-videos-save-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'שומר...'; }
+
+  var url = SAVE_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent(LV_SHEET_NAME)
+    + '&logSheetId=' + encodeURIComponent(logSheetId)
+    + '&changes='    + encodeURIComponent(JSON.stringify(changes));
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json().catch(function(){ return {}; }); })
+    .then(function(){
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      showToast('✅ השינויים נשמרו בהצלחה!');
+      // עדכון snapshot
+      longVideos.forEach(function(v, i){
+        v.row = LV_DATA_START_ROW + i;
+        delete v.isNew;
+      });
+      longVidsInitial = JSON.parse(JSON.stringify(longVideos));
+      lvDirty = false;
+      if (btn) { btn.disabled = false; btn.innerHTML = '💾 שמור שינויים'; }
+      updateLvSaveBtn();
+    })
+    .catch(function(err){
+      console.error('saveLongVideos error:', err);
       showToast('❌ שגיאה בשמירה, נסה שוב', true);
       if (btn) { btn.disabled = false; btn.innerHTML = '💾 שמור שינויים'; }
     });
