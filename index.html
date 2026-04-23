@@ -340,8 +340,9 @@
   .caption-style-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:border-color .15s,transform .12s}
   .caption-style-card:active{transform:scale(.99)}
   .caption-style-card.active{border-color:var(--green);background:rgba(22,163,74,0.05);box-shadow:0 0 0 3px rgba(22,163,74,0.15)}
-  .caption-style-video-wrap{position:relative;background:#000;aspect-ratio:9/16;max-height:220px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-  .caption-style-video-wrap video{width:100%;height:100%;object-fit:cover}
+  .caption-style-video-wrap{position:relative;background:#000;aspect-ratio:9/16;max-height:280px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .caption-style-video-wrap video,
+  .caption-style-video-wrap iframe{width:100%;height:100%;object-fit:cover;border:0}
   .caption-style-video-wrap .video-placeholder{color:var(--text-dim);font-size:30px}
   .caption-style-active-badge{position:absolute;top:8px;left:8px;background:var(--green);color:#fff;font-size:10px;font-weight:800;padding:4px 8px;border-radius:10px;letter-spacing:.02em;box-shadow:0 2px 6px rgba(0,0,0,.3);display:flex;align-items:center;gap:4px}
   .caption-style-body{padding:10px 12px 12px}
@@ -2602,13 +2603,13 @@ function renderCaptionStyles() {
 function renderCaptionStyleCard(style) {
   var isActive  = captionActiveRow === style.row;
   var isPending = captionPendingActivation === style.row;
-  var videoUrl  = driveToPreview(style.videoUrl);
+  var driveId   = extractDriveId(style.videoUrl);
 
   var html = '<div class="caption-style-card' + (isActive ? ' active' : '') + '">';
 
   html += '<div class="caption-style-video-wrap">';
-  if (videoUrl) {
-    html += '<video src="' + videoUrl + '" muted loop playsinline preload="metadata" onclick="toggleCaptionVideo(this,event)"></video>';
+  if (driveId) {
+    html += '<iframe src="https://drive.google.com/file/d/' + driveId + '/preview" allow="autoplay" allowfullscreen loading="lazy"></iframe>';
   } else {
     html += '<div class="video-placeholder">🎬</div>';
   }
@@ -2636,12 +2637,14 @@ function renderCaptionStyleCard(style) {
   return html;
 }
 
-/* Convert a Google Drive preview/share URL to a direct-view one that can load in <video> */
-function driveToPreview(url) {
+/* חילוץ file ID מקישור של Google Drive */
+function extractDriveId(url) {
   if (!url) return '';
-  var m = url.match(/\/file\/d\/([^\/]+)/);
-  if (!m) return url;
-  return 'https://drive.google.com/uc?export=download&id=' + m[1];
+  var m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (m) return m[1];
+  m = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (m) return m[1];
+  return '';
 }
 
 function toggleCaptionVideo(videoEl, e) {
