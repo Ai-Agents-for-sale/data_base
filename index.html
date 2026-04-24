@@ -400,6 +400,17 @@
   .db-video-delete{position:absolute;top:8px;right:8px;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3;transition:all .15s}
   .db-video-delete:hover{background:var(--red);transform:scale(1.05)}
 
+  /* Subfolder cards - for "ready from long" sub-projects */
+  .db-subfolder-grid{display:flex;flex-direction:column;gap:8px}
+  .db-subfolder-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s}
+  .db-subfolder-card:hover{border-color:var(--accent);background:var(--bg3)}
+  .db-subfolder-card:active{transform:scale(.99)}
+  .db-subfolder-icon{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,rgba(59,130,246,0.18),rgba(59,130,246,0.06));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;border:1px solid rgba(59,130,246,0.25)}
+  .db-subfolder-body{flex:1;min-width:0}
+  .db-subfolder-name{font-size:13px;font-weight:800;color:var(--text);line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .db-subfolder-hint{font-size:10px;color:var(--text-dim);margin-top:2px}
+  .db-subfolder-arrow{color:var(--text-dim);font-size:20px;line-height:1;flex-shrink:0}
+
   /* Video modal for full-screen preview */
   .video-modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:9999;display:none;align-items:center;justify-content:center;padding:60px 20px 20px;animation:fadeIn .2s ease both;cursor:zoom-out}
   .video-modal-backdrop.visible{display:flex}
@@ -874,6 +885,15 @@
       <div class="nav-card-arrow">‹</div>
     </div>
 
+    <div class="nav-card blue" onclick="openDropboxFolder('ready-from-long')">
+      <div class="nav-card-icon">🎞️</div>
+      <div class="nav-card-body">
+        <div class="nav-card-title-row"><div class="nav-card-title">תיקיית מוכנים מארוכים</div></div>
+        <div class="nav-card-desc">קליפים קצרים שנחתכו מסרטונים ארוכים - מסודרים בתתי תיקיות</div>
+      </div>
+      <div class="nav-card-arrow">‹</div>
+    </div>
+
     <div class="section-label" style="margin-top:18px">ניהול סרטונים ארוכים</div>
 
     <div class="nav-card gold" onclick="openLongVideos()">
@@ -1256,6 +1276,7 @@ function closeScreen(id) {
   if (id === 'screen-prompt')   resetPromptScreen();
   if (id === 'screen-folder')   handleFolderBack();
   if (id === 'screen-materials') folderStack = [];
+  if (id === 'screen-dropbox-folder') { dbCurrentFolder = null; dbCurrentSubPath = null; dbClips = []; dbSubfolders = []; }
 
   if (!document.querySelector('.screen.visible') && tg) tg.BackButton.hide();
 }
@@ -3196,39 +3217,49 @@ function saveLongVideos() {
 }
 
 /* ══════════════════════════════════════
-   DROPBOX FOLDERS - גלם / מוכנים
+   DROPBOX FOLDERS - גלם / מוכנים / מוכנים מארוכים
    Uses same GET webhook as everything else.
-   App sends: ?sheet=דרופבוקס&folderType=raw|ready
-   n8n picks the actual folderPath from the log sheet
-   Response: { clips: [...], folderPath: "/full/path/to/folder" }
+   App sends:
+     ?sheet=דרופבוקס&folderType=raw|ready|ready-from-long
+     or
+     ?sheet=דרופבוקס&folderPath=/specific/subfolder/path (when entering a sub-project)
+   Response:
+     For files mode:    { clips: [...], folderPath }
+     For folders mode:  { subfolders: [...], folderPath }
    ══════════════════════════════════════ */
 
 /* state */
-var dbCurrentFolder  = null;   // 'raw' | 'ready'
-var dbFolderPath     = '';     // full dropbox path for the current folder
-var dbClips          = [];     // array of {name, driveUrl, webViewLink, downloadUrl, dropboxPath}
+var dbCurrentFolder  = null;   // 'raw' | 'ready' | 'ready-from-long'
+var dbCurrentSubPath = null;   // נתיב של תת תיקייה אם בתוך 'ready-from-long'
+var dbFolderPath     = '';     // full dropbox path for the current view
+var dbClips          = [];     // array of clip objects
+var dbSubfolders     = [];     // array of {name, dropboxPath}
 
 var DB_FOLDER_META = {
   raw:   { icon: '🎬', title: 'תיקיית סרטוני גלם טייק יחיד',
            intro: 'כאן מעלים סרטונים גולמיים (טייק אחד) שרוצים שהסוכן יערוך בעריכת פרימיום. <strong>הסוכן לא יודע עדיין ליצור סרטון מכמה טייקים</strong> - כשהפיצ\'ר יצא תהיה תיקייה נפרדת לכך.' },
   ready: { icon: '✅', title: 'סרטונים מוכנים',
-           intro: 'יש לכם כבר סרטונים מוכנים שערכתם בעצמכם? תוכלו להעלות אותם לכאן וככה הם יופיעו לכם באפליקציה של הסרטונים ותוכלו לתזמן ולהעלות אותם לרשתות חברתיות.' }
+           intro: 'יש לכם כבר סרטונים מוכנים שערכתם בעצמכם? תוכלו להעלות אותם לכאן וככה הם יופיעו לכם באפליקציה של הסרטונים ותוכלו לתזמן ולהעלות אותם לרשתות חברתיות.' },
+  'ready-from-long': { icon: '🎞️', title: 'מוכנים מארוכים',
+           intro: 'כאן נמצאים כל הקליפים הקצרים שנחתכו מסרטונים ארוכים. <strong>הקליפים מסודרים לפי פרויקט</strong> - כל תת תיקייה מכילה את הקליפים של סרטון מקור אחד. לחץ על תת תיקייה כדי לראות את הקליפים שלה.' }
 };
 
 function openDropboxFolder(folderType) {
   if (!DB_FOLDER_META[folderType]) return;
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 
-  dbCurrentFolder = folderType;
-  dbFolderPath    = '';
-  dbClips         = [];
+  dbCurrentFolder  = folderType;
+  dbCurrentSubPath = null;
+  dbFolderPath     = '';
+  dbClips          = [];
+  dbSubfolders     = [];
 
   var meta = DB_FOLDER_META[folderType];
   document.getElementById('db-folder-icon').textContent = meta.icon;
   document.getElementById('db-folder-title').textContent = meta.title;
 
   var body = document.getElementById('db-folder-body');
-  body.innerHTML = '<div class="screen-loading"><div class="spinner"></div><div>טוען סרטונים מדרופבוקס...</div></div>';
+  body.innerHTML = '<div class="screen-loading"><div class="spinner"></div><div>טוען מדרופבוקס...</div></div>';
 
   var el = document.getElementById('screen-dropbox-folder');
   el.classList.add('visible');
@@ -3236,23 +3267,61 @@ function openDropboxFolder(folderType) {
   if (tg) {
     tg.BackButton.show();
     tg.BackButton.offClick();
-    tg.BackButton.onClick(function(){ closeScreen('screen-dropbox-folder'); });
+    tg.BackButton.onClick(dbHandleBack);
   }
 
   fetchDropboxFolder();
 }
 
+/* פתיחה של תת תיקייה בתוך 'ready-from-long' */
+function openDropboxSubfolder(dropboxPath, subfolderName) {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  dbCurrentSubPath = dropboxPath;
+  // עדכון כותרת
+  document.getElementById('db-folder-title').textContent = subfolderName || 'תת תיקייה';
+  // scroll to top + loading
+  var el = document.getElementById('screen-dropbox-folder');
+  el.scrollTop = 0;
+  var body = document.getElementById('db-folder-body');
+  body.innerHTML = '<div class="screen-loading"><div class="spinner"></div><div>טוען סרטונים...</div></div>';
+  fetchDropboxFolder();
+}
+
+/* התנהגות "אחורה" - אם בתוך תת תיקייה, חזור לרשימת תתי התיקיות */
+function dbHandleBack() {
+  if (dbCurrentFolder === 'ready-from-long' && dbCurrentSubPath) {
+    // חזרה מתוך תת תיקייה — רק נאפס את ה-sub path ונטען מחדש
+    dbCurrentSubPath = null;
+    var meta = DB_FOLDER_META[dbCurrentFolder];
+    document.getElementById('db-folder-title').textContent = meta.title;
+    var body = document.getElementById('db-folder-body');
+    body.innerHTML = '<div class="screen-loading"><div class="spinner"></div><div>טוען תיקיות...</div></div>';
+    fetchDropboxFolder();
+  } else {
+    // חזרה מהמסך כולו
+    closeScreen('screen-dropbox-folder');
+  }
+}
+
 function fetchDropboxFolder() {
   var url = GET_URL
     + '?sheet='      + encodeURIComponent('דרופבוקס')
-    + '&folderType=' + encodeURIComponent(dbCurrentFolder)
     + '&sheetsUrl='  + encodeURIComponent(sheetsUrl)
     + '&logSheetId=' + encodeURIComponent(logSheetId);
+
+  // אם אנחנו בתוך תת תיקייה - שולחים את הנתיב הישיר
+  if (dbCurrentSubPath) {
+    url += '&folderPath=' + encodeURIComponent(dbCurrentSubPath);
+  } else {
+    // אחרת - שולחים את סוג התיקייה
+    url += '&folderType=' + encodeURIComponent(dbCurrentFolder);
+  }
 
   fetch(url)
     .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
     .then(function(data){
       dbClips      = (data && data.clips)      || [];
+      dbSubfolders = (data && data.subfolders) || [];
       dbFolderPath = (data && data.folderPath) || '';
       renderDropboxFolder();
     })
@@ -3266,11 +3335,50 @@ function fetchDropboxFolder() {
 function renderDropboxFolder() {
   var body = document.getElementById('db-folder-body');
   var meta = DB_FOLDER_META[dbCurrentFolder];
-
   var html = '';
 
-  html += '<div class="db-folder-intro">' + meta.intro + '</div>';
+  // אם אנחנו בתוך תת תיקייה של ready-from-long, נציג גם בר חזרה ברור
+  if (dbCurrentFolder === 'ready-from-long' && dbCurrentSubPath) {
+    html += '<div class="db-folder-intro">';
+    html += 'סרטונים בתוך <strong>' + escapeHtml(document.getElementById('db-folder-title').textContent) + '</strong>';
+    html += '</div>';
+  } else {
+    html += '<div class="db-folder-intro">' + meta.intro + '</div>';
+  }
 
+  // --- מצב תתי תיקיות (ready-from-long, ברמה הראשונה) ---
+  if (dbCurrentFolder === 'ready-from-long' && !dbCurrentSubPath) {
+    html += '<div class="db-folder-actions">';
+    html += '<div class="db-count-pill">תתי תיקיות <span class="db-count-pill-num">' + dbSubfolders.length + '</span></div>';
+    html += '</div>';
+
+    if (dbSubfolders.length === 0) {
+      html += '<div class="lv-empty">';
+      html += '<div class="lv-empty-icon">📂</div>';
+      html += 'אין תתי תיקיות.<br>כשסרטונים ארוכים יעובדו — הקליפים שלהם יופיעו כאן';
+      html += '</div>';
+    } else {
+      html += '<div class="db-subfolder-grid">';
+      dbSubfolders.forEach(function(sf){
+        var nameEsc = escapeAttr(sf.name || '');
+        var pathEsc = escapeAttr(sf.dropboxPath || '');
+        html += '<div class="db-subfolder-card" onclick="openDropboxSubfolder(\'' + pathEsc + '\',\'' + nameEsc + '\')">';
+        html += '<div class="db-subfolder-icon">📁</div>';
+        html += '<div class="db-subfolder-body">';
+        html += '<div class="db-subfolder-name">' + escapeHtml(sf.name || '') + '</div>';
+        html += '<div class="db-subfolder-hint">לחץ כדי לראות את הקליפים</div>';
+        html += '</div>';
+        html += '<div class="db-subfolder-arrow">‹</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+
+    body.innerHTML = html;
+    return;
+  }
+
+  // --- מצב סרטונים (raw, ready, או תת תיקייה של ready-from-long) ---
   html += '<div class="db-folder-actions">';
   html += '<div class="db-count-pill">סרטונים בתיקייה <span class="db-count-pill-num">' + dbClips.length + '</span></div>';
   html += '<button class="db-upload-btn" disabled title="בבניה">⬆️ העלה סרטון</button>';
