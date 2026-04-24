@@ -3197,14 +3197,11 @@ function saveLongVideos() {
 
 /* ══════════════════════════════════════
    DROPBOX FOLDERS - גלם / מוכנים
-   n8n endpoint (existing): clips-polling
-   App sends: ?folderType=raw|ready (+ client identification via sheetsUrl/logSheetId)
+   Uses same GET webhook as everything else.
+   App sends: ?sheet=דרופבוקס&folderType=raw|ready
    n8n picks the actual folderPath from the log sheet
    Response: { clips: [...], folderPath: "/full/path/to/folder" }
    ══════════════════════════════════════ */
-
-/* ה-URL של ה-clips-polling webhook הקיים, נמצא בפלואו הדרופבוקס */
-var DROPBOX_URL = 'https://aiagentsforsale.app.n8n.cloud/webhook/clips-polling';
 
 /* state */
 var dbCurrentFolder  = null;   // 'raw' | 'ready'
@@ -3246,8 +3243,9 @@ function openDropboxFolder(folderType) {
 }
 
 function fetchDropboxFolder() {
-  var url = DROPBOX_URL
-    + '?folderType=' + encodeURIComponent(dbCurrentFolder)
+  var url = GET_URL
+    + '?sheet='      + encodeURIComponent('דרופבוקס')
+    + '&folderType=' + encodeURIComponent(dbCurrentFolder)
     + '&sheetsUrl='  + encodeURIComponent(sheetsUrl)
     + '&logSheetId=' + encodeURIComponent(logSheetId);
 
