@@ -38,7 +38,8 @@
   }
   #app{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;padding-bottom:calc(24px + env(safe-area-inset-bottom))}
 
-  .header{padding:20px 20px 0}
+  .header{padding:20px 20px 0;position:relative}
+  .header-logo{position:absolute;top:18px;left:20px;width:48px;height:48px;border-radius:12px;object-fit:contain;background:rgba(255,255,255,0.04);padding:4px;border:1px solid var(--border)}
   .header-label{font-size:11px;font-weight:600;color:var(--text-dimmer);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
   .header-title{font-size:24px;font-weight:900;color:var(--text);line-height:1.15;margin-bottom:4px}
   .header-title span{background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
@@ -397,8 +398,10 @@
   .db-video-wrap{position:relative;background:#000;aspect-ratio:9/16;display:block;overflow:hidden;cursor:zoom-in}
   .db-video-wrap video{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:contain;background:#000}
   .db-video-name{padding:8px 10px;font-size:11px;color:var(--text);font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr;text-align:right}
-  .db-video-delete{position:absolute;top:8px;right:8px;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3;transition:all .15s}
-  .db-video-delete:hover{background:var(--red);transform:scale(1.05)}
+  .db-video-actions{position:absolute;top:8px;right:8px;display:flex;gap:6px;z-index:3}
+  .db-video-action-btn{width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;text-decoration:none;padding:0;font-family:inherit}
+  .db-video-action-btn:hover{background:var(--accent);transform:scale(1.05)}
+  .db-video-delete-btn:hover{background:var(--red)}
 
   /* Subfolder cards - for "ready from long" sub-projects */
   .db-subfolder-grid{display:flex;flex-direction:column;gap:8px}
@@ -551,6 +554,7 @@
 
 <div id="app">
   <div class="header">
+    <img class="header-logo" src="https://res.cloudinary.com/dpe5hzwcg/image/fetch/f_auto,q_auto,w_300/https%3A%2F%2Fdrive.google.com%2Fuc%3Fexport%3Dview%26id%3D1Zwq4lxNndeuQ4RRDAEVK2Yta1ZsNsW6A" alt="Zero Work AI" onerror="this.style.display='none'">
     <div class="header-label">Zero Work AI</div>
     <div class="header-title">האיזור <span>האישי</span> שלי</div>
     <div class="header-greeting" id="greetingLine" style="display:none">היי <span id="clientFirstName"></span> 👋</div>
@@ -865,6 +869,17 @@
       <div class="nav-card-arrow">‹</div>
     </div>
 
+    <div class="section-label" style="margin-top:18px">ניהול סרטונים ארוכים</div>
+
+    <div class="nav-card gold" onclick="openLongVideos()">
+      <div class="nav-card-icon">📹</div>
+      <div class="nav-card-body">
+        <div class="nav-card-title-row"><div class="nav-card-title">סרטונים ארוכים לערוך לקליפים קצרים</div></div>
+        <div class="nav-card-desc">ניהול תור של סרטוני יוטיוב ארוכים שממתינים לעריכה</div>
+      </div>
+      <div class="nav-card-arrow">‹</div>
+    </div>
+
     <div class="section-label" style="margin-top:18px">תיקיות סרטונים בדרופבוקס</div>
 
     <div class="nav-card teal" onclick="openDropboxFolder('raw')">
@@ -879,8 +894,8 @@
     <div class="nav-card green" onclick="openDropboxFolder('ready')">
       <div class="nav-card-icon">✅</div>
       <div class="nav-card-body">
-        <div class="nav-card-title-row"><div class="nav-card-title">תיקייה להעלאת סרטונים מוכנים</div></div>
-        <div class="nav-card-desc">סרטונים שערכת בעצמך — יופיעו באפ הסרטונים ותוכל לתזמן אותם</div>
+        <div class="nav-card-title-row"><div class="nav-card-title">תיקיית סרטונים מוכנים מרגילים / סרטונים שערכת בעצמך</div></div>
+        <div class="nav-card-desc">לכאן יעלו הסרטונים המוכנים שהסוכן ערך מתיקיית "גלם טייק יחיד" / לכאן תוכלו להעלות סרטונים מוכנים שערכתם בעצמכם כדי לבצע בהם פעולות באפליקציה</div>
       </div>
       <div class="nav-card-arrow">‹</div>
     </div>
@@ -888,19 +903,8 @@
     <div class="nav-card blue" onclick="openDropboxFolder('ready-from-long')">
       <div class="nav-card-icon">🎞️</div>
       <div class="nav-card-body">
-        <div class="nav-card-title-row"><div class="nav-card-title">תיקיית מוכנים מארוכים</div></div>
-        <div class="nav-card-desc">קליפים קצרים שנחתכו מסרטונים ארוכים - מסודרים בתתי תיקיות</div>
-      </div>
-      <div class="nav-card-arrow">‹</div>
-    </div>
-
-    <div class="section-label" style="margin-top:18px">ניהול סרטונים ארוכים</div>
-
-    <div class="nav-card gold" onclick="openLongVideos()">
-      <div class="nav-card-icon">📹</div>
-      <div class="nav-card-body">
-        <div class="nav-card-title-row"><div class="nav-card-title">סרטונים ארוכים לערוך לקליפים קצרים</div></div>
-        <div class="nav-card-desc">ניהול תור של סרטוני יוטיוב ארוכים שממתינים לעריכה</div>
+        <div class="nav-card-title-row"><div class="nav-card-title">תיקיית קליפים מוכנים מסרטונים ארוכים</div></div>
+        <div class="nav-card-desc">לכאן יעלו כל הקליפים שנחתכו מסרטונים ארוכים - מסודרים בתתי תיקיות</div>
       </div>
       <div class="nav-card-arrow">‹</div>
     </div>
@@ -957,7 +961,7 @@
 
 <div class="screen" id="screen-dropbox-folder">
   <div class="screen-topbar">
-    <div class="screen-back" onclick="closeScreen('screen-dropbox-folder')">›</div>
+    <div class="screen-back" onclick="dbHandleBack()">›</div>
     <div class="screen-topbar-icon" id="db-folder-icon">🎬</div>
     <div class="screen-topbar-title" id="db-folder-title">תיקייה</div>
   </div>
@@ -2681,18 +2685,6 @@ function renderVideoSettings() {
     'הסוכן יקצר משפטים שחוזרים על עצמם ויוריד מילים מיותרות',
     vs.autoCuts === true || vs.autoCuts === 'true', 'video', 'G3');
 
-  // Remove silent moments (H3 boolean)
-  html += buildVsToggle('removeSilent', 'הורדת רגעים שקטים',
-    'הסרה אוטומטית של שקט ממושך בסרטון',
-    vs.removeSilent === true || vs.removeSilent === 'true', 'video', 'H3');
-
-  // Silence aggressiveness (I3 dropdown)
-  html += buildVsDropdown('silenceLevel', 'עד כמה אגרסיביים הקאטים?',
-    'natural = מינימליסטי, fast = בינוני, extra fast = אגרסיבי מאוד',
-    vs.silenceLevel || 'fast',
-    [{v:'natural',l:'natural'},{v:'fast',l:'fast'},{v:'extra fast',l:'extra fast'}],
-    'video', 'I3');
-
   html += '</div>';
 
   body.innerHTML = html;
@@ -3059,7 +3051,8 @@ function renderLongVideos() {
   var html = '';
   html += '<div class="lv-intro">';
   html += '<strong>📹 תור סרטונים ארוכים</strong><br>';
-  html += 'כל הקישורים של סרטוני יוטיוב ארוכים שישלחו לעריכה לקליפים קצרים. תוכלו להדביק כאן את כל הקישורים שלכם בפעם אחת במקום להעלות קישור לסוכן בכל פעם. כשתלחצו על "עריכת סרטון ארוך לקליפים" בסוכן - הוא ייקח את הסרטון הבא מהרשימה ויעבוד עליו.';
+  html += 'כל הקישורים של סרטוני יוטיוב ארוכים שישלחו לעריכה לקליפים קצרים. תוכלו להדביק כאן את כל הקישורים שלכם בפעם אחת במקום להעלות קישור לסוכן בכל פעם. כשתלחצו על "עריכת סרטון ארוך לקליפים" בסוכן - הוא ייקח את הסרטון הבא מהרשימה ויעבוד עליו.<br><br>';
+  html += 'הקליפים שנערכים מהסרטונים האילו יוערכו לפי ההגדרות שמוגדרות לכם ב<strong>"הגדרות עריכה של קליפים מסרטונים ארוכים"</strong>.';
   html += '</div>';
 
   html += '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px">';
@@ -3236,12 +3229,34 @@ var dbClips          = [];     // array of clip objects
 var dbSubfolders     = [];     // array of {name, dropboxPath}
 
 var DB_FOLDER_META = {
-  raw:   { icon: '🎬', title: 'תיקיית סרטוני גלם טייק יחיד',
-           intro: 'כאן מעלים סרטונים גולמיים (טייק אחד) שרוצים שהסוכן יערוך בעריכת פרימיום. <strong>הסוכן לא יודע עדיין ליצור סרטון מכמה טייקים</strong> - כשהפיצ\'ר יצא תהיה תיקייה נפרדת לכך.' },
-  ready: { icon: '✅', title: 'סרטונים מוכנים',
-           intro: 'יש לכם כבר סרטונים מוכנים שערכתם בעצמכם? תוכלו להעלות אותם לכאן וככה הם יופיעו לכם באפליקציה של הסרטונים ותוכלו לתזמן ולהעלות אותם לרשתות חברתיות.' },
-  'ready-from-long': { icon: '🎞️', title: 'מוכנים מארוכים',
-           intro: 'כאן נמצאים כל הקליפים הקצרים שנחתכו מסרטונים ארוכים. <strong>הקליפים מסודרים לפי פרויקט</strong> - כל תת תיקייה מכילה את הקליפים של סרטון מקור אחד. לחץ על תת תיקייה כדי לראות את הקליפים שלה.' }
+  raw: {
+    icon: '🎬',
+    title: 'תיקיית סרטוני גלם טייק יחיד',
+    intro:
+      'לכאן מעלים סרטונים גולמיים רגילים (של טייק אחד) שישלחו לעריכת פרימיום על ידי הסוכן.<br>' +
+      '<em>*הסוכן עדיין לא יודע לחבר כמה טייקים/חומרים לסרטון אחד, הפיצ\'ר הזה בפיתוח*</em><br><br>' +
+      'ברגע שהעלתם לכאן סרטון שתרצו שהסוכן יערוך, חזרו לצ\'אט עם הסוכן ← פתחו את התפריט הכחול בצד שמאל למטה ← לחצו על <strong>"עריכת סרטון רגיל"</strong>. אחרי שלחצתם הסוכן יעדכן אתכם שהוא שלח את הסרטון לעריכה והסרטון יעלם מהתיקייה. הסוכן שולח סרטון אחד בכל לחיצה, אם העלתם כמה סרטונים לתיקייה, תצטרכו ללחוץ "עריכת סרטון רגיל" עבור כל אחד. הסוכן גם ניגש לתיקייה הזאת באופן אוטומטי פעם ביום ועורך סרטון אחד (אם קיים בתיקייה).<br><br>' +
+      'ברגע שהסרטון יהיה מוכן הוא יעלה לתיקיית <strong>"סרטונים מוכנים מרגילים"</strong>, תקבלו גם הודעה מהסוכן שהסרטון מוכן וקישור לאפליקציה לבצע פעולות. בלי קשר, אפשר תמיד ללחוץ בתפריט על "העלאת סרטון/ביצוע פעולות בסרטונים" כדי לבצע פעולות בכל שאר הסרטונים המוכנים שיש לכם.<br><br>' +
+      'העריכה שהסוכן יבצע לסרטונים כאן היא עריכה מתקדמת, לפי ההגדרות לסגנון עריכה שמוגדרת לכם ב<strong>"הגדרות עריכה של סרטונים רגילים"</strong>.'
+  },
+  ready: {
+    icon: '✅',
+    title: 'תיקיית סרטונים מוכנים מרגילים / סרטונים שערכת בעצמך',
+    intro:
+      'לכאן יעלו הסרטונים המוכנים שהסוכן ערך מתיקיית <strong>"גלם טייק יחיד"</strong>.<br>' +
+      'כל הסרטונים שנמצאים כאן יופיעו באפליקציה ותוכלו לבצע בהם פעולות. תפריט ← <strong>"העלאת סרטון/ביצוע פעולות בסרטונים"</strong>.<br><br>' +
+      '<strong>💡 טיפ:</strong> יש לכם סרטונים מוכנים שערכתם בעצמכם/עם עורך? תעלו אותם לתיקייה הזאת ככה שתוכלו לתזמן/להעלות גם אותם לכל הרשתות דרך האפליקציה.<br><br>' +
+      '<strong>⚠️ שימו לב:</strong> ברגע שתעלו / תתזמנו סרטון לרשתות מהאפליקציה, הסוכן יוציא את אותו סרטון מתיקיית המוכנים (כדי שלא יצטברו שם יותר מדיי סרטונים).<br><br>' +
+      '<strong>📌 תזכורת:</strong> כדי להעלות/לתזמן/לבצע פעולות בסרטונים צריך לחזור לצ\'אט עם הסוכן ← תפריט ← "העלאת סרטון/ביצוע פעולות". לא ניתן לבצע פעולות העלאה/תזמון ישירות מתיקייה זו.'
+  },
+  'ready-from-long': {
+    icon: '🎞️',
+    title: 'תיקיית קליפים מוכנים מסרטונים ארוכים',
+    intro:
+      'כאן נמצאים כל הקליפים הקצרים שנחתכו מסרטונים ארוכים. <strong>הקליפים מסודרים לפי פרויקט</strong> — כל תת תיקייה מכילה את הקליפים של סרטון מקור אחד. לחץ על תת תיקייה כדי לראות את הקליפים שלה.<br><br>' +
+      '<strong>⚠️ שימו לב:</strong> ברגע שתעלו / תתזמנו סרטון לרשתות מהאפליקציה, הסוכן יוציא את אותו סרטון מהתיקייה שלו.<br><br>' +
+      '<strong>📌 תזכורת:</strong> כדי להעלות/לתזמן/לבצע פעולות בסרטונים צריך לחזור לצ\'אט עם הסוכן ← תפריט ← "העלאת סרטון/ביצוע פעולות". לא ניתן לבצע פעולות העלאה/תזמון ישירות מתיקייה זו.'
+  }
 };
 
 function openDropboxFolder(folderType) {
@@ -3259,7 +3274,7 @@ function openDropboxFolder(folderType) {
   document.getElementById('db-folder-title').textContent = meta.title;
 
   var body = document.getElementById('db-folder-body');
-  body.innerHTML = '<div class="screen-loading"><div class="spinner"></div><div>טוען מדרופבוקס...</div></div>';
+  body.innerHTML = '<div class="screen-loading"><div class="spinner"></div><div>טוען סרטונים...</div></div>';
 
   var el = document.getElementById('screen-dropbox-folder');
   el.classList.add('visible');
@@ -3403,10 +3418,16 @@ function renderDropboxFolder() {
 function renderDropboxClipCard(clip, idx) {
   var nameEsc    = escapeAttr(clip.name || '');
   var streamUrl  = clip.driveUrl || '';
+  var downloadUrl = clip.downloadUrl || '';
 
   var html = '<div class="db-video-card" id="dbcard_' + idx + '">';
 
-  html += '<button class="db-video-delete" onclick="onDropboxDeleteClick(' + idx + ')" title="מחק סרטון">🗑</button>';
+  html += '<div class="db-video-actions">';
+  if (downloadUrl) {
+    html += '<a class="db-video-action-btn" href="' + escapeAttr(downloadUrl) + '" download="' + nameEsc + '" onclick="event.stopPropagation();dbHandleDownload(event)" title="הורד למכשיר">⬇️</a>';
+  }
+  html += '<button class="db-video-action-btn db-video-delete-btn" onclick="onDropboxDeleteClick(' + idx + ')" title="מחק סרטון">🗑</button>';
+  html += '</div>';
 
   html += '<div class="db-video-wrap" onclick="openDropboxVideoModal(' + idx + ')">';
   if (streamUrl) {
@@ -3420,6 +3441,12 @@ function renderDropboxClipCard(clip, idx) {
 
   html += '</div>';
   return html;
+}
+
+function dbHandleDownload(e) {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  // הדפדפן יטפל בהורדה דרך attribute download
+  showToast('⬇️ ההורדה החלה');
 }
 
 function openDropboxVideoModal(idx) {
