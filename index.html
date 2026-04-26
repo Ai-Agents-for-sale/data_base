@@ -65,6 +65,7 @@
   .nav-card.teal  {--c:var(--teal);  --cs:var(--teal-s);  --cg:rgba(8,145,178,.2)}
   .nav-card.pink  {--c:var(--pink);  --cs:var(--pink-s);  --cg:rgba(219,39,119,.2)}
   .nav-card.orange{--c:var(--orange);--cs:var(--orange-s);--cg:rgba(234,88,12,.2)}
+  .nav-card.gray-soft{--c:#9ca3af;--cs:rgba(156,163,175,.10);--cg:rgba(156,163,175,.2)}
   .nav-card.disabled{opacity:.5;cursor:not-allowed;pointer-events:none}
   .nav-card-icon{width:46px;height:46px;border-radius:12px;background:var(--cs);border:1px solid var(--c);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
   .nav-card-body{flex:1;min-width:0}
@@ -905,6 +906,26 @@
       <div class="nav-card-body">
         <div class="nav-card-title-row"><div class="nav-card-title">תיקיית קליפים מוכנים מסרטונים ארוכים</div></div>
         <div class="nav-card-desc">לכאן יעלו כל הקליפים שנחתכו מסרטונים ארוכים - מסודרים בתתי תיקיות</div>
+      </div>
+      <div class="nav-card-arrow">‹</div>
+    </div>
+
+    <div class="section-label" style="margin-top:28px">תיקיות ארכיון</div>
+
+    <div class="nav-card gray-soft" onclick="openDropboxFolder('uploaded')">
+      <div class="nav-card-icon">📤</div>
+      <div class="nav-card-body">
+        <div class="nav-card-title-row"><div class="nav-card-title">תיקיית סרטונים שעלו</div></div>
+        <div class="nav-card-desc">לכאן יעלו כל הסרטונים שכבר העלתם/תזמנתם לרשתות דרך הסוכן</div>
+      </div>
+      <div class="nav-card-arrow">‹</div>
+    </div>
+
+    <div class="nav-card gray-soft" onclick="openDropboxFolder('raw-edited')">
+      <div class="nav-card-icon">📦</div>
+      <div class="nav-card-body">
+        <div class="nav-card-title-row"><div class="nav-card-title">תיקיית סרטונים גלם שכבר נשלחו לעריכה</div></div>
+        <div class="nav-card-desc">לכאן יועברו גרסאות הגלם של הסרטונים שהעלתם לתיקיית "גלם טייק יחיד", ככה שלא תאבדו את גרסאות הגלם של סרטונים שעברו עריכה</div>
       </div>
       <div class="nav-card-arrow">‹</div>
     </div>
@@ -3256,6 +3277,18 @@ var DB_FOLDER_META = {
       'כאן נמצאים כל הקליפים הקצרים שנחתכו מסרטונים ארוכים. <strong>הקליפים מסודרים לפי פרויקט</strong> — כל תת תיקייה מכילה את הקליפים של סרטון מקור אחד. לחץ על תת תיקייה כדי לראות את הקליפים שלה.<br><br>' +
       '<strong>⚠️ שימו לב:</strong> ברגע שתעלו / תתזמנו סרטון לרשתות מהאפליקציה, הסוכן יוציא את אותו סרטון מהתיקייה שלו.<br><br>' +
       '<strong>📌 תזכורת:</strong> כדי להעלות/לתזמן/לבצע פעולות בסרטונים צריך לחזור לצ\'אט עם הסוכן ← תפריט ← "העלאת סרטון/ביצוע פעולות". לא ניתן לבצע פעולות העלאה/תזמון ישירות מתיקייה זו.'
+  },
+  uploaded: {
+    icon: '📤',
+    title: 'תיקיית סרטונים שעלו',
+    intro:
+      'בכל פעם שתעלו סרטון לרשתות דרך הסוכן / תתזמנו סרטון, הסרטון יועבר מתיקיית המוכנים שבו הוא נמצא לתיקייה הזאת, ככה ש<strong>תיקיית המוכנים תשאר נקייה</strong>, ומצד שני <strong>לא תאבדו את הסרטונים שכבר העלתם</strong>.'
+  },
+  'raw-edited': {
+    icon: '📦',
+    title: 'תיקיית סרטונים גלם שכבר נשלחו לעריכה',
+    intro:
+      'בכל פעם שתעלו סרטון לתיקיית <strong>"גלם טייק יחיד"</strong> (כדי לשלוח אותו לעריכה), הגרסא המוכנה שלו תעלה לתיקיית המוכנים, וגרסת הגלם שהעלתם לתיקיית הגלם תועבר לתיקייה הזאת, ככה ש<strong>עדיין תשאר לכם גרסת הגלם של סרטונים שעברו עריכה</strong>.'
   }
 };
 
