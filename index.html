@@ -4721,10 +4721,28 @@ function savePrompt() {
   var btn = document.getElementById('prompt-save-btn');
   btn.disabled = true;
   btn.textContent = 'שומר...';
-  sendSave(promptData.cfg.sheet, promptChanges)
+
+  // הקובץ של ההוראות כתיבה יכול להיות ארוך מאוד.
+  // משתמשים באותה שיטה כמו אפיון עסק:
+  // POST עם body טקסטואלי - הדפדפן שולח כ-text/plain אוטומטית (simple request, בלי CORS preflight)
+  // הפרמטרים הקטנים (sheet/cell) ב-URL, התוכן הארוך ב-body
+  var newContent = promptChanges[promptData.cfg.cell] || '';
+
+  var url = SAVE_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent(promptData.cfg.sheet)
+    + '&logSheetId=' + encodeURIComponent(logSheetId)
+    + '&action='     + encodeURIComponent('writing prompt')
+    + '&cell='       + encodeURIComponent(promptData.cfg.cell);
+
+  fetch(url, {
+    method: 'POST',
+    body: newContent
+  })
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
     .then(function(){
       showToast('✅ ההוראות נשמרו בהצלחה!');
-      if (promptData) promptData.value = promptChanges[promptData.cfg.cell] || promptData.value;
+      if (promptData) promptData.value = newContent;
       promptChanges = {};
       btn.innerHTML = '💾 שמור שינויים';
       updateSaveBtn('prompt');
