@@ -404,6 +404,18 @@
   .db-video-action-btn:hover{background:var(--accent);transform:scale(1.05)}
   .db-video-delete-btn:hover{background:var(--red)}
 
+  /* Upload progress card - shown while file is uploading */
+  .db-upload-card{background:var(--bg2);border:1.5px solid var(--accent);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;position:relative}
+  .db-upload-preview{position:relative;background:#000;aspect-ratio:9/16;display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--text-dim)}
+  .db-upload-preview video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.5}
+  .db-upload-spinner-wrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(0,0,0,0.5);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);z-index:2}
+  .db-upload-percent{color:#fff;font-size:18px;font-weight:800;letter-spacing:.05em}
+  .db-upload-status{color:rgba(255,255,255,.85);font-size:11px;font-weight:600;padding:0 12px;text-align:center;line-height:1.4}
+  .db-upload-progress-bar{position:absolute;bottom:0;left:0;height:3px;background:var(--accent);transition:width .2s ease;z-index:3}
+  .db-upload-name{padding:8px 10px;font-size:11px;color:var(--text);font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr;text-align:right}
+  .db-upload-cancel{position:absolute;top:8px;right:8px;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:4;transition:all .15s}
+  .db-upload-cancel:hover{background:var(--red);transform:scale(1.05)}
+
   /* Subfolder cards - for "ready from long" sub-projects */
   .db-subfolder-grid{display:flex;flex-direction:column;gap:8px}
   .db-subfolder-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s}
@@ -3427,21 +3439,35 @@ function renderDropboxFolder() {
   }
 
   // --- מצב סרטונים (raw, ready, או תת תיקייה של ready-from-long) ---
+  // האם אנחנו בתיקייה שמותר להעלות אליה?
+  // ready-from-long ברמה ראשית - לא, זה מסך של תתי תיקיות
+  // ארכיון (uploaded/raw-edited) - לא, אלו תיקיות מנוהלות אוטומטית
+  var canUpload = (dbCurrentFolder === 'raw' || dbCurrentFolder === 'ready' ||
+                   (dbCurrentFolder === 'ready-from-long' && dbCurrentSubPath));
+
   html += '<div class="db-folder-actions">';
   html += '<div class="db-count-pill">סרטונים בתיקייה <span class="db-count-pill-num">' + dbClips.length + '</span></div>';
-  html += '<button class="db-upload-btn" disabled title="בבניה">⬆️ העלה סרטון</button>';
+  if (canUpload) {
+    var uploadDisabled = dbUpload ? ' disabled' : '';
+    html += '<button class="db-upload-btn" onclick="dbStartUpload()"' + uploadDisabled + '>⬆️ העלה סרטון</button>';
+  }
   html += '</div>';
 
-  if (dbClips.length === 0) {
-    html += '<div class="lv-empty">';
-    html += '<div class="lv-empty-icon">📭</div>';
-    html += 'אין סרטונים בתיקייה.<br>לחץ על "העלה סרטון" להתחיל';
-    html += '</div>';
-  } else {
+  // מציגים גם את כרטיס ההעלאה הפעיל (אם יש) וגם את הסרטונים הקיימים
+  if (dbUpload || dbClips.length > 0) {
     html += '<div class="caption-styles-grid">';
+    if (dbUpload) {
+      html += renderDbUploadCard();
+    }
     dbClips.forEach(function(clip, idx){
       html += renderDropboxClipCard(clip, idx);
     });
+    html += '</div>';
+  } else {
+    html += '<div class="lv-empty">';
+    html += '<div class="lv-empty-icon">📭</div>';
+    html += 'אין סרטונים בתיקייה.';
+    if (canUpload) html += '<br>לחץ על "העלה סרטון" להתחיל';
     html += '</div>';
   }
 
@@ -3480,6 +3506,169 @@ function dbHandleDownload(e) {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
   // הדפדפן יטפל בהורדה דרך attribute download
   showToast('⬇️ ההורדה החלה');
+}
+
+/* ══════════════════════════════════════
+   UPLOAD VIDEOS TO DROPBOX (via n8n streaming)
+   ══════════════════════════════════════ */
+
+/* ה-URL של ה-webhook הייעודי להעלאות. החלף אם השם שונה */
+var UPLOAD_URL = 'https://aiagentsforsale.app.n8n.cloud/webhook/upload-video';
+
+/* state של העלאה פעילה */
+var dbUpload = null;  // { fileName, percent, xhr, previewUrl, status }
+
+function dbStartUpload() {
+  // יוצרים input מוסתר ופותחים אותו
+  var input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'video/*';
+  input.style.display = 'none';
+  input.onchange = function() {
+    if (input.files && input.files[0]) {
+      dbUploadFile(input.files[0]);
+    }
+    document.body.removeChild(input);
+  };
+  document.body.appendChild(input);
+  input.click();
+}
+
+function dbUploadFile(file) {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+
+  // וידוא שזה וידאו
+  if (!file.type.startsWith('video/')) {
+    showToast('❌ ניתן להעלות רק קבצי וידאו', true);
+    return;
+  }
+
+  // יצירת preview מהקובץ המקומי (URL זמני)
+  var previewUrl = URL.createObjectURL(file);
+
+  dbUpload = {
+    fileName:   file.name,
+    percent:    0,
+    status:     'מתחיל העלאה...',
+    previewUrl: previewUrl,
+    xhr:        null,
+    cancelled:  false
+  };
+
+  // רנדור מחדש כדי להציג את הכרטיס של ההעלאה
+  renderDropboxFolder();
+
+  // בניית ה-URL להעלאה
+  var url = UPLOAD_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&logSheetId=' + encodeURIComponent(logSheetId)
+    + '&fileName='   + encodeURIComponent(file.name);
+
+  if (dbCurrentSubPath) {
+    url += '&folderPath=' + encodeURIComponent(dbCurrentSubPath);
+  } else {
+    url += '&folderType=' + encodeURIComponent(dbCurrentFolder);
+  }
+
+  // שולחים את הקובץ עם XMLHttpRequest כדי לעקוב אחרי ההתקדמות
+  var xhr = new XMLHttpRequest();
+  dbUpload.xhr = xhr;
+
+  xhr.open('POST', url, true);
+  xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+
+  // התקדמות העלאה
+  xhr.upload.onprogress = function(e) {
+    if (e.lengthComputable && dbUpload) {
+      dbUpload.percent = Math.round((e.loaded / e.total) * 100);
+      if (dbUpload.percent < 100) {
+        dbUpload.status = 'מעלה...';
+      } else {
+        dbUpload.status = 'מעבד בדרופבוקס...';
+      }
+      dbUpdateProgress();
+    }
+  };
+
+  xhr.onload = function() {
+    if (!dbUpload || dbUpload.cancelled) return;
+    if (xhr.status >= 200 && xhr.status < 300) {
+      // הצלחה
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      showToast('✅ הסרטון הועלה בהצלחה!');
+      dbCleanupUpload();
+      // טוען מחדש את הרשימה (כדי לקבל את הסרטון החדש מ-Dropbox)
+      fetchDropboxFolder();
+    } else {
+      console.error('Upload failed:', xhr.status, xhr.responseText);
+      showToast('❌ שגיאה בהעלאה (' + xhr.status + ')', true);
+      dbCleanupUpload();
+      renderDropboxFolder();
+    }
+  };
+
+  xhr.onerror = function() {
+    if (!dbUpload || dbUpload.cancelled) return;
+    console.error('Upload network error');
+    showToast('❌ שגיאת רשת בהעלאה', true);
+    dbCleanupUpload();
+    renderDropboxFolder();
+  };
+
+  xhr.onabort = function() {
+    showToast('ההעלאה בוטלה', false);
+    dbCleanupUpload();
+    renderDropboxFolder();
+  };
+
+  // שולח את הקובץ
+  xhr.send(file);
+}
+
+function dbCancelUpload() {
+  if (!dbUpload) return;
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+  dbUpload.cancelled = true;
+  if (dbUpload.xhr) dbUpload.xhr.abort();
+}
+
+function dbCleanupUpload() {
+  if (dbUpload && dbUpload.previewUrl) {
+    URL.revokeObjectURL(dbUpload.previewUrl);
+  }
+  dbUpload = null;
+}
+
+/* עדכון הויזואלי של ה-progress bar בלי רנדור מחדש של כל המסך */
+function dbUpdateProgress() {
+  if (!dbUpload) return;
+  var percentEl = document.getElementById('db-upload-percent');
+  var statusEl  = document.getElementById('db-upload-status');
+  var barEl     = document.getElementById('db-upload-bar');
+  if (percentEl) percentEl.textContent = dbUpload.percent + '%';
+  if (statusEl)  statusEl.textContent  = dbUpload.status;
+  if (barEl)     barEl.style.width     = dbUpload.percent + '%';
+}
+
+/* רנדור כרטיס ההעלאה - מוצג ב-grid כמו כרטיס סרטון רגיל */
+function renderDbUploadCard() {
+  if (!dbUpload) return '';
+  var nameEsc = escapeAttr(dbUpload.fileName || '');
+  var html = '<div class="db-upload-card">';
+  html += '<button class="db-upload-cancel" onclick="dbCancelUpload()" title="בטל העלאה">✕</button>';
+  html += '<div class="db-upload-preview">';
+  if (dbUpload.previewUrl) {
+    html += '<video src="' + escapeAttr(dbUpload.previewUrl) + '" muted playsinline preload="metadata"></video>';
+  }
+  html += '<div class="db-upload-spinner-wrap">';
+  html += '<div class="db-upload-percent" id="db-upload-percent">' + dbUpload.percent + '%</div>';
+  html += '<div class="db-upload-status" id="db-upload-status">' + escapeHtml(dbUpload.status) + '</div>';
+  html += '</div>';
+  html += '<div class="db-upload-progress-bar" id="db-upload-bar" style="width:' + dbUpload.percent + '%"></div>';
+  html += '</div>';
+  html += '<div class="db-upload-name" title="' + nameEsc + '">' + escapeHtml(dbUpload.fileName) + '</div>';
+  html += '</div>';
+  return html;
 }
 
 function openDropboxVideoModal(idx) {
