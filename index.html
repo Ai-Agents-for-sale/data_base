@@ -3543,55 +3543,29 @@ function dbDownloadVideo(idx) {
     return;
   }
 
-  var fileName = clip.name || 'video.mp4';
-  if (!/\.mp4$/i.test(fileName)) fileName += '.mp4';
-
-  // ─── שיטה 1: Telegram WebApp downloadFile API (Bot API 8.0+) ───
-  // ה-API הרשמי של טלגרם להורדה מתוך Mini App.
-  // - מציג popup native של טלגרם
-  // - ההורדה מתבצעת ע"י טלגרם, לא ע"י הדפדפן
-  // - הקובץ נשמר אוטומטית בDownloads
-  // - המשתמש לא יוצא מהאפליקציה
-  // עובד באנדרואיד ובאייפון בגרסאות חדשות של טלגרם.
-  if (tg && typeof tg.downloadFile === 'function') {
-    console.log('[Download] tg.downloadFile (native API)');
-    try {
-      tg.downloadFile(
-        { url: downloadUrl, file_name: fileName },
-        function(accepted) {
-          if (accepted && tg.HapticFeedback) {
-            tg.HapticFeedback.notificationOccurred('success');
-          }
-        }
-      );
-      return;
-    } catch (err) {
-      console.error('tg.downloadFile failed:', err);
-      // ממשיכים ל-fallback
-    }
-  }
-
-  // ─── שיטה 2 (fallback לגרסאות ישנות של טלגרם) ───
-  console.log('[Download] tg.downloadFile not available, using fallback');
+  // זיהוי פלטפורמה - באייפון blob fetch עובד ולא יוצא מהאפ
+  // באנדרואיד WebView לא מוריד blob URLs - חייבים לפתוח דפדפן חיצוני
   var platform = (tg && tg.platform) ? tg.platform : '';
   var isAndroid = platform === 'android' || (!platform && /android/i.test(navigator.userAgent));
 
+  console.log('[Download] platform=' + platform + ' isAndroid=' + isAndroid);
+
   if (isAndroid) {
-    // אנדרואיד ישן - נצא לדפדפן חיצוני
+    // אנדרואיד - יציאה לדפדפן חיצוני (Chrome מטפל ב-Content-Disposition של Dropbox)
+    console.log('[Download] opening external browser:', downloadUrl);
     if (tg && tg.openLink) {
       tg.openLink(downloadUrl, { try_instant_view: false });
-      showToast('⬇️ פותח דפדפן להורדה...');
     } else {
       window.open(downloadUrl, '_blank');
     }
+    showToast('⬇️ פותח דפדפן להורדה...');
   } else {
-    // אייפון ישן או דפדפן רגיל - blob fetch
-    dbDownloadIOSFallback(clip, idx);
+    // אייפון או דפדפן רגיל - blob fetch (נשאר באפליקציה)
+    dbDownloadIOS(clip, idx);
   }
 }
 
-/* Fallback ל-iOS (גרסאות טלגרם ישנות) - blob fetch */
-function dbDownloadIOSFallback(clip, idx) {
+function dbDownloadIOS(clip, idx) {
   if (!clip.driveUrl) {
     showToast('❌ קישור הורדה לא זמין', true);
     return;
