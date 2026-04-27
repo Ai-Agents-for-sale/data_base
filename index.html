@@ -40,6 +40,7 @@
 
   .header{padding:20px 20px 0;position:relative}
   .header-logo{position:absolute;top:18px;left:20px;width:48px;height:48px;border-radius:12px;object-fit:contain;background:rgba(255,255,255,0.04);padding:4px;border:1px solid var(--border)}
+  .version-badge{position:absolute;top:18px;left:78px;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;background:#06b6d4;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.3);z-index:5}
   .header-label{font-size:11px;font-weight:600;color:var(--text-dimmer);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
   .header-title{font-size:24px;font-weight:900;color:var(--text);line-height:1.15;margin-bottom:4px}
   .header-title span{background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
@@ -404,6 +405,35 @@
   .db-video-action-btn:hover{background:var(--accent);transform:scale(1.05)}
   .db-video-delete-btn:hover{background:var(--red)}
 
+  /* Upload progress card - shown while file is uploading */
+  .db-upload-card{background:var(--bg2);border:1.5px solid var(--accent);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;position:relative}
+  .db-upload-preview{position:relative;background:#000;aspect-ratio:9/16;display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--text-dim)}
+  .db-upload-preview video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.5}
+  .db-upload-spinner-wrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(0,0,0,0.5);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);z-index:2}
+  .db-upload-percent{color:#fff;font-size:18px;font-weight:800;letter-spacing:.05em}
+  .db-upload-status{color:rgba(255,255,255,.85);font-size:11px;font-weight:600;padding:0 12px;text-align:center;line-height:1.4}
+  .db-upload-progress-bar{position:absolute;bottom:0;left:0;height:3px;background:var(--accent);transition:width .2s ease;z-index:3}
+  .db-upload-name{padding:8px 10px;font-size:11px;color:var(--text);font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr;text-align:right}
+  .db-upload-cancel{position:absolute;top:8px;right:8px;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:4;transition:all .15s}
+  .db-upload-cancel:hover{background:var(--red);transform:scale(1.05)}
+
+  /* Android download confirmation modal */
+  .db-modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity .2s ease}
+  .db-modal-backdrop.visible{opacity:1}
+  .db-modal-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px 20px;width:100%;max-width:340px;text-align:center;transform:scale(.95);transition:transform .2s ease;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+  .db-modal-backdrop.visible .db-modal-card{transform:scale(1)}
+  .db-modal-icon{font-size:42px;margin-bottom:8px;line-height:1}
+  .db-modal-title{font-size:18px;font-weight:800;color:var(--text);margin-bottom:14px;line-height:1.3}
+  .db-modal-body{margin-bottom:20px}
+  .db-modal-row{font-size:13px;color:var(--text-dim);line-height:1.6;padding:6px 0;text-align:right}
+  .db-modal-row strong{color:var(--text)}
+  .db-modal-actions{display:flex;gap:10px;flex-direction:row-reverse}
+  .db-modal-btn{flex:1;padding:12px 16px;border-radius:10px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .15s}
+  .db-modal-btn-primary{background:var(--accent);color:#fff}
+  .db-modal-btn-primary:hover{opacity:.92}
+  .db-modal-btn-secondary{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
+  .db-modal-btn-secondary:hover{background:var(--bg)}
+
   /* Subfolder cards - for "ready from long" sub-projects */
   .db-subfolder-grid{display:flex;flex-direction:column;gap:8px}
   .db-subfolder-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s}
@@ -424,6 +454,8 @@
   .video-modal-back:hover{background:rgba(0,0,0,0.8);transform:scale(1.03)}
   .video-modal-back-arrow{font-size:18px;line-height:1}
   .video-modal-title{position:absolute;top:18px;left:20px;right:120px;color:#fff;font-size:13px;font-weight:700;z-index:10000;text-shadow:0 2px 8px rgba(0,0,0,0.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .db-modal-download-hint{position:absolute;bottom:0;left:0;right:0;height:56px;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;padding:0 16px;color:#fff;font-size:12px;line-height:1.5;text-align:center;z-index:10001}
+  .db-modal-download-hint strong{color:#60a5fa;font-weight:800}
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
   .day-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
@@ -556,6 +588,7 @@
 <div id="app">
   <div class="header">
     <img class="header-logo" src="https://res.cloudinary.com/dpe5hzwcg/image/fetch/f_auto,q_auto,w_300/https%3A%2F%2Fdrive.google.com%2Fuc%3Fexport%3Dview%26id%3D1Zwq4lxNndeuQ4RRDAEVK2Yta1ZsNsW6A" alt="Zero Work AI" onerror="this.style.display='none'">
+    <div class="version-badge">7</div>
     <div class="header-label">Zero Work AI</div>
     <div class="header-title">האיזור <span>האישי</span> שלי</div>
     <div class="header-greeting" id="greetingLine" style="display:none">היי <span id="clientFirstName"></span> 👋</div>
@@ -3427,21 +3460,38 @@ function renderDropboxFolder() {
   }
 
   // --- מצב סרטונים (raw, ready, או תת תיקייה של ready-from-long) ---
+  // האם אנחנו בתיקייה שמותר להעלות אליה?
+  // ready-from-long ברמה ראשית - לא, זה מסך של תתי תיקיות
+  // ארכיון (uploaded/raw-edited) - לא, אלו תיקיות מנוהלות אוטומטית
+  var canUpload = (dbCurrentFolder === 'raw' || dbCurrentFolder === 'ready' ||
+                   (dbCurrentFolder === 'ready-from-long' && dbCurrentSubPath));
+
+  // האם יש העלאות פעילות?
+  var hasActiveUploads = activeUploads.length > 0;
+
   html += '<div class="db-folder-actions">';
   html += '<div class="db-count-pill">סרטונים בתיקייה <span class="db-count-pill-num">' + dbClips.length + '</span></div>';
-  html += '<button class="db-upload-btn" disabled title="בבניה">⬆️ העלה סרטון</button>';
+  if (canUpload) {
+    var btnLabel = hasActiveUploads
+      ? '⬆️ העלה עוד (' + activeUploads.length + ' בתור)'
+      : '⬆️ העלה סרטון';
+    html += '<button class="db-upload-btn" onclick="dbStartUpload()">' + btnLabel + '</button>';
+  }
   html += '</div>';
 
-  if (dbClips.length === 0) {
-    html += '<div class="lv-empty">';
-    html += '<div class="lv-empty-icon">📭</div>';
-    html += 'אין סרטונים בתיקייה.<br>לחץ על "העלה סרטון" להתחיל';
-    html += '</div>';
-  } else {
+  // מציגים גם את כרטיסי ההעלאה הפעילים וגם את הסרטונים הקיימים
+  if (hasActiveUploads || dbClips.length > 0) {
     html += '<div class="caption-styles-grid">';
+    html += renderDbUploadCards();
     dbClips.forEach(function(clip, idx){
       html += renderDropboxClipCard(clip, idx);
     });
+    html += '</div>';
+  } else {
+    html += '<div class="lv-empty">';
+    html += '<div class="lv-empty-icon">📭</div>';
+    html += 'אין סרטונים בתיקייה.';
+    if (canUpload) html += '<br>לחץ על "העלה סרטון" להתחיל';
     html += '</div>';
   }
 
@@ -3457,7 +3507,9 @@ function renderDropboxClipCard(clip, idx) {
 
   html += '<div class="db-video-actions">';
   if (downloadUrl) {
-    html += '<a class="db-video-action-btn" href="' + escapeAttr(downloadUrl) + '" download="' + nameEsc + '" onclick="event.stopPropagation();dbHandleDownload(event)" title="הורד למכשיר">⬇️</a>';
+    // קישור הורדה ישיר - target=_blank יפתח בדפדפן חיצוני שם ההורדה תעבוד באמת
+    // לא משתמשים ב-onclick כדי שהדפדפן יטפל בלינק נטיב, בלי JavaScript
+    html += '<a class="db-video-action-btn" href="' + escapeAttr(downloadUrl) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="הורד למכשיר">⬇️</a>';
   }
   html += '<button class="db-video-action-btn db-video-delete-btn" onclick="onDropboxDeleteClick(' + idx + ')" title="מחק סרטון">🗑</button>';
   html += '</div>';
@@ -3476,10 +3528,238 @@ function renderDropboxClipCard(clip, idx) {
   return html;
 }
 
+function dbDownloadVideo(idx) {
+  var clip = dbClips[idx];
+  if (!clip) {
+    showToast('❌ סרטון לא זמין', true);
+    return;
+  }
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+
+  // זיהוי פלטפורמה
+  var platform = (tg && tg.platform) ? tg.platform : '';
+  var isAndroid = platform === 'android' || (!platform && /android/i.test(navigator.userAgent));
+
+  if (isAndroid) {
+    // אנדרואיד - יציאה לדפדפן חיצוני (Chrome מטפל ב-Content-Disposition)
+    var downloadUrl = clip.downloadUrl || (clip.webViewLink ? clip.webViewLink.replace('dl=0', 'dl=1') : '');
+    if (!downloadUrl) {
+      showToast('❌ קישור הורדה לא זמין', true);
+      return;
+    }
+    if (tg && tg.openLink) {
+      tg.openLink(downloadUrl, { try_instant_view: false });
+    } else {
+      window.open(downloadUrl, '_blank');
+    }
+    showToast('⬇️ פותח דפדפן להורדה...');
+  } else {
+    // אייפון/דפדפן - blob fetch (נשאר באפליקציה)
+    if (!clip.driveUrl) {
+      showToast('❌ קישור הורדה לא זמין', true);
+      return;
+    }
+    var btn = document.getElementById('db-download-btn-' + idx);
+    if (btn) { btn.disabled = true; btn.textContent = '⏳'; }
+    showToast('⬇️ מתחיל הורדה...');
+
+    fetch(clip.driveUrl)
+      .then(function(r){
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.blob();
+      })
+      .then(function(blob){
+        var blobUrl = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = clip.name || 'video.mp4';
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function(){
+          document.body.removeChild(a);
+          URL.revokeObjectURL(blobUrl);
+        }, 100);
+        if (btn) { btn.disabled = false; btn.textContent = '⬇️'; }
+        showToast('✅ הסרטון נשמר במכשיר');
+        if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      })
+      .catch(function(err){
+        console.error('Download failed:', err);
+        if (btn) { btn.disabled = false; btn.textContent = '⬇️'; }
+        showToast('❌ שגיאה בהורדה', true);
+      });
+  }
+}
+
 function dbHandleDownload(e) {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-  // הדפדפן יטפל בהורדה דרך attribute download
   showToast('⬇️ ההורדה החלה');
+}
+
+
+
+
+/* ══════════════════════════════════════
+   UPLOAD VIDEOS - בדיוק כמו תמונות רקע
+   ══════════════════════════════════════ */
+
+var UPLOAD_URL        = 'https://aiagentsforsale.app.n8n.cloud/webhook/upload-video';
+var VIDEO_CLOUD_NAME  = 'dpe5hzwcg';
+var VIDEO_PRESET      = 'video-temp-upload';
+
+/* רשימת העלאות פעילות לתצוגה */
+var activeUploads     = [];   // { id, fileName, percent, status }
+var uploadIdCounter   = 0;
+
+/* פתיחת בורר קבצים */
+function dbStartUpload() {
+  var input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'video/*';
+  // ⚠️ multiple=false - בוחרים סרטון אחד בכל פעם.
+  // באייפון multiple=true גורם לתקיעה בגלריה.
+  input.onchange = function() {
+    if (input.files && input.files.length > 0) {
+      dbUploadOne(input.files[0]);
+    }
+  };
+  input.click();
+}
+
+/* העלאה של קובץ אחד - הכי פשוט אפשר */
+function dbUploadOne(file) {
+  if (!file.type || file.type.indexOf('video') !== 0) {
+    showToast('❌ ' + file.name + ' אינו קובץ וידאו', true);
+    return;
+  }
+
+  // הוספה לרשימה לתצוגה
+  var uploadItem = {
+    id:       ++uploadIdCounter,
+    fileName: file.name,
+    percent:  0,
+    status:   'מעלה סרטון...'
+  };
+  activeUploads.push(uploadItem);
+  renderDropboxFolder();
+
+  // העלאה ל-Cloudinary - בדיוק כמו תמונות רקע
+  var formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', VIDEO_PRESET);
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'https://api.cloudinary.com/v1_1/' + VIDEO_CLOUD_NAME + '/video/upload', true);
+
+  xhr.upload.onprogress = function(e) {
+    if (e.lengthComputable) {
+      uploadItem.percent = Math.round((e.loaded / e.total) * 90);
+      dbUpdateUploadProgress(uploadItem.id, uploadItem.percent, 'מעלה סרטון...');
+    }
+  };
+
+  xhr.onload = function() {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      var data = JSON.parse(xhr.responseText);
+      var cloudUrl = data.secure_url || data.url;
+      if (!cloudUrl) {
+        dbUploadFinished(uploadItem.id, false, 'שגיאה בשרת התמונות');
+        return;
+      }
+      // שלב 2: שולחים את ה-URL ל-n8n
+      dbSendToDropbox(uploadItem, cloudUrl, file.name);
+    } else {
+      console.error('Cloudinary failed:', xhr.status, xhr.responseText);
+      dbUploadFinished(uploadItem.id, false, 'שגיאה בהעלאה');
+    }
+  };
+
+  xhr.onerror = function() {
+    dbUploadFinished(uploadItem.id, false, 'שגיאת רשת');
+  };
+
+  xhr.send(formData);
+}
+
+/* שלב 2: n8n מעביר ל-Dropbox */
+function dbSendToDropbox(uploadItem, cloudUrl, fileName) {
+  uploadItem.percent = 95;
+  uploadItem.status  = 'מעביר לדרופבוקס...';
+  dbUpdateUploadProgress(uploadItem.id, 95, 'מעביר לדרופבוקס...');
+
+  var url = UPLOAD_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&logSheetId=' + encodeURIComponent(logSheetId)
+    + '&fileName='   + encodeURIComponent(fileName)
+    + '&cloudUrl='   + encodeURIComponent(cloudUrl);
+
+  if (dbCurrentSubPath) {
+    url += '&folderPath=' + encodeURIComponent(dbCurrentSubPath);
+  } else {
+    url += '&folderType=' + encodeURIComponent(dbCurrentFolder);
+  }
+
+  fetch(url, { method: 'POST' })
+    .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function(){ dbUploadFinished(uploadItem.id, true); })
+    .catch(function(err){
+      console.error('n8n failed:', err);
+      dbUploadFinished(uploadItem.id, false, 'שגיאה בהעברה לדרופבוקס');
+    });
+}
+
+/* סיום העלאה - הצלחה או כישלון */
+function dbUploadFinished(itemId, success, errMsg) {
+  // הסרת הפריט מהרשימה
+  activeUploads = activeUploads.filter(function(u){ return u.id !== itemId; });
+
+  if (success) {
+    if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    showToast('✅ הסרטון הועלה בהצלחה!');
+    // ממתינים 3 שניות (Dropbox save_url הוא async) ואז מרעננים
+    setTimeout(function(){ fetchDropboxFolder(); }, 3000);
+  } else {
+    showToast('❌ ' + (errMsg || 'שגיאה'), true);
+    renderDropboxFolder();
+  }
+}
+
+/* עדכון UI ללא רנדור מחדש */
+function dbUpdateUploadProgress(itemId, percent, status) {
+  var item = null;
+  for (var i = 0; i < activeUploads.length; i++) {
+    if (activeUploads[i].id === itemId) { item = activeUploads[i]; break; }
+  }
+  if (!item) return;
+  item.percent = percent;
+  if (status) item.status = status;
+  var pEl = document.getElementById('db-upload-percent-' + itemId);
+  var sEl = document.getElementById('db-upload-status-' + itemId);
+  var bEl = document.getElementById('db-upload-bar-' + itemId);
+  if (pEl) pEl.textContent = percent + '%';
+  if (sEl) sEl.textContent = item.status;
+  if (bEl) bEl.style.width = percent + '%';
+}
+
+/* HTML של כרטיסי העלאה פעילים */
+function renderDbUploadCards() {
+  var html = '';
+  for (var i = 0; i < activeUploads.length; i++) {
+    var item = activeUploads[i];
+    var nameEsc = escapeAttr(item.fileName || '');
+    html += '<div class="db-upload-card">';
+    html += '<div class="db-upload-preview">';
+    html += '<div class="db-upload-spinner-wrap">';
+    html += '<div class="db-upload-percent" id="db-upload-percent-' + item.id + '">' + item.percent + '%</div>';
+    html += '<div class="db-upload-status" id="db-upload-status-' + item.id + '">' + escapeHtml(item.status) + '</div>';
+    html += '</div>';
+    html += '<div class="db-upload-progress-bar" id="db-upload-bar-' + item.id + '" style="width:' + item.percent + '%"></div>';
+    html += '</div>';
+    html += '<div class="db-upload-name" title="' + nameEsc + '">' + escapeHtml(item.fileName) + '</div>';
+    html += '</div>';
+  }
+  return html;
 }
 
 function openDropboxVideoModal(idx) {
