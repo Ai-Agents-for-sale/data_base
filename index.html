@@ -3507,9 +3507,8 @@ function renderDropboxClipCard(clip, idx) {
   var html = '<div class="db-video-card" id="dbcard_' + idx + '">';
 
   html += '<div class="db-video-actions">';
-  if (streamUrl) {
-    // קישור הורדה ישיר ל-driveUrl (dl.dropboxusercontent.com) - זה אותו URL שעובד בנגן ב-3 נקודות
-    html += '<a class="db-video-action-btn" href="' + escapeAttr(streamUrl) + '" download="' + nameEsc + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="הורד למכשיר" id="db-download-btn-' + idx + '">⬇️</a>';
+  if (downloadUrl) {
+    html += '<button class="db-video-action-btn" onclick="event.stopPropagation();dbDownloadVideo(' + idx + ')" title="הורד למכשיר" id="db-download-btn-' + idx + '">⬇️</button>';
   }
   html += '<button class="db-video-action-btn db-video-delete-btn" onclick="onDropboxDeleteClick(' + idx + ')" title="מחק סרטון">🗑</button>';
   html += '</div>';
@@ -3529,9 +3528,67 @@ function renderDropboxClipCard(clip, idx) {
 }
 
 function dbDownloadVideo(idx) {
-  // משנה התנהגות - במקום לנסות להוריד ישירות (שלא עובד אמין בכל המכשירים),
-  // פותחים את המודאל של הסרטון שיש בו את הפלייר עם הורדה.
-  openDropboxVideoModal(idx);
+  var clip = dbClips[idx];
+  if (!clip) {
+    showToast('❌ סרטון לא זמין', true);
+    return;
+  }
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+
+  // זיהוי פלטפורמה
+  var platform = (tg && tg.platform) ? tg.platform : '';
+  var isAndroid = platform === 'android' || (!platform && /android/i.test(navigator.userAgent));
+
+  if (isAndroid) {
+    // אנדרואיד - יציאה לדפדפן חיצוני (Chrome מטפל ב-Content-Disposition)
+    var downloadUrl = clip.downloadUrl || (clip.webViewLink ? clip.webViewLink.replace('dl=0', 'dl=1') : '');
+    if (!downloadUrl) {
+      showToast('❌ קישור הורדה לא זמין', true);
+      return;
+    }
+    if (tg && tg.openLink) {
+      tg.openLink(downloadUrl, { try_instant_view: false });
+    } else {
+      window.open(downloadUrl, '_blank');
+    }
+    showToast('⬇️ פותח דפדפן להורדה...');
+  } else {
+    // אייפון/דפדפן - blob fetch (נשאר באפליקציה)
+    if (!clip.driveUrl) {
+      showToast('❌ קישור הורדה לא זמין', true);
+      return;
+    }
+    var btn = document.getElementById('db-download-btn-' + idx);
+    if (btn) { btn.disabled = true; btn.textContent = '⏳'; }
+    showToast('⬇️ מתחיל הורדה...');
+
+    fetch(clip.driveUrl)
+      .then(function(r){
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.blob();
+      })
+      .then(function(blob){
+        var blobUrl = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = clip.name || 'video.mp4';
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function(){
+          document.body.removeChild(a);
+          URL.revokeObjectURL(blobUrl);
+        }, 100);
+        if (btn) { btn.disabled = false; btn.textContent = '⬇️'; }
+        showToast('✅ הסרטון נשמר במכשיר');
+        if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      })
+      .catch(function(err){
+        console.error('Download failed:', err);
+        if (btn) { btn.disabled = false; btn.textContent = '⬇️'; }
+        showToast('❌ שגיאה בהורדה', true);
+      });
+  }
 }
 
 function dbHandleDownload(e) {
