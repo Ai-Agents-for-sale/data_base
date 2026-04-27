@@ -40,7 +40,7 @@
 
   .header{padding:20px 20px 0;position:relative}
   .header-logo{position:absolute;top:18px;left:20px;width:48px;height:48px;border-radius:12px;object-fit:contain;background:rgba(255,255,255,0.04);padding:4px;border:1px solid var(--border)}
-  .version-badge{position:absolute;top:18px;left:78px;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;background:#a855f7;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.3);z-index:5}
+  .version-badge{position:absolute;top:18px;left:78px;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;background:#f97316;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.3);z-index:5}
   .header-label{font-size:11px;font-weight:600;color:var(--text-dimmer);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
   .header-title{font-size:24px;font-weight:900;color:var(--text);line-height:1.15;margin-bottom:4px}
   .header-title span{background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
@@ -588,7 +588,7 @@
 <div id="app">
   <div class="header">
     <img class="header-logo" src="https://res.cloudinary.com/dpe5hzwcg/image/fetch/f_auto,q_auto,w_300/https%3A%2F%2Fdrive.google.com%2Fuc%3Fexport%3Dview%26id%3D1Zwq4lxNndeuQ4RRDAEVK2Yta1ZsNsW6A" alt="Zero Work AI" onerror="this.style.display='none'">
-    <div class="version-badge">4</div>
+    <div class="version-badge">5</div>
     <div class="header-label">Zero Work AI</div>
     <div class="header-title">האיזור <span>האישי</span> שלי</div>
     <div class="header-greeting" id="greetingLine" style="display:none">היי <span id="clientFirstName"></span> 👋</div>
@@ -3467,9 +3467,6 @@ function renderDropboxFolder() {
                    (dbCurrentFolder === 'ready-from-long' && dbCurrentSubPath));
 
   // האם יש העלאות פעילות?
-  var activeUploads = uploadQueue.filter(function(u){
-    return u.phase === 'queued' || u.phase === 'cloudinary' || u.phase === 'dropbox';
-  });
   var hasActiveUploads = activeUploads.length > 0;
 
   html += '<div class="db-folder-actions">';
@@ -3602,186 +3599,100 @@ function dbHandleDownload(e) {
 
 
 
+
 /* ══════════════════════════════════════
-   UPLOAD VIDEOS - מאפס, פשוט ויציב
-   זרימה: דפדפן → Cloudinary (FormData) → URL חזרה → n8n → Dropbox save_url
-   חשוב: לא משתמשים ב-URL.createObjectURL בכלל
-          (יש באג ידוע ב-iOS שגורם לתקיעה בקבצי וידאו מהגלריה)
+   UPLOAD VIDEOS - בדיוק כמו תמונות רקע
    ══════════════════════════════════════ */
 
-var UPLOAD_URL            = 'https://aiagentsforsale.app.n8n.cloud/webhook/upload-video';
-var CLOUDINARY_NAME       = 'dpe5hzwcg';
-var CLOUDINARY_PRESET     = 'video-temp-upload';
-var CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/' + CLOUDINARY_NAME + '/auto/upload';
+var UPLOAD_URL        = 'https://aiagentsforsale.app.n8n.cloud/webhook/upload-video';
+var VIDEO_CLOUD_NAME  = 'dpe5hzwcg';
+var VIDEO_PRESET      = 'video-temp-upload';
 
-/* תור של פריטים פעילים בהעלאה
-   { id, fileName, fileSize, percent, status, phase, xhr, cancelled }
-   phase: queued | uploading | dropbox | done | error */
-var uploadQueue     = [];
-var uploadActive    = false;
-var uploadIdCounter = 0;
+/* רשימת העלאות פעילות לתצוגה */
+var activeUploads     = [];   // { id, fileName, percent, status }
+var uploadIdCounter   = 0;
 
-/* ─── 1. פתיחת בורר קבצים ─── */
+/* פתיחת בורר קבצים */
 function dbStartUpload() {
   var input = document.createElement('input');
-  input.type     = 'file';
-  input.accept   = 'video/*';
+  input.type = 'file';
+  input.accept = 'video/*';
   input.multiple = true;
-  input.style.display = 'none';
-
   input.onchange = function() {
     if (input.files && input.files.length > 0) {
       for (var i = 0; i < input.files.length; i++) {
-        dbAddToQueue(input.files[i]);
+        dbUploadOne(input.files[i]);
       }
-      if (!uploadActive) dbProcessNext();
     }
-    if (input.parentNode) input.parentNode.removeChild(input);
   };
-
-  document.body.appendChild(input);
   input.click();
 }
 
-/* ─── 2. הוספה לתור ─── */
-function dbAddToQueue(file) {
-  if (!file || !file.type || file.type.indexOf('video') !== 0) {
-    showToast('❌ ' + (file ? file.name : '') + ' אינו קובץ וידאו', true);
+/* העלאה של קובץ אחד - הכי פשוט אפשר */
+function dbUploadOne(file) {
+  if (!file.type || file.type.indexOf('video') !== 0) {
+    showToast('❌ ' + file.name + ' אינו קובץ וידאו', true);
     return;
   }
 
-  uploadQueue.push({
-    id:        ++uploadIdCounter,
-    file:      file,
-    fileName:  file.name,
-    fileSize:  file.size,
-    percent:   0,
-    status:    'ממתין בתור...',
-    phase:     'queued',
-    xhr:       null,
-    cancelled: false
-  });
-
-  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  // הוספה לרשימה לתצוגה
+  var uploadItem = {
+    id:       ++uploadIdCounter,
+    fileName: file.name,
+    percent:  0,
+    status:   'מעלה סרטון...'
+  };
+  activeUploads.push(uploadItem);
   renderDropboxFolder();
-}
 
-/* ─── 3. עיבוד הפריט הבא בתור ─── */
-function dbProcessNext() {
-  // מחפש פריט במצב queued
-  var next = null;
-  for (var i = 0; i < uploadQueue.length; i++) {
-    if (uploadQueue[i].phase === 'queued' && !uploadQueue[i].cancelled) {
-      next = uploadQueue[i];
-      break;
-    }
-  }
-
-  if (!next) {
-    // אין יותר לעבד - בודקים אם יש פריטים אחרים פעילים
-    uploadActive = false;
-    var stillRunning = false;
-    var anySuccess = false;
-    for (var j = 0; j < uploadQueue.length; j++) {
-      if (uploadQueue[j].phase === 'uploading' || uploadQueue[j].phase === 'dropbox') stillRunning = true;
-      if (uploadQueue[j].phase === 'done') anySuccess = true;
-    }
-    if (!stillRunning) {
-      // ניקוי הפריטים שהסתיימו
-      uploadQueue = uploadQueue.filter(function(u){
-        return u.phase === 'queued' || u.phase === 'uploading' || u.phase === 'dropbox';
-      });
-      if (anySuccess) {
-        // ממתינים 3 שניות (Dropbox save_url הוא async) ואז מרעננים
-        setTimeout(function(){ fetchDropboxFolder(); }, 3000);
-      } else {
-        renderDropboxFolder();
-      }
-    }
-    return;
-  }
-
-  uploadActive = true;
-  next.phase = 'uploading';
-  next.status = 'מעלה סרטון...';
-  next.percent = 0;
-  dbUpdateUploadUI(next.id);
-
-  dbUploadToCloudinary(next);
-}
-
-/* ─── 4. העלאה ל-Cloudinary ─── */
-function dbUploadToCloudinary(item) {
+  // העלאה ל-Cloudinary - בדיוק כמו תמונות רקע
   var formData = new FormData();
-  formData.append('file', item.file);
-  formData.append('upload_preset', CLOUDINARY_PRESET);
+  formData.append('file', file);
+  formData.append('upload_preset', VIDEO_PRESET);
 
   var xhr = new XMLHttpRequest();
-  item.xhr = xhr;
+  xhr.open('POST', 'https://api.cloudinary.com/v1_1/' + VIDEO_CLOUD_NAME + '/video/upload', true);
 
-  xhr.open('POST', CLOUDINARY_UPLOAD_URL, true);
-
-  // התקדמות
   xhr.upload.onprogress = function(e) {
-    if (e.lengthComputable && !item.cancelled) {
-      // 0-90% עבור Cloudinary, 90-100% עבור Dropbox
-      item.percent = Math.round((e.loaded / e.total) * 90);
-      item.status = 'מעלה סרטון...';
-      dbUpdateUploadUI(item.id);
+    if (e.lengthComputable) {
+      uploadItem.percent = Math.round((e.loaded / e.total) * 90);
+      dbUpdateUploadProgress(uploadItem.id, uploadItem.percent, 'מעלה סרטון...');
     }
   };
 
-  // הצלחה / כישלון
   xhr.onload = function() {
-    if (item.cancelled) return;
-
     if (xhr.status >= 200 && xhr.status < 300) {
-      var response;
-      try {
-        response = JSON.parse(xhr.responseText);
-      } catch (e) {
-        return dbFailItem(item, 'תשובה לא תקינה מ-Cloudinary');
-      }
-
-      var cloudUrl = response.secure_url || response.url;
+      var data = JSON.parse(xhr.responseText);
+      var cloudUrl = data.secure_url || data.url;
       if (!cloudUrl) {
-        return dbFailItem(item, 'לא התקבל URL מ-Cloudinary');
+        dbUploadFinished(uploadItem.id, false, 'שגיאה בשרת התמונות');
+        return;
       }
-
-      // ממשיך לשלב 5
-      dbSendToN8n(item, cloudUrl);
+      // שלב 2: שולחים את ה-URL ל-n8n
+      dbSendToDropbox(uploadItem, cloudUrl, file.name);
     } else {
-      console.error('Cloudinary upload failed:', xhr.status, xhr.responseText);
-      dbFailItem(item, 'שגיאה בהעלאה (' + xhr.status + ')');
+      console.error('Cloudinary failed:', xhr.status, xhr.responseText);
+      dbUploadFinished(uploadItem.id, false, 'שגיאה בהעלאה');
     }
   };
 
   xhr.onerror = function() {
-    if (!item.cancelled) dbFailItem(item, 'שגיאת רשת');
-  };
-
-  xhr.onabort = function() {
-    if (item.cancelled) {
-      item.phase = 'error';
-      renderDropboxFolder();
-      dbProcessNext();
-    }
+    dbUploadFinished(uploadItem.id, false, 'שגיאת רשת');
   };
 
   xhr.send(formData);
 }
 
-/* ─── 5. הודעה ל-n8n שיעביר ל-Dropbox ─── */
-function dbSendToN8n(item, cloudUrl) {
-  item.phase = 'dropbox';
-  item.percent = 95;
-  item.status = 'מעביר לדרופבוקס...';
-  dbUpdateUploadUI(item.id);
+/* שלב 2: n8n מעביר ל-Dropbox */
+function dbSendToDropbox(uploadItem, cloudUrl, fileName) {
+  uploadItem.percent = 95;
+  uploadItem.status  = 'מעביר לדרופבוקס...';
+  dbUpdateUploadProgress(uploadItem.id, 95, 'מעביר לדרופבוקס...');
 
   var url = UPLOAD_URL
     + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
     + '&logSheetId=' + encodeURIComponent(logSheetId)
-    + '&fileName='   + encodeURIComponent(item.fileName)
+    + '&fileName='   + encodeURIComponent(fileName)
     + '&cloudUrl='   + encodeURIComponent(cloudUrl);
 
   if (dbCurrentSubPath) {
@@ -3791,100 +3702,64 @@ function dbSendToN8n(item, cloudUrl) {
   }
 
   fetch(url, { method: 'POST' })
-    .then(function(r){
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    })
-    .then(function(){
-      item.phase = 'done';
-      item.percent = 100;
-      item.status = 'הסתיים';
-      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-      renderDropboxFolder();
-      setTimeout(dbProcessNext, 100);
-    })
+    .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function(){ dbUploadFinished(uploadItem.id, true); })
     .catch(function(err){
-      console.error('n8n upload failed:', err);
-      dbFailItem(item, 'שגיאה בהעברה לדרופבוקס');
+      console.error('n8n failed:', err);
+      dbUploadFinished(uploadItem.id, false, 'שגיאה בהעברה לדרופבוקס');
     });
 }
 
-/* ─── 6. כישלון / ביטול ─── */
-function dbFailItem(item, msg) {
-  item.phase = 'error';
-  item.status = msg;
-  showToast('❌ ' + item.fileName + ': ' + msg, true);
-  renderDropboxFolder();
-  setTimeout(dbProcessNext, 100);
+/* סיום העלאה - הצלחה או כישלון */
+function dbUploadFinished(itemId, success, errMsg) {
+  // הסרת הפריט מהרשימה
+  activeUploads = activeUploads.filter(function(u){ return u.id !== itemId; });
+
+  if (success) {
+    if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    showToast('✅ הסרטון הועלה בהצלחה!');
+    // ממתינים 3 שניות (Dropbox save_url הוא async) ואז מרעננים
+    setTimeout(function(){ fetchDropboxFolder(); }, 3000);
+  } else {
+    showToast('❌ ' + (errMsg || 'שגיאה'), true);
+    renderDropboxFolder();
+  }
 }
 
-function dbCancelUploadItem(itemId) {
+/* עדכון UI ללא רנדור מחדש */
+function dbUpdateUploadProgress(itemId, percent, status) {
   var item = null;
-  for (var i = 0; i < uploadQueue.length; i++) {
-    if (uploadQueue[i].id === itemId) { item = uploadQueue[i]; break; }
+  for (var i = 0; i < activeUploads.length; i++) {
+    if (activeUploads[i].id === itemId) { item = activeUploads[i]; break; }
   }
   if (!item) return;
-
-  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-  item.cancelled = true;
-
-  if (item.phase === 'uploading' && item.xhr) {
-    item.xhr.abort();
-    item.phase = 'error';
-  } else if (item.phase === 'dropbox') {
-    showToast('ההעלאה כבר נשלחה לעיבוד', false);
-    return;
-  } else if (item.phase === 'queued') {
-    item.phase = 'error';
-  }
-
-  uploadQueue = uploadQueue.filter(function(u){ return u.id !== itemId; });
-  renderDropboxFolder();
+  item.percent = percent;
+  if (status) item.status = status;
+  var pEl = document.getElementById('db-upload-percent-' + itemId);
+  var sEl = document.getElementById('db-upload-status-' + itemId);
+  var bEl = document.getElementById('db-upload-bar-' + itemId);
+  if (pEl) pEl.textContent = percent + '%';
+  if (sEl) sEl.textContent = item.status;
+  if (bEl) bEl.style.width = percent + '%';
 }
 
-/* ─── 7. עדכון UI של פריט בהעלאה ─── */
-function dbUpdateUploadUI(itemId) {
-  var item = null;
-  for (var i = 0; i < uploadQueue.length; i++) {
-    if (uploadQueue[i].id === itemId) { item = uploadQueue[i]; break; }
-  }
-  if (!item) return;
-
-  var percentEl = document.getElementById('db-upload-percent-' + itemId);
-  var statusEl  = document.getElementById('db-upload-status-' + itemId);
-  var barEl     = document.getElementById('db-upload-bar-' + itemId);
-  if (percentEl) percentEl.textContent = item.percent + '%';
-  if (statusEl)  statusEl.textContent  = item.status;
-  if (barEl)     barEl.style.width     = item.percent + '%';
-}
-
-/* ─── 8. רנדור הכרטיסים של ההעלאות הפעילות ─── */
+/* HTML של כרטיסי העלאה פעילים */
 function renderDbUploadCards() {
   var html = '';
-  for (var i = 0; i < uploadQueue.length; i++) {
-    var u = uploadQueue[i];
-    if (u.phase === 'queued' || u.phase === 'uploading' || u.phase === 'dropbox') {
-      html += renderDbSingleUploadCard(u);
-    }
+  for (var i = 0; i < activeUploads.length; i++) {
+    var item = activeUploads[i];
+    var nameEsc = escapeAttr(item.fileName || '');
+    html += '<div class="db-upload-card">';
+    html += '<div class="db-upload-preview">';
+    html += '<div class="db-upload-spinner-wrap">';
+    html += '<div class="db-upload-percent" id="db-upload-percent-' + item.id + '">' + item.percent + '%</div>';
+    html += '<div class="db-upload-status" id="db-upload-status-' + item.id + '">' + escapeHtml(item.status) + '</div>';
+    html += '</div>';
+    html += '<div class="db-upload-progress-bar" id="db-upload-bar-' + item.id + '" style="width:' + item.percent + '%"></div>';
+    html += '</div>';
+    html += '<div class="db-upload-name" title="' + nameEsc + '">' + escapeHtml(item.fileName) + '</div>';
+    html += '</div>';
   }
-  return html;
-}
-
-function renderDbSingleUploadCard(item) {
-  var nameEsc = escapeAttr(item.fileName || '');
-  var html = '';
-  html += '<div class="db-upload-card" id="db-upload-card-' + item.id + '">';
-  html += '<button class="db-upload-cancel" onclick="dbCancelUploadItem(' + item.id + ')" title="בטל העלאה">✕</button>';
-  html += '<div class="db-upload-preview">';
-  // אין preview - רקע שחור עם spinner וטקסט (זה יציב, לא תלוי ב-iOS)
-  html += '<div class="db-upload-spinner-wrap">';
-  html += '<div class="db-upload-percent" id="db-upload-percent-' + item.id + '">' + item.percent + '%</div>';
-  html += '<div class="db-upload-status" id="db-upload-status-' + item.id + '">' + escapeHtml(item.status) + '</div>';
-  html += '</div>';
-  html += '<div class="db-upload-progress-bar" id="db-upload-bar-' + item.id + '" style="width:' + item.percent + '%"></div>';
-  html += '</div>';
-  html += '<div class="db-upload-name" title="' + nameEsc + '">' + escapeHtml(item.fileName) + '</div>';
-  html += '</div>';
   return html;
 }
 
