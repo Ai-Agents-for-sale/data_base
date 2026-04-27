@@ -3507,8 +3507,9 @@ function renderDropboxClipCard(clip, idx) {
   var html = '<div class="db-video-card" id="dbcard_' + idx + '">';
 
   html += '<div class="db-video-actions">';
-  if (downloadUrl) {
-    html += '<button class="db-video-action-btn" onclick="event.stopPropagation();dbDownloadVideo(' + idx + ')" title="הורד למכשיר" id="db-download-btn-' + idx + '">⬇️</button>';
+  if (streamUrl) {
+    // קישור הורדה ישיר ל-driveUrl (dl.dropboxusercontent.com) - זה אותו URL שעובד בנגן ב-3 נקודות
+    html += '<a class="db-video-action-btn" href="' + escapeAttr(streamUrl) + '" download="' + nameEsc + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="הורד למכשיר" id="db-download-btn-' + idx + '">⬇️</a>';
   }
   html += '<button class="db-video-action-btn db-video-delete-btn" onclick="onDropboxDeleteClick(' + idx + ')" title="מחק סרטון">🗑</button>';
   html += '</div>';
@@ -3807,17 +3808,7 @@ function openDropboxVideoModal(idx) {
   var title = document.getElementById('video-modal-title');
   var modal = document.getElementById('video-modal');
   if (!wrap || !modal) return;
-
-  var html = '';
-  html += '<video src="' + escapeAttr(clip.driveUrl) + '" controls autoplay playsinline ';
-  html += 'style="position:absolute;inset:0;width:100%;height:calc(100% - 56px);object-fit:contain;background:#000"></video>';
-
-  // הוראות הורדה ברורות בתחתית המסך
-  html += '<div class="db-modal-download-hint">';
-  html += '💡 להורדה: לחץ על <strong>3 הנקודות</strong> בנגן הסרטון ובחר <strong>"הורד"</strong>';
-  html += '</div>';
-
-  wrap.innerHTML = html;
+  wrap.innerHTML = '<video src="' + escapeAttr(clip.driveUrl) + '" controls autoplay playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000"></video>';
   if (title) title.textContent = clip.name || '';
   modal.classList.add('visible');
   document.body.style.overflow = 'hidden';
