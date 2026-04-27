@@ -3525,6 +3525,9 @@ function renderDropboxClipCard(clip, idx) {
   return html;
 }
 
+/* state עבור הורדת אנדרואיד */
+var dbPendingDownloadUrl = null;
+
 function dbDownloadVideo(idx) {
   var clip = dbClips[idx];
   if (!clip) {
@@ -3533,14 +3536,19 @@ function dbDownloadVideo(idx) {
   }
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 
-  // זיהוי פלטפורמה - באייפון blob fetch עובד, באנדרואיד צריך openLink
+  // זיהוי פלטפורמה
   var platform = (tg && tg.platform) ? tg.platform : '';
   var isAndroid = platform === 'android' ||
-                  (platform === '' && /android/i.test(navigator.userAgent));
+                  (!platform && /android/i.test(navigator.userAgent));
+  var isIOS     = platform === 'ios' ||
+                  (!platform && /iphone|ipad|ipod/i.test(navigator.userAgent));
+
+  console.log('[Download] platform=' + platform + ' isAndroid=' + isAndroid + ' isIOS=' + isIOS);
 
   if (isAndroid) {
     dbDownloadAndroid(clip);
   } else {
+    // אייפון או דפדפן רגיל - שיטת blob fetch
     dbDownloadIOS(clip, idx);
   }
 }
@@ -3556,11 +3564,12 @@ function dbDownloadAndroid(clip) {
     return;
   }
 
-  // מציג מודאל הסבר לפני שיוצאים מהאפ
-  dbShowAndroidDownloadModal(downloadUrl);
+  // שומרים ב-state במקום להעביר ב-HTML attribute (כי URL ארוך + תווים מיוחדים שובר את ה-onclick)
+  dbPendingDownloadUrl = downloadUrl;
+  dbShowAndroidDownloadModal();
 }
 
-function dbShowAndroidDownloadModal(downloadUrl) {
+function dbShowAndroidDownloadModal() {
   // מסיר מודאל קודם אם יש
   var existing = document.getElementById('db-android-download-modal');
   if (existing) existing.remove();
@@ -3576,13 +3585,12 @@ function dbShowAndroidDownloadModal(downloadUrl) {
   html += '</div>';
   html += '<div class="db-modal-actions">';
   html += '<button class="db-modal-btn db-modal-btn-secondary" onclick="dbCloseAndroidModal()">ביטול</button>';
-  html += '<button class="db-modal-btn db-modal-btn-primary" onclick="dbConfirmAndroidDownload(\'' + escapeAttr(downloadUrl) + '\')">המשך להורדה</button>';
+  html += '<button class="db-modal-btn db-modal-btn-primary" onclick="dbConfirmAndroidDownload()">המשך להורדה</button>';
   html += '</div>';
   html += '</div>';
   html += '</div>';
 
   document.body.insertAdjacentHTML('beforeend', html);
-  // animation in
   setTimeout(function(){
     var el = document.getElementById('db-android-download-modal');
     if (el) el.classList.add('visible');
@@ -3593,26 +3601,39 @@ function dbCloseAndroidModal() {
   var el = document.getElementById('db-android-download-modal');
   if (!el) return;
   el.classList.remove('visible');
-  setTimeout(function(){ if (el.parentNode) el.parentNode.removeChild(el); }, 200);
+  setTimeout(function(){
+    if (el.parentNode) el.parentNode.removeChild(el);
+  }, 200);
+  // לא מאפסים את dbPendingDownloadUrl כאן - נאפס רק אם המשתמש לחץ ביטול במקום אחר
 }
 
-function dbConfirmAndroidDownload(downloadUrl) {
+function dbConfirmAndroidDownload() {
+  var url = dbPendingDownloadUrl;
+  dbPendingDownloadUrl = null;
   dbCloseAndroidModal();
+
+  if (!url) {
+    showToast('❌ קישור הורדה אבד', true);
+    return;
+  }
+
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+
+  console.log('[Download] opening external link:', url);
 
   if (tg && tg.openLink) {
     try {
-      tg.openLink(downloadUrl, { try_instant_view: false });
+      tg.openLink(url, { try_instant_view: false });
       return;
     } catch (err) {
       console.error('tg.openLink failed:', err);
     }
   }
-  // fallback אם openLink לא זמין
-  window.open(downloadUrl, '_blank');
+  // fallback אם אין tg.openLink
+  window.open(url, '_blank');
 }
 
-/* ─── אייפון: blob fetch (נשאר באפליקציה) ─── */
+/* ─── אייפון: blob fetch ─── */
 function dbDownloadIOS(clip, idx) {
   if (!clip.driveUrl) {
     showToast('❌ קישור הורדה לא זמין', true);
@@ -3648,7 +3669,6 @@ function dbDownloadIOS(clip, idx) {
     .catch(function(err){
       console.error('Download failed:', err);
       if (btn) { btn.disabled = false; btn.textContent = '⬇️'; }
-      // fallback - פתיחה ישירה
       var a = document.createElement('a');
       a.href = clip.downloadUrl || clip.driveUrl;
       a.download = clip.name || 'video.mp4';
