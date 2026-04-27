@@ -40,7 +40,7 @@
 
   .header{padding:20px 20px 0;position:relative}
   .header-logo{position:absolute;top:18px;left:20px;width:48px;height:48px;border-radius:12px;object-fit:contain;background:rgba(255,255,255,0.04);padding:4px;border:1px solid var(--border)}
-  .version-badge{position:absolute;top:18px;left:78px;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;background:#ec4899;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.3);z-index:5}
+  .version-badge{position:absolute;top:18px;left:78px;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;background:#06b6d4;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.3);z-index:5}
   .header-label{font-size:11px;font-weight:600;color:var(--text-dimmer);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
   .header-title{font-size:24px;font-weight:900;color:var(--text);line-height:1.15;margin-bottom:4px}
   .header-title span{background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
@@ -588,7 +588,7 @@
 <div id="app">
   <div class="header">
     <img class="header-logo" src="https://res.cloudinary.com/dpe5hzwcg/image/fetch/f_auto,q_auto,w_300/https%3A%2F%2Fdrive.google.com%2Fuc%3Fexport%3Dview%26id%3D1Zwq4lxNndeuQ4RRDAEVK2Yta1ZsNsW6A" alt="Zero Work AI" onerror="this.style.display='none'">
-    <div class="version-badge">6</div>
+    <div class="version-badge">7</div>
     <div class="header-label">Zero Work AI</div>
     <div class="header-title">האיזור <span>האישי</span> שלי</div>
     <div class="header-greeting" id="greetingLine" style="display:none">היי <span id="clientFirstName"></span> 👋</div>
@@ -3616,17 +3616,12 @@ var uploadIdCounter   = 0;
 function dbStartUpload() {
   var input = document.createElement('input');
   input.type = 'file';
-
-  // ⚠️ באייפון, accept="video/*" מפעיל המרה של HEVC שלעיתים נתקעת.
-  // שימוש ב-MIME types ספציפיים מאלץ את iOS להחזיר את הקובץ ישירות בלי המרה.
-  input.accept = 'video/mp4,video/quicktime,video/x-m4v,video/*';
-
-  input.multiple = true;
+  input.accept = 'video/*';
+  // ⚠️ multiple=false - בוחרים סרטון אחד בכל פעם.
+  // באייפון multiple=true גורם לתקיעה בגלריה.
   input.onchange = function() {
     if (input.files && input.files.length > 0) {
-      for (var i = 0; i < input.files.length; i++) {
-        dbUploadOne(input.files[i]);
-      }
+      dbUploadOne(input.files[0]);
     }
   };
   input.click();
