@@ -3525,9 +3525,6 @@ function renderDropboxClipCard(clip, idx) {
   return html;
 }
 
-/* state עבור הורדת אנדרואיד */
-var dbPendingDownloadUrl = null;
-
 function dbDownloadVideo(idx) {
   var clip = dbClips[idx];
   if (!clip) {
@@ -3536,25 +3533,7 @@ function dbDownloadVideo(idx) {
   }
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 
-  // זיהוי פלטפורמה
-  var platform = (tg && tg.platform) ? tg.platform : '';
-  var isAndroid = platform === 'android' ||
-                  (!platform && /android/i.test(navigator.userAgent));
-  var isIOS     = platform === 'ios' ||
-                  (!platform && /iphone|ipad|ipod/i.test(navigator.userAgent));
-
-  console.log('[Download] platform=' + platform + ' isAndroid=' + isAndroid + ' isIOS=' + isIOS);
-
-  if (isAndroid) {
-    dbDownloadAndroid(clip);
-  } else {
-    // אייפון או דפדפן רגיל - שיטת blob fetch
-    dbDownloadIOS(clip, idx);
-  }
-}
-
-/* ─── אנדרואיד: פותח דפדפן חיצוני עם הודעה מקדימה ─── */
-function dbDownloadAndroid(clip) {
+  // קישור הורדה ישיר של Dropbox (?dl=1 שולח Content-Disposition: attachment)
   var downloadUrl = clip.downloadUrl;
   if (!downloadUrl && clip.webViewLink) {
     downloadUrl = clip.webViewLink.replace('dl=0', 'dl=1');
@@ -3564,77 +3543,55 @@ function dbDownloadAndroid(clip) {
     return;
   }
 
-  // שומרים ב-state במקום להעביר ב-HTML attribute (כי URL ארוך + תווים מיוחדים שובר את ה-onclick)
-  dbPendingDownloadUrl = downloadUrl;
-  dbShowAndroidDownloadModal();
-}
+  var fileName = clip.name || 'video.mp4';
+  if (!/\.mp4$/i.test(fileName)) fileName += '.mp4';
 
-function dbShowAndroidDownloadModal() {
-  // מסיר מודאל קודם אם יש
-  var existing = document.getElementById('db-android-download-modal');
-  if (existing) existing.remove();
-
-  var html = '';
-  html += '<div class="db-modal-backdrop" id="db-android-download-modal" onclick="dbCloseAndroidModal()">';
-  html += '<div class="db-modal-card" onclick="event.stopPropagation()">';
-  html += '<div class="db-modal-icon">📥</div>';
-  html += '<div class="db-modal-title">הורדת הסרטון</div>';
-  html += '<div class="db-modal-body">';
-  html += '<div class="db-modal-row">📂 הסרטון יישמר בתיקיית <strong>"הורדות"</strong> במכשיר</div>';
-  html += '<div class="db-modal-row">🔙 לחזרה לאפליקציה - לחץ על <strong>כפתור Back של המכשיר</strong></div>';
-  html += '</div>';
-  html += '<div class="db-modal-actions">';
-  html += '<button class="db-modal-btn db-modal-btn-secondary" onclick="dbCloseAndroidModal()">ביטול</button>';
-  html += '<button class="db-modal-btn db-modal-btn-primary" onclick="dbConfirmAndroidDownload()">המשך להורדה</button>';
-  html += '</div>';
-  html += '</div>';
-  html += '</div>';
-
-  document.body.insertAdjacentHTML('beforeend', html);
-  setTimeout(function(){
-    var el = document.getElementById('db-android-download-modal');
-    if (el) el.classList.add('visible');
-  }, 10);
-}
-
-function dbCloseAndroidModal() {
-  var el = document.getElementById('db-android-download-modal');
-  if (!el) return;
-  el.classList.remove('visible');
-  setTimeout(function(){
-    if (el.parentNode) el.parentNode.removeChild(el);
-  }, 200);
-  // לא מאפסים את dbPendingDownloadUrl כאן - נאפס רק אם המשתמש לחץ ביטול במקום אחר
-}
-
-function dbConfirmAndroidDownload() {
-  var url = dbPendingDownloadUrl;
-  dbPendingDownloadUrl = null;
-  dbCloseAndroidModal();
-
-  if (!url) {
-    showToast('❌ קישור הורדה אבד', true);
-    return;
-  }
-
-  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-
-  console.log('[Download] opening external link:', url);
-
-  if (tg && tg.openLink) {
+  // ─── שיטה 1: Telegram WebApp downloadFile API (Bot API 8.0+) ───
+  // ה-API הרשמי של טלגרם להורדה מתוך Mini App.
+  // - מציג popup native של טלגרם
+  // - ההורדה מתבצעת ע"י טלגרם, לא ע"י הדפדפן
+  // - הקובץ נשמר אוטומטית בDownloads
+  // - המשתמש לא יוצא מהאפליקציה
+  // עובד באנדרואיד ובאייפון בגרסאות חדשות של טלגרם.
+  if (tg && typeof tg.downloadFile === 'function') {
+    console.log('[Download] tg.downloadFile (native API)');
     try {
-      tg.openLink(url, { try_instant_view: false });
+      tg.downloadFile(
+        { url: downloadUrl, file_name: fileName },
+        function(accepted) {
+          if (accepted && tg.HapticFeedback) {
+            tg.HapticFeedback.notificationOccurred('success');
+          }
+        }
+      );
       return;
     } catch (err) {
-      console.error('tg.openLink failed:', err);
+      console.error('tg.downloadFile failed:', err);
+      // ממשיכים ל-fallback
     }
   }
-  // fallback אם אין tg.openLink
-  window.open(url, '_blank');
+
+  // ─── שיטה 2 (fallback לגרסאות ישנות של טלגרם) ───
+  console.log('[Download] tg.downloadFile not available, using fallback');
+  var platform = (tg && tg.platform) ? tg.platform : '';
+  var isAndroid = platform === 'android' || (!platform && /android/i.test(navigator.userAgent));
+
+  if (isAndroid) {
+    // אנדרואיד ישן - נצא לדפדפן חיצוני
+    if (tg && tg.openLink) {
+      tg.openLink(downloadUrl, { try_instant_view: false });
+      showToast('⬇️ פותח דפדפן להורדה...');
+    } else {
+      window.open(downloadUrl, '_blank');
+    }
+  } else {
+    // אייפון ישן או דפדפן רגיל - blob fetch
+    dbDownloadIOSFallback(clip, idx);
+  }
 }
 
-/* ─── אייפון: blob fetch ─── */
-function dbDownloadIOS(clip, idx) {
+/* Fallback ל-iOS (גרסאות טלגרם ישנות) - blob fetch */
+function dbDownloadIOSFallback(clip, idx) {
   if (!clip.driveUrl) {
     showToast('❌ קישור הורדה לא זמין', true);
     return;
@@ -3685,6 +3642,7 @@ function dbHandleDownload(e) {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
   showToast('⬇️ ההורדה החלה');
 }
+
 
 /* ══════════════════════════════════════
    UPLOAD VIDEOS TO DROPBOX (via Cloudinary)
