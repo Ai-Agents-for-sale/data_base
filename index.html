@@ -3510,60 +3510,42 @@ function renderDropboxClipCard(clip, idx) {
 
 function dbDownloadVideo(idx) {
   var clip = dbClips[idx];
-  if (!clip || !clip.driveUrl) {
-    showToast('❌ קישור הורדה לא זמין', true);
+  if (!clip) {
+    showToast('❌ סרטון לא זמין', true);
     return;
   }
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 
-  var btn = document.getElementById('db-download-btn-' + idx);
-  if (btn) { btn.disabled = true; btn.textContent = '⏳'; }
+  // קישור ההורדה הישיר של Dropbox עם dl=1
+  var downloadUrl = clip.downloadUrl;
+  if (!downloadUrl && clip.webViewLink) {
+    downloadUrl = clip.webViewLink.replace('dl=0', 'dl=1');
+  }
+  if (!downloadUrl) {
+    showToast('❌ קישור הורדה לא זמין', true);
+    return;
+  }
 
-  showToast('⬇️ מתחיל הורדה...');
+  // טלגרם Mini App: openLink פותח את הקישור בדפדפן החיצוני (Chrome/Safari)
+  // שם ההורדה עובדת כי הדפדפן מטפל ב-Content-Disposition header של Dropbox
+  // זה הכרחי באנדרואיד - WebView לא יודע להוריד קבצים מ-cross-origin
+  if (tg && tg.openLink) {
+    try {
+      tg.openLink(downloadUrl, { try_instant_view: false });
+      showToast('⬇️ פותח דפדפן להורדה...');
+      if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      return;
+    } catch (err) {
+      console.error('tg.openLink failed:', err);
+    }
+  }
 
-  // דורשים את הקובץ כblob כדי לעקוף את בעיית ה-cross-origin download attribute
-  // הdriveUrl הוא dl.dropboxusercontent.com שתומך ב-CORS
-  fetch(clip.driveUrl)
-    .then(function(r){
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.blob();
-    })
-    .then(function(blob){
-      // יוצרים URL מקומי (blob:) - זה same-origin לדפדפן ולכן download עובד
-      var blobUrl = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = blobUrl;
-      a.download = clip.name || 'video.mp4';
-      a.style.display = 'none';
-      document.body.appendChild(a);
-      a.click();
-      // ניקוי אחרי הקליק
-      setTimeout(function(){
-        document.body.removeChild(a);
-        URL.revokeObjectURL(blobUrl);
-      }, 100);
-      if (btn) { btn.disabled = false; btn.textContent = '⬇️'; }
-      showToast('✅ הקובץ נשמר במכשיר');
-      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-    })
-    .catch(function(err){
-      console.error('Download failed:', err);
-      if (btn) { btn.disabled = false; btn.textContent = '⬇️'; }
-      // fallback - ננסה את השיטה הישנה (תעבוד באייפון, אולי גם באנדרואיד עם dropbox app)
-      var a = document.createElement('a');
-      a.href = clip.downloadUrl || clip.driveUrl;
-      a.download = clip.name || 'video.mp4';
-      a.target = '_blank';
-      a.rel = 'noopener';
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(function(){ document.body.removeChild(a); }, 100);
-      showToast('⬇️ ההורדה החלה (פתיחה ישירה)');
-    });
+  // Fallback: אם אין tg.openLink (למשל בדפדפן רגיל), פתיחה רגילה
+  window.open(downloadUrl, '_blank');
+  showToast('⬇️ ההורדה החלה');
 }
 
 function dbHandleDownload(e) {
-  // legacy - kept for compatibility
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
   showToast('⬇️ ההורדה החלה');
 }
