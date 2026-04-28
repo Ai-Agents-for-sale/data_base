@@ -114,6 +114,38 @@
   .lv-intro{background:rgba(234,179,8,0.08);border:1px solid rgba(234,179,8,0.3);border-radius:var(--radius);padding:12px 14px;font-size:11px;line-height:1.7;color:var(--text-dim);margin-bottom:6px}
   .lv-intro strong{color:#fbbf24}
 
+  /* How-it-works box for long videos */
+  .lv-howto{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-size:12px;line-height:1.7;color:var(--text-dim);margin-bottom:6px}
+  .lv-howto-title{font-size:14px;font-weight:800;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .lv-howto p{margin-bottom:10px}
+  .lv-howto p:last-child{margin-bottom:0}
+  .lv-howto strong{color:var(--text)}
+  .lv-howto-warning{background:rgba(250,204,21,0.10);border:1px solid rgba(250,204,21,0.35);border-radius:var(--radius-sm);padding:10px 12px;color:#fbbf24;font-weight:600;margin:10px 0}
+  .lv-howto-warning strong{color:#fde047}
+
+  /* Tutorial open button */
+  .lv-tutorial-btn{background:var(--accent-s);border:1px solid var(--accent);color:var(--accent);font-family:'Heebo',sans-serif;font-size:11px;font-weight:700;padding:8px 14px;border-radius:20px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;margin-top:6px}
+  .lv-tutorial-btn:hover{background:var(--accent);color:#fff}
+  .lv-tutorial-btn:active{transform:scale(.97)}
+
+  /* Tutorial popup modal */
+  .tutorial-popup{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:0;max-width:440px;width:100%;display:flex;flex-direction:column;animation:modalIn .2s ease both;max-height:85vh;overflow:hidden}
+  .tutorial-popup-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(135deg,rgba(37,99,235,0.12),rgba(37,99,235,0.04))}
+  .tutorial-popup-title{font-size:14px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px}
+  .tutorial-popup-close{width:30px;height:30px;border-radius:50%;background:var(--bg3);border:none;color:var(--text-dim);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+  .tutorial-popup-close:hover{color:var(--text);background:var(--border-h)}
+  .tutorial-popup-body{padding:18px 20px;overflow-y:auto;font-size:13px;line-height:1.75;color:var(--text-dim)}
+  .tutorial-popup-body strong{color:var(--text)}
+  .tutorial-popup-step{display:flex;gap:12px;margin-bottom:14px}
+  .tutorial-popup-step:last-child{margin-bottom:0}
+  .tutorial-popup-step-num{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+  .tutorial-popup-step-text{flex:1;line-height:1.65;font-size:12.5px}
+
+  /* Send-to-edit button on long video row */
+  .lv-row-send-btn{width:100%;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border:none;border-radius:8px;font-family:'Heebo',sans-serif;font-size:12px;font-weight:700;padding:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity .15s,transform .12s;box-shadow:0 2px 6px rgba(124,58,237,0.25);margin-top:4px}
+  .lv-row-send-btn:active{transform:scale(.98);opacity:.92}
+  .lv-row-send-btn:disabled{opacity:.5;cursor:default}
+
   .lv-count-pill{display:inline-flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:6px 12px;font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px}
   .lv-count-pill-num{background:var(--accent);color:#fff;border-radius:10px;padding:1px 8px;font-size:11px;font-weight:800}
 
@@ -603,6 +635,18 @@
   .db-send-edit-btn{width:100%;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border:none;border-radius:8px;font-family:'Heebo',sans-serif;font-size:12px;font-weight:700;padding:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity .15s,transform .12s;box-shadow:0 2px 6px rgba(124,58,237,0.25)}
   .db-send-edit-btn:active{transform:scale(.98);opacity:.92}
   .db-send-edit-btn:disabled{opacity:.5;cursor:default}
+
+  /* Success modal (large, with full message) */
+  .success-modal{background:var(--bg2);border:1px solid var(--green);border-radius:var(--radius);padding:0;max-width:380px;width:100%;display:flex;flex-direction:column;animation:modalIn .25s ease both;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+  .success-modal-header{padding:24px 20px 16px;text-align:center;background:linear-gradient(135deg,rgba(22,163,74,0.18),rgba(22,163,74,0.04))}
+  .success-modal-icon{width:64px;height:64px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px;box-shadow:0 4px 16px rgba(22,163,74,0.4);animation:successPop .4s cubic-bezier(.4,1.6,.6,1) both}
+  @keyframes successPop{from{opacity:0;transform:scale(0.4)}to{opacity:1;transform:scale(1)}}
+  .success-modal-title{font-size:17px;font-weight:900;color:var(--text);margin-bottom:4px}
+  .success-modal-body{padding:8px 20px 20px;font-size:13px;color:var(--text-dim);line-height:1.7;text-align:right}
+  .success-modal-body strong{color:var(--text)}
+  .success-modal-actions{padding:12px 20px 16px;border-top:1px solid var(--border);background:var(--bg2)}
+  .success-modal-btn{width:100%;background:linear-gradient(135deg,#1a3a8f,#2d5fc4);color:#fff;border:none;border-radius:var(--radius-sm);padding:12px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:opacity .2s,transform .15s;box-shadow:0 4px 12px rgba(26,58,143,.25)}
+  .success-modal-btn:active{transform:scale(.98);opacity:.88}
 </style>
 </head>
 <body>
@@ -610,7 +654,6 @@
 <div id="app">
   <div class="header">
     <img class="header-logo" src="https://res.cloudinary.com/dpe5hzwcg/image/fetch/f_auto,q_auto,w_300/https%3A%2F%2Fdrive.google.com%2Fuc%3Fexport%3Dview%26id%3D1Zwq4lxNndeuQ4RRDAEVK2Yta1ZsNsW6A" alt="Zero Work AI" onerror="this.style.display='none'">
-    <div class="version-badge">8</div>
     <div class="header-label">Zero Work AI</div>
     <div class="header-title">האיזור <span>האישי</span> שלי</div>
     <div class="header-greeting" id="greetingLine" style="display:none">היי <span id="clientFirstName"></span> 👋</div>
@@ -930,7 +973,7 @@
     <div class="nav-card gold" onclick="openLongVideos()">
       <div class="nav-card-icon">📹</div>
       <div class="nav-card-body">
-        <div class="nav-card-title-row"><div class="nav-card-title">סרטונים ארוכים לערוך לקליפים קצרים</div></div>
+        <div class="nav-card-title-row"><div class="nav-card-title">סרטונים ארוכים שתרצה לערוך לקליפים קצרים</div></div>
         <div class="nav-card-desc">ניהול תור של סרטוני יוטיוב ארוכים שממתינים לעריכה</div>
       </div>
       <div class="nav-card-arrow">‹</div>
@@ -1053,7 +1096,7 @@
   <div class="screen-topbar">
     <div class="screen-back" onclick="closeScreen('screen-long-videos')">›</div>
     <div class="screen-topbar-icon">📹</div>
-    <div class="screen-topbar-title">סרטונים ארוכים לעריכה</div>
+    <div class="screen-topbar-title">סרטונים ארוכים שתרצה לערוך לקליפים קצרים</div>
   </div>
   <div class="screen-body" id="long-videos-body">
     <div class="screen-loading" id="long-videos-loading">
@@ -1077,6 +1120,140 @@
     <div class="modal-actions">
       <button class="modal-btn secondary" onclick="closeModal('modal-delete')">ביטול</button>
       <button class="modal-btn primary" id="modal-delete-confirm" onclick="performDelete()">מחק</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modal-yt-upload-tutorial">
+  <div class="tutorial-popup">
+    <div class="tutorial-popup-header">
+      <div class="tutorial-popup-title">📤 איך מעלים סרטון ליוטיוב כ"מוסתר"</div>
+      <button class="tutorial-popup-close" onclick="closeModal('modal-yt-upload-tutorial')">✕</button>
+    </div>
+    <div class="tutorial-popup-body">
+
+      <div class="tutorial-popup-step">
+        <div class="tutorial-popup-step-num">1</div>
+        <div class="tutorial-popup-step-text">
+          תיכנסו ל-<strong>youtube.com</strong> מהמחשב או הטלפון, ותתחברו לחשבון יוטיוב שלכם (לא חייב להיות חשבון מיוחד — כל חשבון גוגל זה חשבון יוטיוב).
+        </div>
+      </div>
+
+      <div class="tutorial-popup-step">
+        <div class="tutorial-popup-step-num">2</div>
+        <div class="tutorial-popup-step-text">
+          לחצו על הסמל של <strong>המצלמה עם ה-+</strong> בפינה למעלה (ביוטיוב למחשב — בצד שמאל למעלה. בנייד — באמצע למטה).
+        </div>
+      </div>
+
+      <div class="tutorial-popup-step">
+        <div class="tutorial-popup-step-num">3</div>
+        <div class="tutorial-popup-step-text">
+          בחרו <strong>"העלאת סרטון"</strong> ובחרו את הקובץ מהמחשב/הטלפון.
+        </div>
+      </div>
+
+      <div class="tutorial-popup-step">
+        <div class="tutorial-popup-step-num">4</div>
+        <div class="tutorial-popup-step-text">
+          תנו שם לסרטון (לא משנה מה — זה רק לכם, אף אחד לא יראה).
+        </div>
+      </div>
+
+      <div class="tutorial-popup-step">
+        <div class="tutorial-popup-step-num">5</div>
+        <div class="tutorial-popup-step-text">
+          המשיכו "הבא" עד שתגיעו למסך <strong>"חשיפה"</strong> או <strong>"Visibility"</strong>.
+        </div>
+      </div>
+
+      <div class="tutorial-popup-step">
+        <div class="tutorial-popup-step-num">6</div>
+        <div class="tutorial-popup-step-text">
+          סמנו <strong>"לא רשום" / "מוסתר" / "Unlisted"</strong>.<br><br>
+          <div class="lv-howto-warning" style="margin:0">
+            ⚠️ <strong>שימו לב!</strong> אל תסמנו <strong>"פרטי" / "Private"</strong> — זה ימנע מהסוכן גישה לסרטון. רק <strong>"מוסתר" / "Unlisted"</strong>.
+          </div>
+        </div>
+      </div>
+
+      <div class="tutorial-popup-step">
+        <div class="tutorial-popup-step-num">7</div>
+        <div class="tutorial-popup-step-text">
+          לחצו <strong>"שמור" / "פרסם"</strong>. הסרטון מועלה ברקע — אפשר להמשיך הלאה.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modal-yt-link-tutorial">
+  <div class="tutorial-popup">
+    <div class="tutorial-popup-header">
+      <div class="tutorial-popup-title">🔗 איך משיגים את הקישור של הסרטון</div>
+      <button class="tutorial-popup-close" onclick="closeModal('modal-yt-link-tutorial')">✕</button>
+    </div>
+    <div class="tutorial-popup-body">
+
+      <div class="tutorial-popup-step">
+        <div class="tutorial-popup-step-num">1</div>
+        <div class="tutorial-popup-step-text">
+          תיכנסו ל-<strong>youtube.com</strong> ותלחצו על תמונת הפרופיל שלכם בפינה ← <strong>"הסרטונים שלי" / "Your videos"</strong>.
+        </div>
+      </div>
+
+      <div class="tutorial-popup-step">
+        <div class="tutorial-popup-step-num">2</div>
+        <div class="tutorial-popup-step-text">
+          תמצאו את הסרטון שהעליתם, ותלחצו עליו כדי לפתוח אותו.
+        </div>
+      </div>
+
+      <div class="tutorial-popup-step">
+        <div class="tutorial-popup-step-num">3</div>
+        <div class="tutorial-popup-step-text">
+          תחת הסרטון יש כפתור <strong>"שיתוף" / "Share"</strong> — לחצו עליו.
+        </div>
+      </div>
+
+      <div class="tutorial-popup-step">
+        <div class="tutorial-popup-step-num">4</div>
+        <div class="tutorial-popup-step-text">
+          תיפתח חלונית עם הקישור של הסרטון, ולידו כפתור <strong>"העתק" / "Copy"</strong>. לחצו עליו.
+        </div>
+      </div>
+
+      <div class="tutorial-popup-step">
+        <div class="tutorial-popup-step-num">5</div>
+        <div class="tutorial-popup-step-text">
+          חזרו לאפליקציה, לחצו <strong>"הוסף סרטון"</strong>, ותדביקו את הקישור בשדה <strong>"קישור יוטיוב"</strong>. תוסיפו גם שם לסרטון לזיהוי.
+        </div>
+      </div>
+
+      <div class="tutorial-popup-step">
+        <div class="tutorial-popup-step-num">6</div>
+        <div class="tutorial-popup-step-text">
+          לחצו <strong>"💾 שמור שינויים"</strong>. הסרטון נמצא עכשיו בתור.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modal-send-to-edit-success">
+  <div class="success-modal">
+    <div class="success-modal-header">
+      <div class="success-modal-icon">✓</div>
+      <div class="success-modal-title">הסרטון נשלח לעריכה!</div>
+    </div>
+    <div class="success-modal-body">
+      הסוכן יעדכן אותך בצ'אט ברגע שהסרטון מוכן, עם כפתור לאפליקציה שדרכו תוכל <strong>להעלות / לתזמן</strong> את הסרטון.<br><br>
+      בנוסף, הסוכן יעלה את הסרטון לתיקיית <strong>"מוכנים מרגילים"</strong>.
+    </div>
+    <div class="success-modal-actions">
+      <button class="success-modal-btn" onclick="closeModal('modal-send-to-edit-success')">הבנתי</button>
     </div>
   </div>
 </div>
@@ -3167,9 +3344,29 @@ function renderLongVideos() {
   var body = document.getElementById('long-videos-body');
 
   var html = '';
+
+  // ── איך זה עובד? ──
+  html += '<div class="lv-howto">';
+  html += '<div class="lv-howto-title">💡 איך עורכים סרטון ארוך לקליפים קצרים?</div>';
+  html += '<p>כדי לייצר קליפים קצרים מסרטון ארוך (או כל סרטון שתרצו לייצר ממנו קליפים — הרצאה, לייב, שיעור מקורס דיגיטלי), צריך קודם כל להעלות את הסרטון המקורי <strong>ליוטיוב</strong> ואז לספק לסוכן את הקישור של הסרטון בטבלה למטה במסך הזה.</p>';
+  html += '<p>את הסרטון מעלים ליוטיוב כ<strong>"מוסתר"</strong> (מוסתר = רק מי שיש לו את הקישור יכול לצפות בו, הוא לא מתפרסם לציבור).</p>';
+
+  html += '<div class="lv-howto-warning">';
+  html += '⚠️ <strong>שימו לב:</strong> בהעלאת הסרטון אתם <strong>לא</strong> מגדירים את הסרטון על "פרטי" — אחרת גם הסוכן לא יוכל לגשת אליו. תגדירו <strong>"מוסתר"</strong> בהעלאה, ככה שאף אחד לא יוכל לראות אותו חוץ מהסוכן (בעזרת הקישור שתספקו לו).';
+  html += '</div>';
+
+  html += '<button class="lv-tutorial-btn" onclick="openModal(\'modal-yt-upload-tutorial\')">📖 איך מעלים סרטון ליוטיוב?</button>';
+
+  html += '<p style="margin-top:14px">לאחר שהעלתם את הסרטון ליוטיוב, העתיקו את הקישור שלו, לחצו <strong>"הוסף סרטון"</strong> בהמשך העמוד, ותדביקו את הקישור יוטיוב + שם לסרטון.</p>';
+
+  html += '<button class="lv-tutorial-btn" onclick="openModal(\'modal-yt-link-tutorial\')">📖 איך משיגים את הקישור של הסרטון?</button>';
+
+  html += '</div>';
+
+  // ── תור סרטונים (תיבה צהובה) ──
   html += '<div class="lv-intro">';
   html += '<strong>📹 תור סרטונים ארוכים</strong><br>';
-  html += 'כל הקישורים של סרטוני יוטיוב ארוכים שישלחו לעריכה לקליפים קצרים. תוכלו להדביק כאן את כל הקישורים שלכם בפעם אחת במקום להעלות קישור לסוכן בכל פעם. כשתלחצו על "עריכת סרטון ארוך לקליפים" בסוכן - הוא ייקח את הסרטון הבא מהרשימה ויעבוד עליו.<br><br>';
+  html += 'כל הקישורים של סרטוני יוטיוב ארוכים שישלחו לעריכה לקליפים קצרים. תוכלו להדביק כאן את כל הקישורים שלכם בפעם אחת במקום להעלות קישור לסוכן בכל פעם. כשתלחצו על <strong>"עריכת סרטון"</strong> הסרטון ישלח לעריכה, וברגע שהקליפים יהיו מוכנים הסוכן יעדכן אתכם.<br><br>';
   html += 'הקליפים שנערכים מהסרטונים האילו יוערכו לפי ההגדרות שמוגדרות לכם ב<strong>"הגדרות עריכה של קליפים מסרטונים ארוכים"</strong>.';
   html += '</div>';
 
@@ -3220,8 +3417,20 @@ function renderLongVideoRow(video, idx) {
   html += '<input type="url" class="lv-input lv-input-url" placeholder="https://youtube.com/watch?v=..." value="' + escapeAttr(video.url || '') + '" oninput="onLongVideoInput(' + idx + ',\'url\',this.value)">';
   html += '</div>';
 
+  // כפתור "שלח לעריכה" — מוצג רק אם הסרטון כבר נשמר (יש לו row) ויש לו קישור ושם
+  var canSend = video.row && (video.url || '').trim() !== '' && (video.name || '').trim() !== '';
+  if (canSend) {
+    html += '<button class="lv-row-send-btn" onclick="onLongVideoSendToEdit(' + idx + ')">✂️ שלח לעריכה</button>';
+  }
+
   html += '</div>';
   return html;
+}
+
+function onLongVideoSendToEdit(idx) {
+  // placeholder - נבנה את הלוגיקה בשלב הבא
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  showToast('✂️ פעולת "שלח לעריכה" עדיין בבנייה');
 }
 
 function onLongVideoInput(idx, field, value) {
@@ -3625,7 +3834,7 @@ function onSendToEditClick(idx) {
     .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(function(){
       if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-      showToast('✅ הסרטון נשלח לעריכה בהצלחה');
+      openModal('modal-send-to-edit-success');
     })
     .catch(function(err){
       console.error('send-to-edit error:', err);
