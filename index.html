@@ -146,6 +146,16 @@
   .lv-row-send-btn:active{transform:scale(.98);opacity:.92}
   .lv-row-send-btn:disabled{opacity:.5;cursor:default}
 
+  /* Subheading inside howto box */
+  .lv-howto-subhead{font-size:13px;font-weight:800;color:var(--text);margin:14px 0 8px;display:flex;align-items:center;gap:6px}
+
+  /* Arrow indicator pointing to "add video" section */
+  .lv-arrow-pointer{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 0 10px;animation:bounceArrow 1.6s ease-in-out infinite}
+  .lv-arrow-pointer-text{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(217,119,6,0.18),rgba(217,119,6,0.06));border:1px solid var(--gold);color:#fbbf24;font-size:13px;font-weight:800;padding:9px 16px;border-radius:22px;box-shadow:0 2px 8px rgba(217,119,6,0.18)}
+  .lv-arrow-pointer-icon{font-size:22px;color:var(--gold);line-height:1;animation:arrowBob 1.6s ease-in-out infinite}
+  @keyframes bounceArrow{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+  @keyframes arrowBob{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+
   .lv-count-pill{display:inline-flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:6px 12px;font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px}
   .lv-count-pill-num{background:var(--accent);color:#fff;border-radius:10px;padding:1px 8px;font-size:11px;font-weight:800}
 
@@ -3357,10 +3367,17 @@ function renderLongVideos() {
 
   html += '<button class="lv-tutorial-btn" onclick="openModal(\'modal-yt-upload-tutorial\')">📖 איך מעלים סרטון ליוטיוב?</button>';
 
-  html += '<p style="margin-top:14px">לאחר שהעלתם את הסרטון ליוטיוב, העתיקו את הקישור שלו, לחצו <strong>"הוסף סרטון"</strong> בהמשך העמוד, ותדביקו את הקישור יוטיוב + שם לסרטון.</p>';
+  html += '<div class="lv-howto-subhead">📌 העלתי את הסרטון ליוטיוב — מה עכשיו?</div>';
+  html += '<p>לאחר שהעלתם את הסרטון ליוטיוב, העתיקו את הקישור שלו, לחצו <strong>"הוסף סרטון"</strong> בהמשך העמוד, ותדביקו את הקישור יוטיוב + שם לסרטון.</p>';
 
   html += '<button class="lv-tutorial-btn" onclick="openModal(\'modal-yt-link-tutorial\')">📖 איך משיגים את הקישור של הסרטון?</button>';
 
+  html += '</div>';
+
+  // ── חץ בין הקופסה הלבנה לתיבת תור הסרטונים ──
+  html += '<div class="lv-arrow-pointer">';
+  html += '<div class="lv-arrow-pointer-text">להוספת סרטון לעריכה</div>';
+  html += '<div class="lv-arrow-pointer-icon">▼</div>';
   html += '</div>';
 
   // ── תור סרטונים (תיבה צהובה) ──
