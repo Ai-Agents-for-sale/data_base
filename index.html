@@ -3793,7 +3793,8 @@ function dbSendToDropbox(uploadItem, cloudUrl, fileName) {
   dbUpdateUploadProgress(uploadItem.id, 95, 'מעביר לדרופבוקס...');
 
   var url = UPLOAD_URL
-    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '?action=upload'
+    + '&sheetsUrl='  + encodeURIComponent(sheetsUrl)
     + '&logSheetId=' + encodeURIComponent(logSheetId)
     + '&fileName='   + encodeURIComponent(fileName)
     + '&cloudUrl='   + encodeURIComponent(cloudUrl);
@@ -3914,9 +3915,71 @@ function openDropboxVideoModal(idx) {
   document.body.style.overflow = 'hidden';
 }
 
+/* state למחיקת סרטון - אינדקס + כרטיס דום */
+var dbPendingDeleteIdx = null;
+
 function onDropboxDeleteClick(idx) {
-  // placeholder - לא נבנה עדיין את השמירה
-  showToast('מחיקה עדיין בבנייה', true);
+  var clip = dbClips[idx];
+  if (!clip) return;
+  if (!clip.dropboxPath) {
+    showToast('⚠️ לא ניתן למחוק את הסרטון הזה', true);
+    return;
+  }
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+
+  dbPendingDeleteIdx = idx;
+  document.getElementById('modal-delete-text').textContent =
+    'למחוק את הסרטון "' + clip.name + '" מדרופבוקס? פעולה זו אינה ניתנת לביטול.';
+  document.getElementById('modal-delete-confirm').textContent = 'מחק סרטון';
+  // משנים את הכפתור כדי שיקרא לפונקציה החדשה במקום ל-performDelete של תמונות
+  document.getElementById('modal-delete-confirm').setAttribute('onclick', 'performDropboxVideoDelete()');
+  openModal('modal-delete');
+}
+
+function performDropboxVideoDelete() {
+  var idx = dbPendingDeleteIdx;
+  if (idx === null || !dbClips[idx]) {
+    closeModal('modal-delete');
+    return;
+  }
+  var clip = dbClips[idx];
+
+  var btn = document.getElementById('modal-delete-confirm');
+  btn.disabled = true;
+  btn.textContent = 'מוחק...';
+
+  // Optimistic UI - נסיר מיד מהרשימה ונבנה מחדש
+  // אם המחיקה תיכשל, נחזיר אותו
+  var removedClip = dbClips[idx];
+  dbClips.splice(idx, 1);
+  renderDropboxFolder();
+
+  var url = UPLOAD_URL
+    + '?action=delete'
+    + '&dropboxPath=' + encodeURIComponent(clip.dropboxPath);
+
+  fetch(url, { method: 'POST' })
+    .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function(){
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      showToast('✅ הסרטון נמחק');
+      dbPendingDeleteIdx = null;
+      btn.disabled = false;
+      btn.textContent = 'מחק';
+      // משחזרים את ה-onclick המקורי של modal-delete (תמונות)
+      document.getElementById('modal-delete-confirm').setAttribute('onclick', 'performDelete()');
+      closeModal('modal-delete');
+    })
+    .catch(function(err){
+      console.error('delete video error:', err);
+      // החזרה של הקליפ למקומו
+      dbClips.splice(idx, 0, removedClip);
+      renderDropboxFolder();
+      showToast('❌ שגיאה במחיקה, נסה שוב', true);
+      btn.disabled = false;
+      btn.textContent = 'מחק סרטון';
+      document.getElementById('modal-delete-confirm').setAttribute('onclick', 'performDelete()');
+    });
 }
 
 function buildGetUrl(sheetName, ranges) {
