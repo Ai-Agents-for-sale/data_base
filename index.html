@@ -1222,7 +1222,8 @@ var clientName   = params.get('clientName') || '';
 var agentStatus  = params.get('agentStatus') || '';
 var modelName    = params.get('modelName') || '';
 var chatId       = params.get('chatId')    || '';
-var dropboxUploadLink = params.get('dropboxUploadLink') || '';
+/* dropboxUploadLink מגיע מ-n8n בתגובה של GET תיקיית raw */
+var dropboxUploadLink = '';
 
 (function initHeader(){
   if (clientName) {
@@ -3467,6 +3468,8 @@ function fetchDropboxFolder() {
       dbClips      = (data && data.clips)      || [];
       dbSubfolders = (data && data.subfolders) || [];
       dbFolderPath = (data && data.folderPath) || '';
+      // n8n מחזיר את הקישור הישיר להעלאה לתיקיית raw — שומרים גלובלית לשימוש במודל האזהרה
+      if (data && data.dropboxUploadLink) dropboxUploadLink = data.dropboxUploadLink;
       renderDropboxFolder();
     })
     .catch(function(err){
@@ -3840,6 +3843,7 @@ function dbUploadFinished(itemId, success, errMsg) {
           dbClips      = (data && data.clips)      || [];
           dbSubfolders = (data && data.subfolders) || [];
           dbFolderPath = (data && data.folderPath) || '';
+          if (data && data.dropboxUploadLink) dropboxUploadLink = data.dropboxUploadLink;
           // עכשיו — מסירים את הריבוע הזמני. הרינדור הבא יציג את הסרטון האמיתי מ-Dropbox.
           activeUploads = activeUploads.filter(function(u){ return u.id !== itemId; });
           renderDropboxFolder();
