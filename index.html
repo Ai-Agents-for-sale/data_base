@@ -3545,6 +3545,8 @@ function saveLongVideos() {
       lvDirty = false;
       if (btn) { btn.disabled = false; btn.innerHTML = '💾 שמור שינויים'; }
       updateLvSaveBtn();
+      // רינדור מחדש כדי שכפתור "שלח לעריכה" יופיע על הסרטונים שכרגע נשמרו
+      renderLongVideos();
     })
     .catch(function(err){
       console.error('saveLongVideos error:', err);
