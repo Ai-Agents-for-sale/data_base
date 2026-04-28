@@ -3445,9 +3445,43 @@ function renderLongVideoRow(video, idx) {
 }
 
 function onLongVideoSendToEdit(idx) {
-  // placeholder - נבנה את הלוגיקה בשלב הבא
+  var video = longVideos[idx];
+  if (!video) return;
+  if (!video.url) {
+    showToast('⚠️ אין קישור לסרטון הזה', true);
+    return;
+  }
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-  showToast('✂️ פעולת "שלח לעריכה" עדיין בבנייה');
+
+  // Optimistic UI - מסירים מהתצוגה מיד (אבל לא מהשיט - הסרטון נשאר שם)
+  var removedVideo = longVideos[idx];
+  longVideos.splice(idx, 1);
+  // עדכון snapshot כדי שלא יחשוב שזו מחיקה ידנית
+  longVidsInitial = longVidsInitial.filter(function(v){ return v.row !== removedVideo.row; });
+  renderLongVideos();
+  showToast('✂️ שולח לעריכה...');
+
+  var url = SAVE_URL
+    + '?action='     + encodeURIComponent('edit-long-video')
+    + '&sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&logSheetId=' + encodeURIComponent(logSheetId)
+    + '&chatId='     + encodeURIComponent(chatId)
+    + '&url='        + encodeURIComponent(video.url);
+
+  fetch(url)
+    .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json().catch(function(){ return {}; }); })
+    .then(function(){
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      openModal('modal-send-to-edit-success');
+    })
+    .catch(function(err){
+      console.error('send long video to edit error:', err);
+      // החזרת הסרטון לרשימה
+      longVideos.splice(idx, 0, removedVideo);
+      longVidsInitial.push({ row: removedVideo.row, name: removedVideo.name, url: removedVideo.url });
+      renderLongVideos();
+      showToast('❌ שגיאה בשליחה לעריכה, נסה שוב', true);
+    });
 }
 
 function onLongVideoInput(idx, field, value) {
