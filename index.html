@@ -3600,9 +3600,40 @@ function renderDropboxClipCard(clip, idx) {
 }
 
 function onSendToEditClick(idx) {
-  // placeholder - הלוגיקה תיבנה בהמשך
+  var clip = dbClips[idx];
+  if (!clip) return;
+  if (!clip.dropboxPath) {
+    showToast('⚠️ לא ניתן לשלוח את הסרטון הזה לעריכה', true);
+    return;
+  }
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-  showToast('✂️ פעולת "שלח לעריכה" עדיין בבנייה');
+
+  // Optimistic UI - מסירים את הסרטון מהרשימה מיד (כמו שקורה בפועל אחרי שהסוכן יעביר אותו)
+  var removedClip = dbClips[idx];
+  dbClips.splice(idx, 1);
+  renderDropboxFolder();
+  showToast('✂️ שולח לעריכה...');
+
+  var url = UPLOAD_URL
+    + '?action=send-to-edit'
+    + '&sheetsUrl='   + encodeURIComponent(sheetsUrl)
+    + '&logSheetId='  + encodeURIComponent(logSheetId)
+    + '&chatId='      + encodeURIComponent(chatId)
+    + '&dropboxPath=' + encodeURIComponent(clip.dropboxPath);
+
+  fetch(url, { method: 'POST' })
+    .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function(){
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      showToast('✅ הסרטון נשלח לעריכה בהצלחה');
+    })
+    .catch(function(err){
+      console.error('send-to-edit error:', err);
+      // החזרה של הקליפ למקום
+      dbClips.splice(idx, 0, removedClip);
+      renderDropboxFolder();
+      showToast('❌ שגיאה בשליחה לעריכה, נסה שוב', true);
+    });
 }
 
 function dbDownloadVideo(idx) {
