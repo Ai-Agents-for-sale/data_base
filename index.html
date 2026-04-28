@@ -169,6 +169,9 @@
   .lv-input:focus{border-color:var(--accent)}
   .lv-input::placeholder{color:var(--text-dimmer)}
   .lv-input-url{direction:ltr;text-align:left}
+  .lv-input.lv-input-error{border-color:var(--red);background:rgba(220,38,38,0.06)}
+  .lv-input.lv-input-error:focus{border-color:var(--red)}
+  .lv-input-error-msg{font-size:11px;font-weight:600;color:var(--red);margin-top:5px;padding-inline-start:3px;line-height:1.4}
 
   .lv-add-btn{background:transparent;border:1.5px dashed var(--border-h);color:var(--text-dim);border-radius:var(--radius-sm);padding:14px;cursor:pointer;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:6px;width:100%}
   .lv-add-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(234,179,8,.05)}
@@ -3433,6 +3436,11 @@ function renderLongVideos() {
 
 function renderLongVideoRow(video, idx) {
   var rowId = 'lvrow_' + idx;
+  var hasName = (video.name || '').trim() !== '';
+  var hasUrl  = (video.url  || '').trim() !== '';
+  // שורה חלקית - רק אם אחד מהם מלא והשני ריק
+  var partialRow = (hasName !== hasUrl);
+
   var html = '<div class="lv-row" id="' + rowId + '" data-idx="' + idx + '">';
 
   html += '<div class="lv-row-header">';
@@ -3441,18 +3449,26 @@ function renderLongVideoRow(video, idx) {
   html += '<button class="lv-row-delete" onclick="deleteLongVideo(' + idx + ')" title="מחק">🗑</button>';
   html += '</div>';
 
+  var nameClass = 'lv-input' + (partialRow && !hasName ? ' lv-input-error' : '');
   html += '<div>';
-  html += '<div class="lv-input-label">שם הסרטון</div>';
-  html += '<input type="text" class="lv-input" placeholder="שם הסרטון (לזיהוי)" value="' + escapeAttr(video.name || '') + '" oninput="onLongVideoInput(' + idx + ',\'name\',this.value)">';
+  html += '<div class="lv-input-label">שם הסרטון' + (partialRow && !hasName ? ' <span style="color:var(--red);font-weight:800">*</span>' : '') + '</div>';
+  html += '<input type="text" class="' + nameClass + '" placeholder="שם הסרטון (לזיהוי)" value="' + escapeAttr(video.name || '') + '" oninput="onLongVideoInput(' + idx + ',\'name\',this.value)">';
+  if (partialRow && !hasName) {
+    html += '<div class="lv-input-error-msg">חובה להזין שם</div>';
+  }
   html += '</div>';
 
+  var urlClass = 'lv-input lv-input-url' + (partialRow && !hasUrl ? ' lv-input-error' : '');
   html += '<div>';
-  html += '<div class="lv-input-label">קישור יוטיוב</div>';
-  html += '<input type="url" class="lv-input lv-input-url" placeholder="https://youtube.com/watch?v=..." value="' + escapeAttr(video.url || '') + '" oninput="onLongVideoInput(' + idx + ',\'url\',this.value)">';
+  html += '<div class="lv-input-label">קישור יוטיוב' + (partialRow && !hasUrl ? ' <span style="color:var(--red);font-weight:800">*</span>' : '') + '</div>';
+  html += '<input type="url" class="' + urlClass + '" placeholder="https://youtube.com/watch?v=..." value="' + escapeAttr(video.url || '') + '" oninput="onLongVideoInput(' + idx + ',\'url\',this.value)">';
+  if (partialRow && !hasUrl) {
+    html += '<div class="lv-input-error-msg">חובה להזין קישור</div>';
+  }
   html += '</div>';
 
   // כפתור "שלח לעריכה" — מוצג רק אם הסרטון כבר נשמר (יש לו row) ויש לו קישור ושם
-  var canSend = video.row && (video.url || '').trim() !== '' && (video.name || '').trim() !== '';
+  var canSend = video.row && hasUrl && hasName;
   if (canSend) {
     html += '<button class="lv-row-send-btn" onclick="onLongVideoSendToEdit(' + idx + ')">✂️ שלח לעריכה</button>';
   }
@@ -3543,6 +3559,22 @@ function updateLvSaveBtn() {
   bar.style.display = lvDirty ? 'block' : 'none';
 }
 
+/* בדיקה אם יש שורות חסרות-נתונים. מחזירה מערך של אינדקסים בעייתיים */
+function getInvalidLongVideoRows() {
+  var invalid = [];
+  longVideos.forEach(function(v, i){
+    var hasName = (v.name || '').trim() !== '';
+    var hasUrl  = (v.url  || '').trim() !== '';
+    // שורה ריקה לחלוטין - תקינה (פשוט תידרוס בשמירה)
+    if (!hasName && !hasUrl) return;
+    // שורה חלקית - לא תקינה
+    if (!hasName || !hasUrl) {
+      invalid.push({ idx: i, missingName: !hasName, missingUrl: !hasUrl });
+    }
+  });
+  return invalid;
+}
+
 function collectLongVideoChanges() {
   /*
     אסטרטגיה: לא רוצים "diff" חכם - במקום זה פשוט כותבים את כל הרשימה
@@ -3572,6 +3604,30 @@ function collectLongVideoChanges() {
 }
 
 function saveLongVideos() {
+  // ── validation: שם + קישור חייבים שניהם להיות מלאים ──
+  var invalid = getInvalidLongVideoRows();
+  if (invalid.length > 0) {
+    if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+    var first = invalid[0];
+    var msg;
+    if (first.missingName && first.missingUrl) {
+      msg = '⚠️ סרטון #' + (first.idx + 1) + ': חסרים שם וקישור';
+    } else if (first.missingName) {
+      msg = '⚠️ סרטון #' + (first.idx + 1) + ': חסר שם הסרטון';
+    } else {
+      msg = '⚠️ סרטון #' + (first.idx + 1) + ': חסר קישור יוטיוב';
+    }
+    showToast(msg, true);
+    // רענדור כדי להציג את שדות השגיאה במצב שלהם
+    renderLongVideos();
+    // גלילה לסרטון הבעייתי
+    setTimeout(function(){
+      var el = document.getElementById('lvrow_' + first.idx);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 50);
+    return;
+  }
+
   var changes = collectLongVideoChanges();
   if (Object.keys(changes).length === 0) { lvDirty = false; updateLvSaveBtn(); return; }
 
