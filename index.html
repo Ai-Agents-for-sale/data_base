@@ -3527,8 +3527,8 @@ function renderDropboxFolder() {
 
   // --- מצב סרטונים (raw, ready, או תת תיקייה של ready-from-long) ---
   // האם אנחנו בתיקייה שמותר להעלות אליה?
-  // העלאה מותרת רק בתיקיית גלם טייק יחיד
-  var canUpload = (dbCurrentFolder === 'raw');
+  // העלאה מותרת בתיקיית גלם טייק יחיד וגם בתיקיית מוכנים
+  var canUpload = (dbCurrentFolder === 'raw' || dbCurrentFolder === 'ready');
 
   // האם יש העלאות פעילות?
   var hasActiveUploads = activeUploads.length > 0;
