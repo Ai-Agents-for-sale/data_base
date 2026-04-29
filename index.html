@@ -141,7 +141,56 @@
   .tutorial-popup-step-num{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
   .tutorial-popup-step-text{flex:1;line-height:1.65;font-size:12.5px}
 
-  /* Competitors Analyze screen */
+  /* Competitor Reports - List */
+  .cr-intro{background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.3);border-radius:var(--radius);padding:14px 16px;font-size:12px;line-height:1.7;color:var(--text-dim);margin-bottom:14px}
+  .cr-intro strong{color:#c4b5fd}
+  .cr-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:50px 20px;text-align:center;gap:10px}
+  .cr-empty-icon{font-size:42px;opacity:.6}
+  .cr-empty-title{font-size:15px;font-weight:800;color:var(--text)}
+  .cr-empty-sub{font-size:12px;color:var(--text-dim);max-width:280px;line-height:1.6}
+  .cr-list{display:flex;flex-direction:column;gap:10px}
+  .cr-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .15s}
+  .cr-card:active{transform:scale(.98);background:var(--bg3)}
+  .cr-card-icon{flex-shrink:0;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#a855f7);display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;box-shadow:0 2px 8px rgba(168,85,247,0.3)}
+  .cr-card-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+  .cr-card-title{font-size:13px;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cr-card-date{font-size:11px;font-weight:600;color:var(--text-dim)}
+  .cr-card-arrow{flex-shrink:0;font-size:22px;color:var(--text-dim);font-weight:300;line-height:1}
+
+  /* Competitor Report Viewer */
+  .crv-section{margin-bottom:24px}
+  .crv-section:last-child{margin-bottom:8px}
+  .crv-section-title{font-size:15px;font-weight:900;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--accent);display:flex;align-items:center;gap:6px}
+
+  /* Video card (top competitor videos) */
+  .crv-video{background:var(--bg2);border:1.5px solid #3b82f6;border-radius:var(--radius);padding:14px;margin-bottom:10px;display:flex;flex-direction:column;gap:8px}
+  .crv-video-header{display:flex;align-items:center;gap:8px}
+  .crv-video-rank{background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;font-size:10.5px;font-weight:800;padding:5px 10px;border-radius:14px;flex-shrink:0}
+  .crv-video-hook{font-size:13.5px;font-weight:800;color:#93c5fd;line-height:1.45}
+  .crv-video-stats{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+  .crv-video-stat{background:var(--bg3);border:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text-dim);padding:5px 9px;border-radius:6px}
+  .crv-video-link{display:inline-block;background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;font-size:11.5px;font-weight:800;padding:8px 14px;border-radius:8px;text-decoration:none;text-align:center;align-self:flex-start;transition:opacity .15s}
+  .crv-video-link:active{opacity:.85}
+  .crv-video-analysis{background:var(--bg3);border-inline-start:3px solid #3b82f6;padding:10px 12px;border-radius:8px;font-size:12px;line-height:1.65;color:var(--text-dim)}
+  .crv-video-analysis strong{color:var(--text);font-weight:800}
+
+  /* Pattern card */
+  .crv-pattern{background:rgba(245,158,11,0.06);border:1.5px solid rgba(245,158,11,0.4);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+  .crv-pattern-name{font-size:13.5px;font-weight:900;color:#fbbf24;margin-bottom:8px}
+  .crv-pattern-explanation{font-size:12px;line-height:1.7;color:var(--text-dim)}
+
+  /* Hook card */
+  .crv-hook{background:rgba(16,185,129,0.06);border:1.5px solid rgba(16,185,129,0.4);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+  .crv-hook-num{display:inline-block;background:linear-gradient(135deg,#059669,#10b981);color:#fff;font-size:10.5px;font-weight:800;padding:4px 10px;border-radius:12px;margin-bottom:8px}
+  .crv-hook-text{font-size:13px;font-weight:800;color:#6ee7b7;margin-bottom:8px;line-height:1.5}
+  .crv-hook-explanation{font-size:12px;line-height:1.65;color:var(--text-dim)}
+
+  /* Takeaway */
+  .crv-takeaway{background:rgba(239,68,68,0.06);border:2px solid rgba(239,68,68,0.4);border-radius:var(--radius);padding:18px;margin-top:6px}
+  .crv-takeaway-title{font-size:15px;font-weight:900;color:#fca5a5;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+  .crv-takeaway-content{font-size:12.5px;line-height:1.75;color:var(--text)}
+
+  .crv-empty-state{text-align:center;padding:24px;color:var(--text-dim);font-size:12px;background:var(--bg3);border:1.5px dashed var(--border);border-radius:var(--radius)}
   .ca-howto{background:rgba(236,72,153,0.08);border:1px solid rgba(236,72,153,0.3);border-radius:var(--radius);padding:14px 16px;font-size:12px;line-height:1.7;color:var(--text-dim);margin-bottom:14px}
   .ca-howto-title{font-size:13px;font-weight:800;color:#f9a8d4;margin-bottom:8px;display:flex;align-items:center;gap:6px}
   .ca-howto strong{color:var(--text)}
@@ -1207,7 +1256,26 @@
 
 <div class="screen" id="screen-competitor-reports">
   <div class="screen-topbar"><div class="screen-back" onclick="closeScreen('screen-competitor-reports')">›</div><div class="screen-topbar-icon">📈</div><div class="screen-topbar-title">דוחות ניתוח מתחרים</div></div>
-  <div class="screen-body"><div class="coming-soon"><div class="coming-soon-icon">🚧</div><div class="coming-soon-title">בקרוב</div></div></div>
+  <div class="screen-body" id="competitor-reports-body">
+    <div class="screen-loading" id="competitor-reports-loading">
+      <div class="spinner"></div>
+      <div>טוען דוחות...</div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-competitor-report-view">
+  <div class="screen-topbar">
+    <div class="screen-back" onclick="closeScreen('screen-competitor-report-view')">›</div>
+    <div class="screen-topbar-icon">📊</div>
+    <div class="screen-topbar-title" id="report-view-title">דוח מתחרים</div>
+  </div>
+  <div class="screen-body" id="competitor-report-view-body">
+    <div class="screen-loading" id="competitor-report-view-loading">
+      <div class="spinner"></div>
+      <div>טוען דוח...</div>
+    </div>
+  </div>
 </div>
 
 <div class="modal-backdrop" id="modal-delete">
@@ -3422,10 +3490,392 @@ var caInitialMy        = '';
 var caInitialComps     = [];
 var caDirty            = false;
 
+/* ════════════════════ דוחות ניתוח מתחרים ════════════════════ */
+
+var crReports = [];
+
 function openCompetitorReports() {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  crReports = [];
   openScreen('screen-competitor-reports', '');
+  document.getElementById('competitor-reports-loading').style.display = 'flex';
+  fetchCompetitorReports();
 }
+
+function fetchCompetitorReports() {
+  var url = GET_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent('competitor-reports-list')
+    + '&logSheetId=' + encodeURIComponent(logSheetId);
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(data){
+      crReports = (data && data.reports) || [];
+      renderCompetitorReports();
+    })
+    .catch(function(err){
+      console.error('fetchCompetitorReports error:', err);
+      var body = document.getElementById('competitor-reports-body');
+      body.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">שגיאה בטעינה</div><div class="empty-state-sub">נסה שוב מאוחר יותר</div></div>';
+    });
+}
+
+function renderCompetitorReports() {
+  var body = document.getElementById('competitor-reports-body');
+  var html = '';
+
+  // הסבר
+  html += '<div class="cr-intro">';
+  html += '<strong>📊 דוחות ניתוח מתחרים</strong><br>';
+  html += 'כל הדוחות שהסוכן יצר עבורך מאז שהצטרפת. כל דוח כולל ניתוח של 5 הסרטונים המובילים אצל המתחרים, דפוסים מנצחים, רעיונות להוקים, ומסקנה מרכזית.<br><br>';
+  html += 'לחץ על דוח כדי לפתוח אותו.';
+  html += '</div>';
+
+  if (crReports.length === 0) {
+    html += '<div class="cr-empty">';
+    html += '<div class="cr-empty-icon">📭</div>';
+    html += '<div class="cr-empty-title">אין עדיין דוחות</div>';
+    html += '<div class="cr-empty-sub">דוחות מתחרים נוצרים אוטומטית פעם בשבוע. ברגע שהדוח הראשון יוכן הוא יופיע כאן.</div>';
+    html += '</div>';
+  } else {
+    html += '<div class="cr-list">';
+    crReports.forEach(function(report, idx){
+      html += renderCompetitorReportCard(report, idx);
+    });
+    html += '</div>';
+  }
+
+  body.innerHTML = html;
+}
+
+function renderCompetitorReportCard(report, idx) {
+  // ניקוי השם — מסירים את "JSON" וסיומות מטומטמות
+  var displayName = (report.name || '')
+    .replace(/\.json$/i, '')
+    .replace(/\s*JSON\s*/i, '')
+    .replace(/_+/g, ' ')
+    .trim();
+  if (!displayName) displayName = 'דוח ניתוח מתחרים';
+
+  // עיצוב התאריך
+  var dateText = '';
+  if (report.createdAt) {
+    try {
+      var d = new Date(report.createdAt);
+      if (!isNaN(d.getTime())) {
+        dateText = d.toLocaleDateString('he-IL', { year: 'numeric', month: 'long', day: 'numeric' });
+      }
+    } catch(e){}
+  }
+
+  var html = '<div class="cr-card" onclick="openCompetitorReportView(' + idx + ')">';
+  html += '<div class="cr-card-icon">📊</div>';
+  html += '<div class="cr-card-body">';
+  html += '<div class="cr-card-title">' + escapeHtml(displayName) + '</div>';
+  if (dateText) html += '<div class="cr-card-date">📅 ' + dateText + '</div>';
+  html += '</div>';
+  html += '<div class="cr-card-arrow">‹</div>';
+  html += '</div>';
+  return html;
+}
+
+function openCompetitorReportView(idx) {
+  var report = crReports[idx];
+  if (!report || !report.id) return;
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+
+  // קביעת הכותרת בראש המסך
+  var displayName = (report.name || '')
+    .replace(/\.json$/i, '')
+    .replace(/\s*JSON\s*/i, '')
+    .replace(/_+/g, ' ')
+    .trim();
+  document.getElementById('report-view-title').textContent = displayName || 'דוח מתחרים';
+
+  // פתיחת המסך + טעינה
+  openScreen('screen-competitor-report-view', '');
+  document.getElementById('competitor-report-view-loading').style.display = 'flex';
+  document.getElementById('competitor-report-view-body').innerHTML =
+    '<div class="screen-loading"><div class="spinner"></div><div>טוען דוח...</div></div>';
+
+  fetchCompetitorReportContent(report.id);
+}
+
+function fetchCompetitorReportContent(docId) {
+  var url = GET_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent('competitor-report-content')
+    + '&logSheetId=' + encodeURIComponent(logSheetId)
+    + '&docId='      + encodeURIComponent(docId);
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(data){
+      // ה-JSON מגיע כמו שהוא — { top_competitor_videos, winning_patterns, hook_ideas, key_takeaway }
+      // מפעילים RTL fix על כל מחרוזת לפני הצגה
+      var fixed = applyRtlFix(data);
+      renderCompetitorReportContent(fixed);
+    })
+    .catch(function(err){
+      console.error('fetchCompetitorReportContent error:', err);
+      var body = document.getElementById('competitor-report-view-body');
+      body.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">שגיאה בטעינת הדוח</div><div class="empty-state-sub">נסה שוב מאוחר יותר</div></div>';
+    });
+}
+
+function renderCompetitorReportContent(data) {
+  // טיפול במבנים שונים (אם מגיע מערך, לוקח את הראשון)
+  if (Array.isArray(data) && data.length > 0) data = data[0];
+  if (data && typeof data === 'object') {
+    if (data.analysis) data = data.analysis;
+    else if (data.result) data = data.result;
+    else if (data.output) data = data.output;
+  }
+
+  var videos      = Array.isArray(data.top_competitor_videos) ? data.top_competitor_videos : [];
+  var patterns    = Array.isArray(data.winning_patterns)      ? data.winning_patterns      : [];
+  var hooks       = Array.isArray(data.hook_ideas)            ? data.hook_ideas            : [];
+  var keyTakeaway = data.key_takeaway || '';
+
+  var body = document.getElementById('competitor-report-view-body');
+  var html = '';
+
+  // ── סרטוני המתחרים המובילים ──
+  html += '<div class="crv-section">';
+  html += '<div class="crv-section-title">🏆 סרטוני המתחרים המובילים</div>';
+  if (videos.length === 0) {
+    html += '<div class="crv-empty-state">⚠️ אין נתוני וידאו זמינים</div>';
+  } else {
+    videos.forEach(function(v, idx){
+      var rank    = v.rank || (idx + 1);
+      var hook    = v.hook || v.hook_text || 'אין הוק זמין';
+      var views   = formatNumber(v.views);
+      var creator = v.creator || v.username || 'לא ידוע';
+      var date    = formatReportDate(v.posted_date || v.date);
+      var url     = v.url || '';
+      var why     = v.why_it_worked || 'אין ניתוח זמין';
+
+      html += '<div class="crv-video">';
+      html += '<div class="crv-video-header"><div class="crv-video-rank">מקום #' + rank + '</div></div>';
+      html += '<div class="crv-video-hook">"' + escapeHtml(hook) + '"</div>';
+      html += '<div class="crv-video-stats">';
+      html += '<div class="crv-video-stat">👀 ' + views + ' צפיות</div>';
+      html += '<div class="crv-video-stat">👤 @' + escapeHtml(creator) + '</div>';
+      html += '<div class="crv-video-stat">📅 ' + date + '</div>';
+      html += '</div>';
+      if (url) {
+        html += '<a href="' + escapeAttr(url) + '" class="crv-video-link" target="_blank" rel="noopener">צפה בפוסט המקורי ←</a>';
+      }
+      html += '<div class="crv-video-analysis"><strong>למה זה עבד:</strong><br>' + formatReportText(why) + '</div>';
+      html += '</div>';
+    });
+  }
+  html += '</div>';
+
+  // ── דפוסים מנצחים ──
+  html += '<div class="crv-section">';
+  html += '<div class="crv-section-title">🎨 דפוסים מנצחים</div>';
+  if (patterns.length === 0) {
+    html += '<div class="crv-empty-state">⚠️ אין נתוני דפוסים זמינים</div>';
+  } else {
+    patterns.forEach(function(p, idx){
+      var name = p.pattern_name || ('דפוס ' + (idx + 1));
+      var exp  = p.explanation || 'אין הסבר זמין';
+      html += '<div class="crv-pattern">';
+      html += '<div class="crv-pattern-name">' + escapeHtml(name) + '</div>';
+      html += '<div class="crv-pattern-explanation">' + formatReportText(exp) + '</div>';
+      html += '</div>';
+    });
+  }
+  html += '</div>';
+
+  // ── רעיונות להוקים ──
+  html += '<div class="crv-section">';
+  html += '<div class="crv-section-title">💡 רעיונות להוקים</div>';
+  if (hooks.length === 0) {
+    html += '<div class="crv-empty-state">⚠️ אין רעיונות להוקים זמינים</div>';
+  } else {
+    hooks.forEach(function(h, idx){
+      var num     = h.hook_number || (idx + 1);
+      var hookTxt = h.hook || h.hook_text || 'אין טקסט הוק זמין';
+      var why     = h.why_it_works || 'אין הסבר זמין';
+      html += '<div class="crv-hook">';
+      html += '<div class="crv-hook-num">הוק #' + num + '</div>';
+      html += '<div class="crv-hook-text">"' + escapeHtml(hookTxt) + '"</div>';
+      html += '<div class="crv-hook-explanation">' + formatReportText(why) + '</div>';
+      html += '</div>';
+    });
+  }
+  html += '</div>';
+
+  // ── מסקנה מרכזית ──
+  if (keyTakeaway) {
+    var takeawayText = typeof keyTakeaway === 'string'
+      ? keyTakeaway
+      : (keyTakeaway.summary || keyTakeaway.text || '');
+    if (takeawayText) {
+      html += '<div class="crv-takeaway">';
+      html += '<div class="crv-takeaway-title">🎯 המסקנה המרכזית</div>';
+      html += '<div class="crv-takeaway-content">' + formatReportText(takeawayText) + '</div>';
+      html += '</div>';
+    }
+  }
+
+  body.innerHTML = html;
+}
+
+/* פורמט מספר עם פסיקים */
+function formatNumber(num) {
+  if (num === null || num === undefined || isNaN(num)) return '0';
+  return Number(num).toLocaleString('he-IL');
+}
+
+/* פורמט תאריך לעברית */
+function formatReportDate(dateStr) {
+  if (!dateStr) return 'תאריך לא ידוע';
+  try {
+    var d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString('he-IL', { year: 'numeric', month: 'short', day: 'numeric' });
+  } catch (e) {
+    return dateStr;
+  }
+}
+
+/* טקסט עם שמירת ירידות שורה */
+function formatReportText(text) {
+  if (!text) return '';
+  return escapeHtml(text).replace(/\n/g, '<br>');
+}
+
+/* ────────── RTL Fix - זהה לקוד שב-n8n (RTL+ESCAPE1) ────────── */
+function applyRtlFix(obj) {
+  if (!obj) return obj;
+
+  var RLM = '\u200F';
+  var LRI = '\u2066';
+  var PDI = '\u2069';
+
+  function fixText(text) {
+    if (typeof text !== 'string') return text;
+
+    // הסרת סימני כיוון קיימים
+    var cleanText = text.replace(/[\u200E\u200F\u202A-\u202E]/g, '');
+
+    var emojiRegex = /[\u{1F300}-\u{1F9FF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{FE00}-\u{FE0F}\u{20D0}-\u{20FF}]+/gu;
+
+    if (/[\u0590-\u05FF]/u.test(cleanText)) {
+      // משפטים שלמים באנגלית בתוך מירכאות
+      cleanText = cleanText.replace(/"([^"\n]*[A-Za-z][^"\n]*)"/g, function(match, content){
+        var latin = (content.match(/[A-Za-z]/g) || []).length;
+        var hebrew = (content.match(/[\u0590-\u05FF]/g) || []).length;
+        if (latin > hebrew) return LRI + '"' + content + '"' + PDI;
+        return match;
+      });
+
+      // URLs
+      cleanText = cleanText.replace(/((?:https?:\/\/|www\.)\S+)/gi, LRI + '$1' + PDI);
+
+      // אימיילים
+      cleanText = cleanText.replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g, LRI + '$&' + PDI);
+
+      // האשטגים/אזכורים לטיניים
+      cleanText = cleanText.replace(/(^|\s)([#@][A-Za-z][A-Za-z0-9_]*)(?=$|\s|[.,!?;:…)\]])/g, function($0, p1, p2){
+        return p1 + LRI + p2 + PDI;
+      });
+
+      var latinToken = '[A-Za-z][A-Za-z0-9]*(?:[._\\-/][A-Za-z0-9]+)*';
+
+      // רצפי 2+ מילים
+      var multiLatin = new RegExp('(' + latinToken + '(?:\\s+' + latinToken + ')+)', 'g');
+      cleanText = cleanText.replace(multiLatin, function(m, _grp, offset, str){
+        var before = str[offset - 1];
+        var after  = str[offset + m.length];
+        if (before === LRI || after === PDI) return m;
+        return LRI + m + PDI;
+      });
+
+      // מילים בודדות
+      var singleLatin = new RegExp('\\b' + latinToken + '\\b', 'g');
+      cleanText = cleanText.replace(singleLatin, function(m, offset, str){
+        var before = str[offset - 1];
+        var after  = str[offset + m.length];
+        if (before === LRI || after === PDI) return m;
+        return LRI + m + PDI;
+      });
+    }
+
+    // החלפת חצים
+    if (/[\u0590-\u05FF]/.test(cleanText)) {
+      cleanText = cleanText
+        .replace(/→/g, '←').replace(/⇒/g, '⇐').replace(/➔/g, '←')
+        .replace(/➜/g, '←').replace(/➡/g, '←').replace(/➤/g, '←')
+        .replace(/⟶/g, '⟵').replace(/⇨/g, '⇦').replace(/⟹/g, '⟸');
+    }
+
+    // מספרים עם אותיות (300K, 5M וכו')
+    cleanText = cleanText.replace(/\b(\d+(?:,\d{3})*(?:\.\d+)?)([A-Za-z]+)\b/g, LRI + '$1$2' + PDI);
+
+    // רשימות בתחילת שורה
+    cleanText = cleanText.replace(/(^|\n)(\s*)([-•▪▫←⟵↑↓↔⇐⇔⬅✓✔✗✘×✕●○◆◇■□★☆])(\s+)([\u0590-\u05FF])/gm, '$1$2' + RLM + '$3$4$5');
+    cleanText = cleanText.replace(/(^|\n)(\s*)([-•▪▫←⟵↑↓↔⇐⇔⬅✓✔✗✘×✕●○◆◇■□★☆])/gm, '$1$2' + RLM + '$3');
+
+    // מספרים בתחילת שורה
+    cleanText = cleanText.replace(/(^|\n)(\d+\.?)(\s+)([\u0590-\u05FF])/gm, '$1' + RLM + '$2$3$4');
+
+    // סימני מטבע
+    cleanText = cleanText.replace(/(\d+(?:,\d{3})*(?:\.\d+)?)\s*(₪|[$€£¥₹₽¢])/g, RLM + '$2$1' + RLM);
+    cleanText = cleanText.replace(/(₪|[$€£¥₹₽¢])\s*(\d+(?:,\d{3})*(?:\.\d+)?)/g, RLM + '$1$2' + RLM);
+
+    // אחוזים
+    cleanText = cleanText.replace(/(\d+(?:\.\d+)?)\s*(%)/g, RLM + '$1$2' + RLM);
+
+    // ציטוטים שלמים עם עברית
+    cleanText = cleanText.replace(/"([^"\n]*[\u0590-\u05FF][^"\n]*)"/g, function(m, inner){ return RLM + '"' + inner + '"' + RLM; });
+    cleanText = cleanText.replace(/'([^'\n]*[\u0590-\u05FF][^'\n]*)'/g, function(m, inner){ return RLM + "'" + inner + "'" + RLM; });
+
+    // סימני פיסוק לפני שורה חדשה
+    cleanText = cleanText.replace(/([.,!?;:…])(\s*\n)/g, '$1' + RLM + '$2');
+
+    // סימני פיסוק רגילים (לא במספרים)
+    cleanText = cleanText.replace(new RegExp('([.,!?;:…])(?!["\'])(?!\\d)', 'g'), function(match, punct, offset, string){
+      if (punct === ',' || punct === '.') {
+        var beforeChar = string[offset - 1];
+        var afterChar  = string[offset + punct.length];
+        if (/\d/.test(beforeChar) && /\d/.test(afterChar)) return punct;
+      }
+      var afterChar = string[offset + punct.length];
+      if (afterChar === RLM) return punct;
+      return punct + RLM;
+    });
+
+    // ניקוי כפילויות
+    cleanText = cleanText.replace(new RegExp(RLM + '+', 'g'), RLM);
+
+    return cleanText;
+  }
+
+  function processObject(item) {
+    if (typeof item === 'string') {
+      if (/[\u0590-\u05FF]/.test(item)) return fixText(item);
+      return item;
+    }
+    if (Array.isArray(item)) return item.map(processObject);
+    if (typeof item === 'object' && item !== null) {
+      var result = {};
+      for (var key in item) {
+        result[key] = processObject(item[key]);
+      }
+      return result;
+    }
+    return item;
+  }
+
+  return processObject(obj);
+}
+
+/* ════════════════════ סוף דוחות ניתוח מתחרים ════════════════════ */
 
 function openCompetitorsToAnalyze() {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
