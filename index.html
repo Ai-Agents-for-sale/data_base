@@ -4546,7 +4546,7 @@ function spBuildPostCard(post, idx) {
   var dt = spParseSchedule(post);
   var platforms = Array.isArray(post.platforms) ? post.platforms : [];
   var isVid = spIsVideo(post);
-  var thumb = post.thumbnail_url || post.thumbnailUrl || post.image_url || post.imageUrl || '';
+  var thumb = post.preview_url || post.previewUrl || '';
   var primaryText = spGetPrimaryText(post);
 
   var html = '<div class="sp-card" onclick="spOpenActionSheet(' + idx + ')">';
@@ -4700,8 +4700,10 @@ function spOpenEditModal(idx) {
       showToast('יש לבחור תאריך ושעה');
       return;
     }
+    // בנה ISO עם timezone ישראל - זה מה שהפלואו מצפה לקבל
+    var newScheduledAt = newDate + 'T' + newTime + ':00.000+03:00';
     spHaptic('success');
-    spSendAction('edit', idx, { date: newDate, time: newTime });
+    spSendAction('edit', idx, { newScheduledAt: newScheduledAt });
     spCloseModal();
     showToast('התזמון עודכן');
   });
