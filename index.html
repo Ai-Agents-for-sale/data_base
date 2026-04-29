@@ -144,6 +144,59 @@
   /* Competitor Reports - List */
   .cr-intro{background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.3);border-radius:var(--radius);padding:14px 16px;font-size:12px;line-height:1.7;color:var(--text-dim);margin-bottom:14px}
   .cr-intro strong{color:#c4b5fd}
+
+  /* ── Reels data buttons frame (above competitor reports list) ── */
+  .reels-frame{background:linear-gradient(135deg,rgba(8,145,178,0.10),rgba(8,145,178,0.03));border:1px solid rgba(8,145,178,0.35);border-radius:var(--radius);padding:14px 14px 14px;margin-bottom:14px}
+  .reels-frame-title{font-size:13px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-inline-start:2px}
+  .reels-frame-title-icon{font-size:18px}
+  .reels-btns-row{display:flex;gap:10px}
+  .reels-btn{flex:1;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:all .18s;-webkit-user-select:none;user-select:none;min-width:0}
+  .reels-btn:active{transform:scale(.97);border-color:var(--teal);background:var(--bg3)}
+  .reels-btn-icon{font-size:24px;line-height:1}
+  .reels-btn-label{font-size:11.5px;font-weight:800;color:var(--text);text-align:center;line-height:1.35;white-space:normal}
+  .reels-btn.mine .reels-btn-icon{filter:hue-rotate(200deg)}
+
+  /* ── Reels list screen (data viewer) ── */
+  .reels-stats-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:6px;font-size:11.5px;color:var(--text-dim);font-weight:600}
+  .reels-stats-bar strong{color:var(--text);font-weight:800}
+  .reels-stats-pill{display:inline-flex;align-items:center;gap:5px;background:var(--teal-s);border:1px solid var(--teal);color:#67e8f9;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700}
+
+  .reel-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:border-color .15s}
+  .reel-card-header{display:flex;gap:12px;padding:12px;cursor:pointer;-webkit-user-select:none;user-select:none}
+  .reel-card-header:active{background:var(--bg3)}
+  .reel-thumb{flex-shrink:0;width:88px;aspect-ratio:9/16;background:#000;border-radius:var(--radius-sm);overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--text-dimmer);font-size:24px;position:relative}
+  .reel-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .reel-thumb-rank{position:absolute;top:4px;right:4px;background:var(--gold);color:#fff;font-size:10px;font-weight:900;padding:2px 6px;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.4);min-width:20px;text-align:center;line-height:1.3}
+  .reel-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+  .reel-username{font-size:12px;font-weight:800;color:var(--text);direction:ltr;text-align:right;display:flex;align-items:center;gap:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .reel-username::before{content:'@';color:var(--text-dim);font-weight:600}
+  .reel-metrics{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px}
+  .reel-metric{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);color:var(--text-dim)}
+  .reel-metric.views{color:#fbbf24;border-color:rgba(250,204,21,0.35);background:rgba(250,204,21,0.06)}
+  .reel-metric.likes{color:#f87171;border-color:rgba(248,113,113,0.35);background:rgba(248,113,113,0.06)}
+  .reel-metric.comments{color:#60a5fa;border-color:rgba(96,165,250,0.35);background:rgba(96,165,250,0.06)}
+  .reel-date{font-size:10px;color:var(--text-dimmer);font-weight:600}
+  .reel-expand-arrow{flex-shrink:0;align-self:center;font-size:18px;color:var(--text-dim);transition:transform .25s}
+  .reel-card.expanded .reel-expand-arrow{transform:rotate(90deg)}
+
+  .reel-details{display:none;border-top:1px solid var(--border);padding:0;animation:fadeIn .25s ease both}
+  .reel-card.expanded .reel-details{display:flex;flex-direction:column}
+  .reel-section{padding:12px 14px;border-bottom:1px solid var(--border)}
+  .reel-section:last-child{border-bottom:none}
+  .reel-section-label{font-size:10px;font-weight:800;color:var(--text-dimmer);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+  .reel-section-text{font-size:12px;color:var(--text);line-height:1.7;white-space:pre-wrap;word-break:break-word}
+  .reel-section-text.dim{color:var(--text-dim)}
+  .reel-section-text.scroll{max-height:200px;overflow-y:auto;background:var(--bg3);padding:10px 12px;border-radius:8px;border:1px solid var(--border)}
+  .reel-section-text.scroll::-webkit-scrollbar{width:6px}
+  .reel-section-text.scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:3px}
+  .reel-link-btn{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#e1306c,#c13584,#833ab4);color:#fff;text-decoration:none;font-family:'Heebo',sans-serif;font-size:12px;font-weight:700;padding:9px 14px;border-radius:8px;transition:opacity .15s,transform .12s;box-shadow:0 2px 8px rgba(193,53,132,0.25)}
+  .reel-link-btn:active{transform:scale(.97);opacity:.92}
+
+  .reels-list{display:flex;flex-direction:column;gap:10px}
+  .reels-empty{text-align:center;padding:50px 20px;color:var(--text-dim)}
+  .reels-empty-icon{font-size:42px;opacity:.6;margin-bottom:10px}
+  .reels-empty-title{font-size:14px;font-weight:800;color:var(--text);margin-bottom:6px}
+  .reels-empty-sub{font-size:12px;color:var(--text-dim);line-height:1.6;max-width:280px;margin:0 auto}
   .cr-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:50px 20px;text-align:center;gap:10px}
   .cr-empty-icon{font-size:42px;opacity:.6}
   .cr-empty-title{font-size:15px;font-weight:800;color:var(--text)}
@@ -1274,6 +1327,20 @@
     <div class="screen-loading" id="competitor-report-view-loading">
       <div class="spinner"></div>
       <div>טוען דוח...</div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-reels-data">
+  <div class="screen-topbar">
+    <div class="screen-back" onclick="closeScreen('screen-reels-data')">›</div>
+    <div class="screen-topbar-icon" id="reels-data-icon">📊</div>
+    <div class="screen-topbar-title" id="reels-data-title">נתוני רילס</div>
+  </div>
+  <div class="screen-body screen-body-no-save" id="reels-data-body">
+    <div class="screen-loading" id="reels-data-loading">
+      <div class="spinner"></div>
+      <div>טוען נתוני רילסים...</div>
     </div>
   </div>
 </div>
@@ -3525,6 +3592,24 @@ function renderCompetitorReports() {
   var body = document.getElementById('competitor-reports-body');
   var html = '';
 
+  // ── מסגרת חדשה: נתונים יבשים של רילסים השבוע ──
+  html += '<div class="reels-frame">';
+  html += '<div class="reels-frame-title">';
+  html += '<span class="reels-frame-title-icon">📈</span>';
+  html += '<span>נתונים יבשים של רילסים השבוע</span>';
+  html += '</div>';
+  html += '<div class="reels-btns-row">';
+  html += '<div class="reels-btn mine" onclick="openReelsData(\'דוח תוכן שלי\')">';
+  html += '<div class="reels-btn-icon">👤</div>';
+  html += '<div class="reels-btn-label">נתוני רילס<br>עמוד שלי</div>';
+  html += '</div>';
+  html += '<div class="reels-btn" onclick="openReelsData(\'דוח תוכן מתחרים\')">';
+  html += '<div class="reels-btn-icon">🎯</div>';
+  html += '<div class="reels-btn-label">נתוני רילס<br>מתחרים</div>';
+  html += '</div>';
+  html += '</div>';
+  html += '</div>';
+
   // הסבר
   html += '<div class="cr-intro">';
   html += '<strong>📊 דוחות ניתוח מתחרים</strong><br>';
@@ -3876,6 +3961,209 @@ function applyRtlFix(obj) {
 }
 
 /* ════════════════════ סוף דוחות ניתוח מתחרים ════════════════════ */
+
+/* ════════════════════ נתוני רילס יבשים ════════════════════ */
+var reelsData = [];
+var reelsCurrentReportType = '';
+
+function openReelsData(reportType) {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  reelsData = [];
+  reelsCurrentReportType = reportType;
+
+  // עדכון כותרת ואייקון לפי סוג הדוח
+  var titleEl = document.getElementById('reels-data-title');
+  var iconEl  = document.getElementById('reels-data-icon');
+  if (reportType === 'דוח תוכן שלי') {
+    titleEl.textContent = 'נתוני רילס - עמוד שלי';
+    iconEl.textContent  = '👤';
+  } else {
+    titleEl.textContent = 'נתוני רילס - מתחרים';
+    iconEl.textContent  = '🎯';
+  }
+
+  var body = document.getElementById('reels-data-body');
+  body.innerHTML = '<div class="screen-loading" id="reels-data-loading"><div class="spinner"></div><div>טוען נתוני רילסים...</div></div>';
+
+  var el = document.getElementById('screen-reels-data');
+  el.classList.add('visible');
+  el.scrollTop = 0;
+  if (tg) {
+    tg.BackButton.show();
+    tg.BackButton.offClick();
+    tg.BackButton.onClick(function(){ closeScreen('screen-reels-data'); });
+  }
+
+  fetchReelsData(reportType);
+}
+
+function fetchReelsData(reportType) {
+  var url = GET_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent('נתוני רילס יבשים')
+    + '&reportType=' + encodeURIComponent(reportType)
+    + '&logSheetId=' + encodeURIComponent(logSheetId);
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(data){
+      reelsData = (data && data.reels) || [];
+      // מיון לפי צפיות מהגבוה לנמוך
+      reelsData.sort(function(a, b){
+        var av = parseInt(a.views, 10) || 0;
+        var bv = parseInt(b.views, 10) || 0;
+        return bv - av;
+      });
+      renderReelsData();
+    })
+    .catch(function(err){
+      console.error('fetchReelsData error:', err);
+      var body = document.getElementById('reels-data-body');
+      body.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">שגיאה בטעינה</div><div class="empty-state-sub">נסה שוב מאוחר יותר</div></div>';
+    });
+}
+
+function formatReelNumber(n) {
+  var num = parseInt(n, 10);
+  if (isNaN(num)) return '0';
+  return num.toLocaleString('en-US');
+}
+
+function formatReelDate(dateStr) {
+  if (!dateStr) return '';
+  try {
+    var d = new Date(dateStr);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('he-IL', { year: 'numeric', month: 'short', day: 'numeric' });
+  } catch(e) { return ''; }
+}
+
+function renderReelsData() {
+  var body = document.getElementById('reels-data-body');
+
+  if (!reelsData || reelsData.length === 0) {
+    body.innerHTML = '<div class="reels-empty"><div class="reels-empty-icon">📭</div><div class="reels-empty-title">אין עדיין נתונים</div><div class="reels-empty-sub">נתוני הרילסים מתעדכנים פעם בשבוע. ברגע שיהיו נתונים הם יופיעו כאן.</div></div>';
+    return;
+  }
+
+  var html = '';
+
+  // סטטיסטיקה כללית
+  var totalViews = 0, totalLikes = 0, totalComments = 0;
+  reelsData.forEach(function(r){
+    totalViews    += parseInt(r.views, 10)    || 0;
+    totalLikes    += parseInt(r.likes, 10)    || 0;
+    totalComments += parseInt(r.comments, 10) || 0;
+  });
+
+  html += '<div class="reels-stats-bar">';
+  html += '<span><strong>' + reelsData.length + '</strong> רילסים</span>';
+  html += '<span class="reels-stats-pill">👁 ' + formatReelNumber(totalViews) + ' צפיות סה"כ</span>';
+  html += '</div>';
+
+  // רשימת הרילסים
+  html += '<div class="reels-list">';
+  reelsData.forEach(function(reel, idx){
+    html += renderReelCard(reel, idx);
+  });
+  html += '</div>';
+
+  body.innerHTML = html;
+}
+
+function renderReelCard(reel, idx) {
+  var thumb = reel.thumbnail || '';
+  var url = reel.url || '';
+  var username = reel.username || '';
+  var transcript = reel.transcript || '';
+  var hookAnalysis = reel.hookAnalysis || '';
+  var caption = reel.caption || '';
+  var views = reel.views || 0;
+  var likes = reel.likes || 0;
+  var comments = reel.comments || 0;
+  var postDate = reel.postDate || '';
+
+  var html = '<div class="reel-card" id="reel-card-' + idx + '">';
+
+  // כותרת לחיצה (תקציר)
+  html += '<div class="reel-card-header" onclick="toggleReelExpand(' + idx + ')">';
+
+  // תמונה ראשית
+  html += '<div class="reel-thumb">';
+  if (thumb) {
+    html += '<div class="reel-thumb-rank">#' + (idx + 1) + '</div>';
+    html += '<img src="' + escapeAttr(thumb) + '" alt="" loading="lazy" onerror="this.style.display=\'none\';this.parentNode.innerHTML+=\'🎬\'">';
+  } else {
+    html += '<div class="reel-thumb-rank">#' + (idx + 1) + '</div>🎬';
+  }
+  html += '</div>';
+
+  // מידע
+  html += '<div class="reel-info">';
+  if (username) {
+    html += '<div class="reel-username">' + escapeHtml(username) + '</div>';
+  }
+  html += '<div class="reel-metrics">';
+  html += '<span class="reel-metric views">👁 ' + formatReelNumber(views) + '</span>';
+  html += '<span class="reel-metric likes">❤️ ' + formatReelNumber(likes) + '</span>';
+  html += '<span class="reel-metric comments">💬 ' + formatReelNumber(comments) + '</span>';
+  html += '</div>';
+  var dateText = formatReelDate(postDate);
+  if (dateText) {
+    html += '<div class="reel-date">📅 ' + dateText + '</div>';
+  }
+  html += '</div>';
+
+  // חץ פתיחה
+  html += '<div class="reel-expand-arrow">›</div>';
+  html += '</div>'; // end header
+
+  // תוכן מורחב
+  html += '<div class="reel-details">';
+
+  if (hookAnalysis) {
+    html += '<div class="reel-section">';
+    html += '<div class="reel-section-label">🎯 ניתוח הוק</div>';
+    html += '<div class="reel-section-text scroll">' + escapeHtml(hookAnalysis) + '</div>';
+    html += '</div>';
+  }
+
+  if (caption) {
+    html += '<div class="reel-section">';
+    html += '<div class="reel-section-label">📝 תיאור הפוסט</div>';
+    html += '<div class="reel-section-text scroll">' + escapeHtml(caption) + '</div>';
+    html += '</div>';
+  }
+
+  if (transcript) {
+    html += '<div class="reel-section">';
+    html += '<div class="reel-section-label">🎤 תמלול</div>';
+    html += '<div class="reel-section-text scroll dim">' + escapeHtml(transcript) + '</div>';
+    html += '</div>';
+  }
+
+  if (url) {
+    html += '<div class="reel-section">';
+    html += '<a class="reel-link-btn" href="' + escapeAttr(url) + '" target="_blank" rel="noopener">';
+    html += '<span>📲</span><span>צפה בפוסט באינסטגרם</span>';
+    html += '</a>';
+    html += '</div>';
+  }
+
+  html += '</div>'; // end details
+  html += '</div>'; // end card
+
+  return html;
+}
+
+function toggleReelExpand(idx) {
+  var card = document.getElementById('reel-card-' + idx);
+  if (!card) return;
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+  card.classList.toggle('expanded');
+}
+
+/* ════════════════════ סוף נתוני רילס יבשים ════════════════════ */
 
 function openCompetitorsToAnalyze() {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
