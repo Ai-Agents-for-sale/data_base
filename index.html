@@ -205,6 +205,70 @@
   .reels-empty-icon{font-size:42px;opacity:.6;margin-bottom:10px}
   .reels-empty-title{font-size:14px;font-weight:800;color:var(--text);margin-bottom:6px}
   .reels-empty-sub{font-size:12px;color:var(--text-dim);line-height:1.6;max-width:280px;margin:0 auto}
+
+  /* ── Scheduled Posts (Mini-App integrated) ── */
+  .sp-state{display:none;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;text-align:center;gap:14px;min-height:50vh}
+  .sp-state.active{display:flex}
+  .sp-state-icon{font-size:42px;opacity:.6}
+  .sp-state-title{font-size:15px;font-weight:800;color:var(--text)}
+  .sp-state-sub{font-size:12px;color:var(--text-dim);line-height:1.6;max-width:280px}
+
+  .sp-header-bar{display:flex;align-items:center;justify-content:space-between;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:10px}
+  .sp-header-bar-title{font-size:13px;font-weight:700;color:var(--text-dim)}
+  .sp-header-count{background:var(--accent-s);color:var(--accent);font-size:11px;font-weight:800;padding:3px 10px;border-radius:12px;border:1px solid var(--accent)}
+
+  .sp-posts-container{display:flex;flex-direction:column;gap:18px}
+
+  .sp-date-group{display:flex;flex-direction:column;gap:10px}
+  .sp-date-header{display:flex;align-items:center;gap:8px;padding:0 4px;font-size:13px;font-weight:700;color:var(--text-dim)}
+  .sp-date-header-icon{width:14px;height:14px;color:var(--accent);flex-shrink:0;display:inline-flex;align-items:center;justify-content:center}
+  .sp-date-header-text{font-weight:800;color:var(--text)}
+
+  .sp-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:border-color .15s,transform .12s}
+  .sp-card:active{transform:scale(.99);border-color:var(--accent)}
+  .sp-card-header{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--border)}
+  .sp-card-time{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--text);background:var(--bg3);padding:4px 9px;border-radius:14px;border:1px solid var(--border)}
+  .sp-card-time-icon{width:11px;height:11px;color:var(--accent)}
+  .sp-card-platforms{display:flex;gap:4px;margin-inline-start:auto;flex-wrap:wrap;justify-content:flex-end}
+  .sp-platform-chip{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:var(--bg3);border:1px solid var(--border)}
+  .sp-platform-chip svg{width:14px;height:14px}
+  .sp-card-dots{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-dim)}
+  .sp-card-dots svg{width:14px;height:14px}
+
+  .sp-card-body{padding:12px 14px;display:flex;gap:12px}
+  .sp-card-thumb{flex-shrink:0;width:72px;height:96px;background:#000;border-radius:8px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;color:#555;font-size:24px}
+  .sp-card-thumb img,.sp-card-thumb video{width:100%;height:100%;object-fit:cover;display:block}
+  .sp-card-thumb-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);color:#fff;font-size:24px;pointer-events:none}
+  .sp-card-thumb-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1f2937,#374151);color:#9ca3af;font-size:26px}
+  .sp-card-text{flex:1;min-width:0}
+  .sp-card-text-content{font-size:12px;color:var(--text);line-height:1.55;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word}
+  .sp-card-text-empty{font-size:12px;color:var(--text-dimmer);font-style:italic}
+
+  /* Modal (used by sp + future) */
+  .sp-modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9000;display:none;align-items:flex-end;justify-content:center;padding:0;animation:fadeIn .2s ease both}
+  .sp-modal-backdrop.active{display:flex}
+  .sp-modal{background:var(--bg2);border-top-left-radius:20px;border-top-right-radius:20px;border:1px solid var(--border);border-bottom:0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));width:100%;max-width:440px;display:flex;flex-direction:column;gap:14px;animation:slideUp .25s ease both;max-height:90vh;overflow-y:auto}
+  @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  .sp-modal-title{font-size:16px;font-weight:800;color:var(--text);text-align:center}
+  .sp-modal-text{font-size:13px;color:var(--text-dim);line-height:1.6;text-align:center}
+  .sp-modal-text strong{color:var(--text)}
+  .sp-sheet-action{width:100%;display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 14px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;color:var(--text);cursor:pointer;transition:all .15s}
+  .sp-sheet-action:active{transform:scale(.98);border-color:var(--accent)}
+  .sp-sheet-action svg{width:18px;height:18px;color:var(--accent);flex-shrink:0}
+  .sp-sheet-action.danger{color:#fca5a5;border-color:rgba(220,38,38,0.35);background:rgba(220,38,38,0.06)}
+  .sp-sheet-action.danger svg{color:var(--red)}
+  .sp-sheet-action.danger:active{border-color:var(--red)}
+  .sp-modal-actions{display:flex;gap:8px;margin-top:6px}
+  .sp-modal-btn{flex:1;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;border:none;border-radius:var(--radius-sm);padding:13px 0;cursor:pointer;transition:transform .12s,opacity .15s}
+  .sp-modal-btn:active{transform:scale(.97)}
+  .sp-modal-btn-cancel{background:var(--bg3);color:var(--text-dim);border:1px solid var(--border)}
+  .sp-modal-btn-confirm{background:linear-gradient(135deg,#1a3a8f,#2d5fc4);color:#fff}
+  .sp-modal-btn-danger{background:var(--red);color:#fff}
+
+  .sp-input-group{display:flex;flex-direction:column;gap:6px}
+  .sp-input-label{font-size:11px;font-weight:700;color:var(--text-dim)}
+  .sp-input-field{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;font-family:'Heebo',sans-serif;font-size:14px;color:var(--text);outline:none;direction:ltr}
+  .sp-input-field:focus{border-color:var(--accent)}
   .cr-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:50px 20px;text-align:center;gap:10px}
   .cr-empty-icon{font-size:42px;opacity:.6}
   .cr-empty-title{font-size:15px;font-weight:800;color:var(--text)}
@@ -1027,15 +1091,15 @@
   <div class="screen-body">
     <div class="submenu-question">איזה סוג תוכן מתוזמן תרצה לנהל?</div>
 
-    <div class="nav-card gray disabled">
+    <div class="nav-card blue" onclick="openScheduledPosts()">
       <div class="nav-card-icon">📋</div>
       <div class="nav-card-body">
         <div class="nav-card-title-row">
           <div class="nav-card-title">תכנים מתוזמנים</div>
-          <div class="nav-card-badge">בבנייה</div>
         </div>
         <div class="nav-card-desc">תוכן שתוזמן מראש ועוד לא פורסם</div>
       </div>
+      <div class="nav-card-arrow">‹</div>
     </div>
 
     <div class="nav-card purple" onclick="openStories()">
@@ -1351,6 +1415,41 @@
       <div>טוען נתוני רילסים...</div>
     </div>
   </div>
+</div>
+
+<div class="screen" id="screen-scheduled-posts">
+  <div class="screen-topbar">
+    <div class="screen-back" onclick="closeScreen('screen-scheduled-posts')">›</div>
+    <div class="screen-topbar-icon">📋</div>
+    <div class="screen-topbar-title">תכנים מתוזמנים</div>
+  </div>
+  <div class="screen-body screen-body-no-save" id="scheduled-posts-body">
+    <div class="sp-state active" id="sp-loading">
+      <div class="spinner"></div>
+      <div class="sp-state-sub">טוען פוסטים מתוזמנים...<br>זה יכול לקחת עד דקה</div>
+    </div>
+    <div class="sp-state" id="sp-empty">
+      <div class="sp-state-icon">📭</div>
+      <div class="sp-state-title">אין פוסטים מתוזמנים</div>
+      <div class="sp-state-sub">כשתתזמן פוסטים, הם יופיעו כאן</div>
+    </div>
+    <div class="sp-state" id="sp-error">
+      <div class="sp-state-icon">⚠️</div>
+      <div class="sp-state-title">שגיאה בטעינת הנתונים</div>
+      <div class="sp-state-sub">נסה לרענן את האפליקציה</div>
+    </div>
+    <div id="sp-posts" style="display:none">
+      <div class="sp-header-bar">
+        <div class="sp-header-bar-title">📋 פוסטים מתוזמנים</div>
+        <div class="sp-header-count" id="sp-header-count">0</div>
+      </div>
+      <div class="sp-posts-container" id="sp-container"></div>
+    </div>
+  </div>
+</div>
+
+<div class="sp-modal-backdrop" id="sp-modal-backdrop">
+  <div class="sp-modal" id="sp-modal-content"></div>
 </div>
 
 <div class="modal-backdrop" id="modal-delete">
@@ -1833,6 +1932,11 @@ function closeScreen(id) {
   if (id === 'screen-folder')   handleFolderBack();
   if (id === 'screen-materials') folderStack = [];
   if (id === 'screen-dropbox-folder') { dbCurrentFolder = null; dbCurrentSubPath = null; dbClips = []; dbSubfolders = []; }
+  if (id === 'screen-scheduled-posts') {
+    if (spPollTimeout) { clearTimeout(spPollTimeout); spPollTimeout = null; }
+    spPosts = [];
+    spPollAttempts = 0;
+  }
 
   if (!document.querySelector('.screen.visible') && tg) tg.BackButton.hide();
 }
@@ -4200,6 +4304,419 @@ function toggleReelTab(idx, tabName) {
 }
 
 /* ════════════════════ סוף נתוני רילס יבשים ════════════════════ */
+
+/* ════════════════════ פוסטים מתוזמנים (Mini-App) ════════════════════ */
+
+var SCHEDULED_POSTS_POLL_URL   = 'https://aiagentsforsale.app.n8n.cloud/webhook/scheduled-posts-poll';
+var SCHEDULED_POSTS_EDIT_URL   = 'https://aiagentsforsale.app.n8n.cloud/webhook/scheduled-posts-edit';
+var SCHEDULED_POSTS_DELETE_URL = 'https://aiagentsforsale.app.n8n.cloud/webhook/scheduled-posts-delete';
+
+var spPosts = [];
+var spPollAttempts = 0;
+var spPollTimeout = null;
+var SP_MAX_POLL_ATTEMPTS = 24;
+
+function openScheduledPosts() {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  spPosts = [];
+  spPollAttempts = 0;
+  if (spPollTimeout) { clearTimeout(spPollTimeout); spPollTimeout = null; }
+
+  spShowState('sp-loading');
+  document.getElementById('sp-posts').style.display = 'none';
+
+  var el = document.getElementById('screen-scheduled-posts');
+  el.classList.add('visible');
+  el.scrollTop = 0;
+  if (tg) {
+    tg.BackButton.show();
+    tg.BackButton.offClick();
+    tg.BackButton.onClick(function(){ closeScreen('screen-scheduled-posts'); });
+  }
+
+  spPollForPosts();
+}
+
+function spShowState(stateId) {
+  ['sp-loading', 'sp-empty', 'sp-error'].forEach(function(s){
+    var el = document.getElementById(s);
+    if (el) el.classList.remove('active');
+  });
+  if (stateId) {
+    var el = document.getElementById(stateId);
+    if (el) el.classList.add('active');
+  }
+  document.getElementById('sp-posts').style.display = stateId === null ? 'block' : 'none';
+}
+
+function spHaptic(type) {
+  if (tg && tg.HapticFeedback) {
+    try {
+      if (type === 'impact')  tg.HapticFeedback.impactOccurred('medium');
+      if (type === 'success') tg.HapticFeedback.notificationOccurred('success');
+      if (type === 'warning') tg.HapticFeedback.notificationOccurred('warning');
+      if (type === 'select')  tg.HapticFeedback.selectionChanged();
+    } catch(e){}
+  }
+}
+
+function spPollForPosts() {
+  spPollAttempts++;
+  var pollParams = { chatId: chatId, profileUsername: '' };
+  var qs = Object.keys(pollParams).map(function(k){
+    return encodeURIComponent(k) + '=' + encodeURIComponent(pollParams[k] == null ? '' : pollParams[k]);
+  }).join('&');
+  var url = SCHEDULED_POSTS_POLL_URL + '?' + qs;
+
+  fetch(url)
+    .then(function(res){ return res.json(); })
+    .then(function(data){
+      if (data && data.ready) {
+        spPosts = Array.isArray(data.posts) ? data.posts : [];
+        spRenderPosts();
+      } else if (spPollAttempts < SP_MAX_POLL_ATTEMPTS) {
+        spPollTimeout = setTimeout(spPollForPosts, 5000);
+      } else {
+        spShowState('sp-error');
+      }
+    })
+    .catch(function(err){
+      console.error('sp polling error:', err);
+      if (spPollAttempts < SP_MAX_POLL_ATTEMPTS) {
+        spPollTimeout = setTimeout(spPollForPosts, 5000);
+      } else {
+        spShowState('sp-error');
+      }
+    });
+}
+
+// ── Helpers ──
+function spPlatformKey(name) {
+  var n = String(name || '').toLowerCase().trim();
+  if (/instagram|insta|ig\b/.test(n)) return 'instagram';
+  if (/facebook|fb\b/.test(n)) return 'facebook';
+  if (/tiktok/.test(n)) return 'tiktok';
+  if (/linkedin/.test(n)) return 'linkedin';
+  if (/twitter|\bx\b/.test(n)) return 'twitter';
+  if (/youtube|yt\b/.test(n)) return 'youtube';
+  if (/threads/.test(n)) return 'threads';
+  if (/pinterest/.test(n)) return 'pinterest';
+  return n.replace(/[^a-z0-9]/g, '') || 'unknown';
+}
+
+function spParseSchedule(post) {
+  var raw = post.scheduled_for || post.scheduledFor || post.schedule_date || post.scheduleDate || '';
+  if (!raw) return { isScheduled:false, dateKey:'', date:'', time:'', label:'מיידי' };
+  var dt = new Date(raw);
+  if (isNaN(dt.getTime())) return { isScheduled:false, dateKey:'', date:'', time:'', label:String(raw) };
+  var pad = function(n){ return n < 10 ? '0' + n : '' + n; };
+  var y = dt.getFullYear();
+  var m = pad(dt.getMonth() + 1);
+  var d = pad(dt.getDate());
+  var hh = pad(dt.getHours());
+  var mm = pad(dt.getMinutes());
+  var dateKey = y + '-' + m + '-' + d;
+  // תאריך בעברית
+  var dayNames = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  var monthNames = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+  var dateLabel = dayNames[dt.getDay()] + ', ' + dt.getDate() + ' ב' + monthNames[dt.getMonth()];
+  return { isScheduled:true, dateKey:dateKey, date:dateLabel, time:hh + ':' + mm, label:dateLabel + ' ב-' + hh + ':' + mm };
+}
+
+function spIsVideo(post) {
+  var t = String(post.post_type || post.postType || '').toLowerCase();
+  if (t === 'video' || t === 'reel' || t === 'reels') return true;
+  if (post.video_url || post.videoUrl) return true;
+  return false;
+}
+
+function spGetPrimaryText(post) {
+  return post.title || post.caption || post.description || post.text || '';
+}
+
+function spEscapeHtml(s) {
+  s = (s == null) ? '' : String(s);
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function spIconClock() {
+  return '<svg class="sp-card-time-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>';
+}
+function spIconCalendar() {
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>';
+}
+function spIconDots() {
+  return '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="19" cy="12" r="2"></circle></svg>';
+}
+function spIconEdit() {
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>';
+}
+function spIconTrash() {
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>';
+}
+
+function spPlatformSvg(key) {
+  var icons = {
+    instagram: '<svg viewBox="0 0 24 24" fill="#E4405F"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.336 3.608 1.311.975.975 1.249 2.242 1.311 3.608.058 1.266.069 1.646.069 4.849 0 3.205-.012 3.584-.069 4.849-.062 1.366-.336 2.633-1.311 3.608-.975.975-2.242 1.249-3.608 1.311-1.266.058-1.645.07-4.85.07-3.204 0-3.584-.012-4.849-.07-1.366-.062-2.633-.336-3.608-1.311-.975-.975-1.249-2.242-1.311-3.608-.058-1.265-.07-1.644-.07-4.849 0-3.203.012-3.583.07-4.849.062-1.366.336-2.633 1.311-3.608.975-.975 2.242-1.249 3.608-1.311 1.265-.058 1.645-.07 4.849-.07zM12 0C8.741 0 8.332.014 7.052.072 5.775.132 4.602.396 3.635 1.363c-.967.967-1.231 2.14-1.291 3.417C2.286 6.06 2.272 6.469 2.272 9.728s.014 3.668.072 4.948c.06 1.277.324 2.45 1.291 3.417.967.967 2.14 1.231 3.417 1.291 1.28.058 1.689.072 4.948.072s3.668-.014 4.948-.072c1.277-.06 2.45-.324 3.417-1.291.967-.967 1.231-2.14 1.291-3.417.058-1.28.072-1.689.072-4.948s-.014-3.668-.072-4.948c-.06-1.277-.324-2.45-1.291-3.417C19.398.396 18.225.132 16.948.072 15.668.014 15.259 0 12 0zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>',
+    facebook:  '<svg viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>',
+    tiktok:    '<svg viewBox="0 0 24 24" fill="#000"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.1z"/></svg>',
+    linkedin:  '<svg viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.063 2.063 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>',
+    twitter:   '<svg viewBox="0 0 24 24" fill="#000"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
+    youtube:   '<svg viewBox="0 0 24 24" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',
+    threads:   '<svg viewBox="0 0 24 24" fill="#000"><path d="M17.07 11.014c-.099-.047-.2-.092-.301-.135-.176-3.244-1.948-5.101-4.92-5.12h-.04c-1.778 0-3.256.759-4.166 2.139l1.635 1.122c.681-1.033 1.751-1.253 2.532-1.253h.027c.973.006 1.708.289 2.184.842.347.402.578.957.694 1.66-.875-.149-1.821-.195-2.832-.135-2.853.164-4.687 1.83-4.564 4.144.062 1.173.643 2.184 1.638 2.844.84.557 1.927.83 3.057.768 1.491-.082 2.66-.652 3.477-1.696.62-.795 1.013-1.825 1.184-3.121.703.426 1.225.985 1.515 1.66.493 1.143.522 3.022-1.011 4.555-1.343 1.343-2.957 1.923-5.394 1.94-2.703-.02-4.747-.892-6.072-2.591-1.241-1.59-1.883-3.888-1.908-6.836.025-2.948.667-5.246 1.908-6.836 1.325-1.7 3.369-2.572 6.072-2.591 2.722.02 4.802.895 6.182 2.604.677.838 1.187 1.892 1.523 3.124l1.85-.494c-.408-1.518-1.05-2.827-1.927-3.91C18.58 1.336 15.91.011 12.01 0h-.014C8.105.011 5.516 1.331 3.815 3.482 2.334 5.32 1.541 7.823 1.51 11.4l.001 1.196c.031 3.578.824 6.082 2.305 7.92 1.701 2.151 4.29 3.471 8.181 3.482h.014c3.461-.024 5.901-.93 7.913-2.94 2.633-2.631 2.553-5.928 1.685-7.946-.622-1.45-1.81-2.629-3.439-3.412zm-5.105 4.397c-1.252.07-2.554-.494-2.618-1.7-.047-.894.638-1.892 2.69-2.011.235-.013.466-.02.691-.02.745 0 1.442.072 2.075.213-.235 2.953-1.619 3.451-2.838 3.518z"/></svg>',
+    pinterest: '<svg viewBox="0 0 24 24" fill="#E60023"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.752-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12.017 24c6.624 0 11.99-5.367 11.99-11.987C24.007 5.367 18.641.001 12.017.001z"/></svg>'
+  };
+  return icons[key] || '<svg viewBox="0 0 24 24" fill="#888"><circle cx="12" cy="12" r="10"></circle></svg>';
+}
+
+// ── Render ──
+function spRenderPosts() {
+  if (!spPosts || spPosts.length === 0) {
+    spShowState('sp-empty');
+    return;
+  }
+
+  // קבץ לפי תאריך
+  var groups = {};
+  var groupOrder = [];
+  spPosts.forEach(function(post, idx){
+    post._idx = idx;
+    var dt = spParseSchedule(post);
+    var key = dt.dateKey || '____unscheduled';
+    if (!groups[key]) {
+      groups[key] = { dateLabel: dt.date || 'מיידי', posts: [] };
+      groupOrder.push(key);
+    }
+    groups[key].posts.push(post);
+  });
+
+  // מיון: תאריכים מוקדמים קודם, "ללא תאריך" בסוף
+  groupOrder.sort(function(a, b){
+    if (a === '____unscheduled') return 1;
+    if (b === '____unscheduled') return -1;
+    return a < b ? -1 : a > b ? 1 : 0;
+  });
+
+  var html = '';
+  groupOrder.forEach(function(key){
+    var grp = groups[key];
+    html += '<div class="sp-date-group">';
+    html += '<div class="sp-date-header">';
+    html += '<span class="sp-date-header-icon">' + spIconCalendar() + '</span>';
+    html += '<span class="sp-date-header-text">' + spEscapeHtml(grp.dateLabel) + '</span>';
+    html += '<span style="margin-inline-start:auto;font-size:11px;font-weight:600;color:var(--text-dimmer)">' + grp.posts.length + ' פוסטים</span>';
+    html += '</div>';
+
+    grp.posts.forEach(function(post){
+      html += spBuildPostCard(post, post._idx);
+    });
+
+    html += '</div>';
+  });
+
+  document.getElementById('sp-container').innerHTML = html;
+  document.getElementById('sp-header-count').textContent = spPosts.length + ' פוסטים';
+  spShowState(null); // מציג את ה-posts
+}
+
+function spBuildPostCard(post, idx) {
+  var dt = spParseSchedule(post);
+  var platforms = Array.isArray(post.platforms) ? post.platforms : [];
+  var isVid = spIsVideo(post);
+  var thumb = post.thumbnail_url || post.thumbnailUrl || post.image_url || post.imageUrl || '';
+  var primaryText = spGetPrimaryText(post);
+
+  var html = '<div class="sp-card" onclick="spOpenActionSheet(' + idx + ')">';
+
+  // header: time + platforms + dots
+  html += '<div class="sp-card-header">';
+  if (dt.isScheduled) {
+    html += '<div class="sp-card-time">' + spIconClock() + '<span>' + spEscapeHtml(dt.time) + '</span></div>';
+  } else {
+    html += '<div class="sp-card-time">' + spIconClock() + '<span>' + spEscapeHtml(dt.label) + '</span></div>';
+  }
+  html += '<div class="sp-card-platforms">';
+  platforms.slice(0, 5).forEach(function(p){
+    var key = spPlatformKey(p);
+    html += '<div class="sp-platform-chip" title="' + spEscapeHtml(p) + '">' + spPlatformSvg(key) + '</div>';
+  });
+  if (platforms.length > 5) {
+    html += '<div class="sp-platform-chip" style="font-size:10px;font-weight:700;color:var(--text-dim)">+' + (platforms.length - 5) + '</div>';
+  }
+  html += '</div>';
+  html += '<div class="sp-card-dots">' + spIconDots() + '</div>';
+  html += '</div>';
+
+  // body: thumb + text
+  html += '<div class="sp-card-body">';
+  html += '<div class="sp-card-thumb">';
+  if (thumb) {
+    html += '<img src="' + spEscapeHtml(thumb) + '" alt="" referrerpolicy="no-referrer" onerror="this.style.display=\'none\';this.nextElementSibling && (this.nextElementSibling.style.display=\'flex\')">';
+    if (isVid) html += '<div class="sp-card-thumb-play">▶</div>';
+    html += '<div class="sp-card-thumb-fallback" style="display:none">' + (isVid ? '🎬' : '🖼️') + '</div>';
+  } else {
+    html += '<div class="sp-card-thumb-fallback" style="display:flex">' + (isVid ? '🎬' : '🖼️') + '</div>';
+  }
+  html += '</div>';
+
+  html += '<div class="sp-card-text">';
+  if (primaryText) {
+    html += '<div class="sp-card-text-content">' + spEscapeHtml(primaryText) + '</div>';
+  } else {
+    html += '<div class="sp-card-text-empty">אין טקסט</div>';
+  }
+  html += '</div>';
+  html += '</div>'; // end body
+
+  html += '</div>'; // end card
+  return html;
+}
+
+// ── Modal ──
+function spOpenModal(htmlContent) {
+  document.getElementById('sp-modal-content').innerHTML = htmlContent;
+  document.getElementById('sp-modal-backdrop').classList.add('active');
+}
+function spCloseModal() {
+  document.getElementById('sp-modal-backdrop').classList.remove('active');
+}
+
+(function(){
+  var bd = document.getElementById('sp-modal-backdrop');
+  if (bd) {
+    bd.addEventListener('click', function(e){
+      if (e.target === bd) spCloseModal();
+    });
+  }
+})();
+
+function spOpenActionSheet(idx) {
+  var post = spPosts[idx];
+  if (!post) return;
+  spHaptic('select');
+  var platforms = Array.isArray(post.platforms) ? post.platforms : [];
+  var multiPlatformNote = platforms.length > 1 ? 'הפעולה תחול על כל ' + platforms.length + ' הפלטפורמות' : 'בחר פעולה לפוסט';
+
+  spOpenModal(
+    '<div class="sp-modal-title">פעולות לפוסט</div>' +
+    '<div class="sp-modal-text">' + spEscapeHtml(multiPlatformNote) + '</div>' +
+    '<button class="sp-sheet-action" id="spActEdit">' + spIconEdit() + '<span>עריכת תאריך ושעה</span></button>' +
+    '<button class="sp-sheet-action danger" id="spActDelete">' + spIconTrash() + '<span>מחק פוסט</span></button>' +
+    '<button class="sp-modal-btn sp-modal-btn-cancel" id="spActCancel" style="width:100%">ביטול</button>'
+  );
+
+  document.getElementById('spActCancel').addEventListener('click', spCloseModal);
+  document.getElementById('spActEdit').addEventListener('click', function(){
+    spCloseModal();
+    setTimeout(function(){ spOpenEditModal(idx); }, 80);
+  });
+  document.getElementById('spActDelete').addEventListener('click', function(){
+    spCloseModal();
+    setTimeout(function(){ spOpenDeleteModal(idx); }, 80);
+  });
+}
+
+function spOpenDeleteModal(idx) {
+  var post = spPosts[idx];
+  var platforms = Array.isArray(post.platforms) ? post.platforms : [];
+  var dt = spParseSchedule(post);
+  var typeLabel = post.post_type === 'video' ? 'וידאו' : (post.post_type === 'photo' ? 'תמונה' : 'פוסט');
+  spHaptic('warning');
+
+  var platformLine = platforms.length > 1 ? '<br>הפוסט יימחק מכל ' + platforms.length + ' הפלטפורמות' : '';
+
+  spOpenModal(
+    '<div class="sp-modal-title">למחוק את הפוסט?</div>' +
+    '<div class="sp-modal-text">' +
+      spEscapeHtml(typeLabel) + (dt.isScheduled ? ' • ' + spEscapeHtml(dt.date + ' ב-' + dt.time) : '') +
+      platformLine +
+      '<br><strong>פעולה זו לא ניתנת לביטול.</strong>' +
+    '</div>' +
+    '<div class="sp-modal-actions">' +
+      '<button class="sp-modal-btn sp-modal-btn-cancel" id="spDelCancel">ביטול</button>' +
+      '<button class="sp-modal-btn sp-modal-btn-danger" id="spDelConfirm">מחק</button>' +
+    '</div>'
+  );
+  document.getElementById('spDelCancel').addEventListener('click', spCloseModal);
+  document.getElementById('spDelConfirm').addEventListener('click', function(){
+    spHaptic('success');
+    spSendAction('delete', idx, {});
+    spCloseModal();
+    spRemoveCardFromUI(idx);
+    showToast('הפוסט נמחק');
+  });
+}
+
+function spOpenEditModal(idx) {
+  var post = spPosts[idx];
+  var dt = spParseSchedule(post);
+  var platforms = Array.isArray(post.platforms) ? post.platforms : [];
+
+  var dateForInput = dt.dateKey || '';
+  var timeForInput = dt.time || '';
+  var platformLine = platforms.length > 1 ? 'התזמון יעודכן בכל ' + platforms.length + ' הפלטפורמות' : 'בחר תאריך ושעה חדשים לפוסט';
+
+  spHaptic('impact');
+  spOpenModal(
+    '<div class="sp-modal-title">עריכת תזמון</div>' +
+    '<div class="sp-modal-text">' + spEscapeHtml(platformLine) + '</div>' +
+    '<div class="sp-input-group"><div class="sp-input-label">תאריך</div>' +
+      '<input type="date" class="sp-input-field" id="spEditDate" value="' + spEscapeHtml(dateForInput) + '"></div>' +
+    '<div class="sp-input-group"><div class="sp-input-label">שעה</div>' +
+      '<input type="time" class="sp-input-field" id="spEditTime" value="' + spEscapeHtml(timeForInput) + '"></div>' +
+    '<div class="sp-modal-actions">' +
+      '<button class="sp-modal-btn sp-modal-btn-cancel" id="spEditCancel">ביטול</button>' +
+      '<button class="sp-modal-btn sp-modal-btn-confirm" id="spEditConfirm">עדכן</button>' +
+    '</div>'
+  );
+  document.getElementById('spEditCancel').addEventListener('click', spCloseModal);
+  document.getElementById('spEditConfirm').addEventListener('click', function(){
+    var newDate = document.getElementById('spEditDate').value;
+    var newTime = document.getElementById('spEditTime').value;
+    if (!newDate || !newTime) {
+      showToast('יש לבחור תאריך ושעה');
+      return;
+    }
+    spHaptic('success');
+    spSendAction('edit', idx, { date: newDate, time: newTime });
+    spCloseModal();
+    showToast('התזמון עודכן');
+  });
+}
+
+function spRemoveCardFromUI(idx) {
+  // הסר מהמערך
+  var removed = false;
+  spPosts = spPosts.filter(function(p){
+    if (p._idx === idx && !removed) { removed = true; return false; }
+    return true;
+  });
+  spRenderPosts();
+}
+
+function spSendAction(action, idx, extra) {
+  var targetUrl = (action === 'delete') ? SCHEDULED_POSTS_DELETE_URL : SCHEDULED_POSTS_EDIT_URL;
+  var post = spPosts.find(function(p){ return p._idx === idx; }) || {};
+  var jobIds = Array.isArray(post.jobIds) ? post.jobIds : (post.job_ids || []);
+
+  var payload = {
+    action: action,
+    jobIds: Array.isArray(jobIds) ? jobIds.join(',') : String(jobIds || ''),
+    chatId: chatId
+  };
+  if (extra) Object.keys(extra).forEach(function(k){ payload[k] = extra[k]; });
+
+  var qs = Object.keys(payload).map(function(k){
+    return encodeURIComponent(k) + '=' + encodeURIComponent(payload[k] == null ? '' : payload[k]);
+  }).join('&');
+
+  // שימוש ב-Image GET trick (כמו במקור) - הימנעות מ-CORS
+  var img = new Image();
+  img.onload = img.onerror = function(){};
+  img.src = targetUrl + '?' + qs;
+}
+
+/* ════════════════════ סוף פוסטים מתוזמנים ════════════════════ */
 
 function openCompetitorsToAnalyze() {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
