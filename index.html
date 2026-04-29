@@ -162,11 +162,11 @@
   .reels-stats-pill{display:inline-flex;align-items:center;gap:5px;background:var(--teal-s);border:1px solid var(--teal);color:#67e8f9;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700}
 
   .reel-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:border-color .15s}
-  .reel-card-header{display:flex;gap:12px;padding:12px;cursor:pointer;-webkit-user-select:none;user-select:none}
-  .reel-card-header:active{background:var(--bg3)}
+  .reel-card-top{display:flex;gap:12px;padding:12px}
   .reel-thumb{flex-shrink:0;width:88px;aspect-ratio:9/16;background:#000;border-radius:var(--radius-sm);overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--text-dimmer);font-size:24px;position:relative}
   .reel-thumb img{width:100%;height:100%;object-fit:cover;display:block}
   .reel-thumb-rank{position:absolute;top:4px;right:4px;background:var(--gold);color:#fff;font-size:10px;font-weight:900;padding:2px 6px;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.4);min-width:20px;text-align:center;line-height:1.3}
+  .reel-thumb-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1f2937,#374151);color:#9ca3af;font-size:28px}
   .reel-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
   .reel-username{font-size:12px;font-weight:800;color:var(--text);direction:ltr;text-align:right;display:flex;align-items:center;gap:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .reel-username::before{content:'@';color:var(--text-dim);font-weight:600}
@@ -176,21 +176,29 @@
   .reel-metric.likes{color:#f87171;border-color:rgba(248,113,113,0.35);background:rgba(248,113,113,0.06)}
   .reel-metric.comments{color:#60a5fa;border-color:rgba(96,165,250,0.35);background:rgba(96,165,250,0.06)}
   .reel-date{font-size:10px;color:var(--text-dimmer);font-weight:600}
-  .reel-expand-arrow{flex-shrink:0;align-self:center;font-size:18px;color:var(--text-dim);transition:transform .25s}
-  .reel-card.expanded .reel-expand-arrow{transform:rotate(90deg)}
 
-  .reel-details{display:none;border-top:1px solid var(--border);padding:0;animation:fadeIn .25s ease both}
-  .reel-card.expanded .reel-details{display:flex;flex-direction:column}
-  .reel-section{padding:12px 14px;border-bottom:1px solid var(--border)}
-  .reel-section:last-child{border-bottom:none}
-  .reel-section-label{font-size:10px;font-weight:800;color:var(--text-dimmer);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:5px}
-  .reel-section-text{font-size:12px;color:var(--text);line-height:1.7;white-space:pre-wrap;word-break:break-word}
-  .reel-section-text.dim{color:var(--text-dim)}
-  .reel-section-text.scroll{max-height:200px;overflow-y:auto;background:var(--bg3);padding:10px 12px;border-radius:8px;border:1px solid var(--border)}
-  .reel-section-text.scroll::-webkit-scrollbar{width:6px}
-  .reel-section-text.scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:3px}
-  .reel-link-btn{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#e1306c,#c13584,#833ab4);color:#fff;text-decoration:none;font-family:'Heebo',sans-serif;font-size:12px;font-weight:700;padding:9px 14px;border-radius:8px;transition:opacity .15s,transform .12s;box-shadow:0 2px 8px rgba(193,53,132,0.25)}
-  .reel-link-btn:active{transform:scale(.97);opacity:.92}
+  /* Tab buttons row */
+  .reel-tabs{display:flex;gap:6px;padding:0 12px 10px;flex-wrap:wrap}
+  .reel-tab-btn{flex:1;min-width:0;background:var(--bg3);border:1px solid var(--border);color:var(--text-dim);font-family:'Heebo',sans-serif;font-size:11px;font-weight:700;padding:7px 6px;border-radius:8px;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;justify-content:center;gap:4px;-webkit-user-select:none;user-select:none;white-space:nowrap}
+  .reel-tab-btn:active{transform:scale(.96)}
+  .reel-tab-btn.active{background:var(--accent-s);border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+  .reel-tab-btn-icon{font-size:13px;line-height:1}
+  .reel-tab-btn:disabled{opacity:.35;cursor:default}
+  .reel-tab-btn:disabled:active{transform:none}
+
+  /* Open content area (shown when a tab is active) */
+  .reel-content{display:none;border-top:1px solid var(--border);padding:12px 14px;background:var(--bg3);animation:fadeIn .2s ease both}
+  .reel-content.visible{display:block}
+  .reel-content-text{font-size:12.5px;color:var(--text);line-height:1.7;white-space:pre-wrap;word-break:break-word;max-height:240px;overflow-y:auto}
+  .reel-content-text.dim{color:var(--text-dim)}
+  .reel-content-text::-webkit-scrollbar{width:6px}
+  .reel-content-text::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:3px}
+  .reel-content-text::-webkit-scrollbar-track{background:transparent}
+
+  /* Permanent footer - "watch on Instagram" button always visible */
+  .reel-footer{padding:10px 12px;border-top:1px solid var(--border);background:var(--bg2)}
+  .reel-link-btn{display:flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#e1306c,#c13584,#833ab4);color:#fff;text-decoration:none;font-family:'Heebo',sans-serif;font-size:12px;font-weight:800;padding:10px;border-radius:8px;transition:opacity .15s,transform .12s;box-shadow:0 2px 8px rgba(193,53,132,0.25);width:100%}
+  .reel-link-btn:active{transform:scale(.98);opacity:.92}
 
   .reels-list{display:flex;flex-direction:column;gap:10px}
   .reels-empty{text-align:center;padding:50px 20px;color:var(--text-dim)}
@@ -4085,16 +4093,17 @@ function renderReelCard(reel, idx) {
 
   var html = '<div class="reel-card" id="reel-card-' + idx + '">';
 
-  // כותרת לחיצה (תקציר)
-  html += '<div class="reel-card-header" onclick="toggleReelExpand(' + idx + ')">';
+  // ── חלק עליון: תמונה + מידע ──
+  html += '<div class="reel-card-top">';
 
   // תמונה ראשית
   html += '<div class="reel-thumb">';
+  html += '<div class="reel-thumb-rank">#' + (idx + 1) + '</div>';
   if (thumb) {
-    html += '<div class="reel-thumb-rank">#' + (idx + 1) + '</div>';
-    html += '<img src="' + escapeAttr(thumb) + '" alt="" loading="lazy" onerror="this.style.display=\'none\';this.parentNode.innerHTML+=\'🎬\'">';
+    html += '<img src="' + escapeAttr(thumb) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">';
+    html += '<div class="reel-thumb-fallback" style="display:none">🎬</div>';
   } else {
-    html += '<div class="reel-thumb-rank">#' + (idx + 1) + '</div>🎬';
+    html += '<div class="reel-thumb-fallback" style="display:flex">🎬</div>';
   }
   html += '</div>';
 
@@ -4114,53 +4123,80 @@ function renderReelCard(reel, idx) {
   }
   html += '</div>';
 
-  // חץ פתיחה
-  html += '<div class="reel-expand-arrow">›</div>';
-  html += '</div>'; // end header
+  html += '</div>'; // end reel-card-top
 
-  // תוכן מורחב
-  html += '<div class="reel-details">';
+  // ── שורת טאבים (3 כפתורים) ──
+  html += '<div class="reel-tabs">';
 
+  var hookDisabled = hookAnalysis ? '' : ' disabled';
+  html += '<button class="reel-tab-btn" data-tab="hook"' + hookDisabled + ' onclick="toggleReelTab(' + idx + ',\'hook\')">';
+  html += '<span class="reel-tab-btn-icon">🎯</span><span>ניתוח הוק</span>';
+  html += '</button>';
+
+  var captionDisabled = caption ? '' : ' disabled';
+  html += '<button class="reel-tab-btn" data-tab="caption"' + captionDisabled + ' onclick="toggleReelTab(' + idx + ',\'caption\')">';
+  html += '<span class="reel-tab-btn-icon">📝</span><span>תיאור</span>';
+  html += '</button>';
+
+  var transcriptDisabled = transcript ? '' : ' disabled';
+  html += '<button class="reel-tab-btn" data-tab="transcript"' + transcriptDisabled + ' onclick="toggleReelTab(' + idx + ',\'transcript\')">';
+  html += '<span class="reel-tab-btn-icon">🎤</span><span>תמלול</span>';
+  html += '</button>';
+
+  html += '</div>'; // end reel-tabs
+
+  // ── אזור תוכן (נסגר/נפתח לפי הטאב הפעיל) ──
   if (hookAnalysis) {
-    html += '<div class="reel-section">';
-    html += '<div class="reel-section-label">🎯 ניתוח הוק</div>';
-    html += '<div class="reel-section-text scroll">' + escapeHtml(hookAnalysis) + '</div>';
+    html += '<div class="reel-content" data-content="hook">';
+    html += '<div class="reel-content-text">' + escapeHtml(hookAnalysis) + '</div>';
     html += '</div>';
   }
-
   if (caption) {
-    html += '<div class="reel-section">';
-    html += '<div class="reel-section-label">📝 תיאור הפוסט</div>';
-    html += '<div class="reel-section-text scroll">' + escapeHtml(caption) + '</div>';
+    html += '<div class="reel-content" data-content="caption">';
+    html += '<div class="reel-content-text">' + escapeHtml(caption) + '</div>';
     html += '</div>';
   }
-
   if (transcript) {
-    html += '<div class="reel-section">';
-    html += '<div class="reel-section-label">🎤 תמלול</div>';
-    html += '<div class="reel-section-text scroll dim">' + escapeHtml(transcript) + '</div>';
+    html += '<div class="reel-content" data-content="transcript">';
+    html += '<div class="reel-content-text dim">' + escapeHtml(transcript) + '</div>';
     html += '</div>';
   }
 
+  // ── כפתור "צפה בפוסט" - תמיד גלוי בתחתית ──
   if (url) {
-    html += '<div class="reel-section">';
+    html += '<div class="reel-footer">';
     html += '<a class="reel-link-btn" href="' + escapeAttr(url) + '" target="_blank" rel="noopener">';
     html += '<span>📲</span><span>צפה בפוסט באינסטגרם</span>';
     html += '</a>';
     html += '</div>';
   }
 
-  html += '</div>'; // end details
   html += '</div>'; // end card
 
   return html;
 }
 
-function toggleReelExpand(idx) {
+function toggleReelTab(idx, tabName) {
   var card = document.getElementById('reel-card-' + idx);
   if (!card) return;
   if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
-  card.classList.toggle('expanded');
+
+  var allBtns = card.querySelectorAll('.reel-tab-btn');
+  var allContents = card.querySelectorAll('.reel-content');
+  var clickedBtn = card.querySelector('.reel-tab-btn[data-tab="' + tabName + '"]');
+  var targetContent = card.querySelector('.reel-content[data-content="' + tabName + '"]');
+
+  var alreadyActive = clickedBtn && clickedBtn.classList.contains('active');
+
+  // איפוס כל הטאבים והתוכן
+  allBtns.forEach(function(b){ b.classList.remove('active'); });
+  allContents.forEach(function(c){ c.classList.remove('visible'); });
+
+  // אם לא היה פעיל - להפעיל. אם היה פעיל - להישאר סגור (טוגל).
+  if (!alreadyActive && clickedBtn && targetContent) {
+    clickedBtn.classList.add('active');
+    targetContent.classList.add('visible');
+  }
 }
 
 /* ════════════════════ סוף נתוני רילס יבשים ════════════════════ */
