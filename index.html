@@ -4428,22 +4428,42 @@ function spPlatformKey(name) {
 }
 
 function spParseSchedule(post) {
-  var raw = post.scheduled_for || post.scheduledFor || post.schedule_date || post.scheduleDate || '';
-  if (!raw) return { isScheduled:false, dateKey:'', date:'', time:'', label:'מיידי' };
-  var dt = new Date(raw);
-  if (isNaN(dt.getTime())) return { isScheduled:false, dateKey:'', date:'', time:'', label:String(raw) };
-  var pad = function(n){ return n < 10 ? '0' + n : '' + n; };
-  var y = dt.getFullYear();
-  var m = pad(dt.getMonth() + 1);
-  var d = pad(dt.getDate());
-  var hh = pad(dt.getHours());
-  var mm = pad(dt.getMinutes());
-  var dateKey = y + '-' + m + '-' + d;
-  // תאריך בעברית
-  var dayNames = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
-  var monthNames = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
-  var dateLabel = dayNames[dt.getDay()] + ', ' + dt.getDate() + ' ב' + monthNames[dt.getMonth()];
-  return { isScheduled:true, dateKey:dateKey, date:dateLabel, time:hh + ':' + mm, label:dateLabel + ' ב-' + hh + ':' + mm };
+  // original_scheduled_str format: "2026-04-28T20:23"
+  // scheduled_date format (UTC): "2026-04-28T17:23:00"
+  var orig = post.original_scheduled_str || '';
+  var utc  = post.scheduled_date || '';
+  var dateStr = orig || utc;
+
+  if (!dateStr) {
+    return { isScheduled:false, dateKey:'', date:'', time:'', label:'מיידי' };
+  }
+
+  // חילוץ YYYY-MM-DD ו-HH:MM
+  var m = String(dateStr).match(/(\d{4})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})/);
+  if (!m) return { isScheduled:false, dateKey:'', date:'', time:'', label:String(dateStr) };
+
+  var year = m[1], month = m[2], day = m[3], hour = m[4], min = m[5];
+  var dateKey = year + '-' + month + '-' + day;
+  var time = hour + ':' + min;
+
+  // תאריך מוצג בעברית - "יום שישי, 1 במאי 2026"
+  var dateDisplay = '';
+  try {
+    var d = new Date(parseInt(year,10), parseInt(month,10)-1, parseInt(day,10));
+    var dayNames = ['יום ראשון','יום שני','יום שלישי','יום רביעי','יום חמישי','יום שישי','שבת'];
+    var monthNames = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+    dateDisplay = dayNames[d.getDay()] + ', ' + parseInt(day,10) + ' ב' + monthNames[parseInt(month,10)-1] + ' ' + year;
+  } catch (e) {
+    dateDisplay = day + '/' + month + '/' + year;
+  }
+
+  return {
+    isScheduled: true,
+    dateKey: dateKey,
+    date: dateDisplay,
+    time: time,
+    label: dateDisplay + ' ב-' + time
+  };
 }
 
 function spIsVideo(post) {
