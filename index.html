@@ -141,7 +141,35 @@
   .tutorial-popup-step-num{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
   .tutorial-popup-step-text{flex:1;line-height:1.65;font-size:12.5px}
 
-  /* Send-to-edit button on long video row */
+  /* Competitors Analyze screen */
+  .ca-howto{background:rgba(236,72,153,0.08);border:1px solid rgba(236,72,153,0.3);border-radius:var(--radius);padding:14px 16px;font-size:12px;line-height:1.7;color:var(--text-dim);margin-bottom:14px}
+  .ca-howto-title{font-size:13px;font-weight:800;color:#f9a8d4;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .ca-howto strong{color:var(--text)}
+  .ca-howto p{margin-bottom:8px}
+  .ca-howto p:last-child{margin-bottom:0}
+  .ca-warn{background:rgba(220,38,38,0.10);border:1px solid rgba(220,38,38,0.35);border-radius:var(--radius-sm);padding:10px 12px;color:#fca5a5;font-weight:600;margin:10px 0;font-size:11.5px;line-height:1.6}
+  .ca-warn strong{color:#fecaca}
+
+  /* Two-column layout */
+  .ca-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
+  @media (max-width: 360px){ .ca-grid{grid-template-columns:1fr} }
+  .ca-col{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;gap:10px}
+  .ca-col-header{display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+  .ca-col-icon{width:32px;height:32px;border-radius:50%;background:var(--accent-s);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+  .ca-col-title{font-size:13px;font-weight:800;color:var(--text)}
+  .ca-col-subtitle{font-size:10.5px;color:var(--text-dim);font-weight:600}
+
+  /* Username input wrap (with @ prefix locked) */
+  .ca-input-wrap{position:relative;display:flex;align-items:stretch;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;transition:border-color .15s}
+  .ca-input-wrap:focus-within{border-color:var(--accent)}
+  .ca-input-wrap.ca-input-error{border-color:var(--red);background:rgba(220,38,38,0.06)}
+  .ca-input-prefix{flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0 10px;background:rgba(0,0,0,0.20);color:var(--text-dim);font-size:14px;font-weight:800;border-inline-end:1px solid var(--border)}
+  .ca-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;padding:9px 10px;direction:ltr;text-align:left;min-width:0}
+  .ca-input::placeholder{color:var(--text-dim);font-weight:500;opacity:.6}
+  .ca-input-row{display:flex;flex-direction:column;gap:4px}
+  .ca-input-num{font-size:10px;font-weight:800;color:var(--text-dim);padding-inline-start:2px}
+  .ca-error-msg{font-size:10.5px;font-weight:600;color:var(--red);margin-top:3px;padding-inline-start:3px;line-height:1.4}
+  .ca-empty-slot{opacity:.55}
   .lv-row-send-btn{width:100%;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border:none;border-radius:8px;font-family:'Heebo',sans-serif;font-size:12px;font-weight:700;padding:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity .15s,transform .12s;box-shadow:0 2px 6px rgba(124,58,237,0.25);margin-top:4px}
   .lv-row-send-btn:active{transform:scale(.98);opacity:.92}
   .lv-row-send-btn:disabled{opacity:.5;cursor:default}
@@ -1123,6 +1151,45 @@
 </div>
 <div class="screen" id="screen-competitors">
   <div class="screen-topbar"><div class="screen-back" onclick="closeScreen('screen-competitors')">›</div><div class="screen-topbar-icon">📊</div><div class="screen-topbar-title">מתחרים ודוחות</div></div>
+  <div class="screen-body">
+    <div class="nav-card pink" onclick="openCompetitorsToAnalyze()">
+      <div class="nav-card-icon">📱</div>
+      <div class="nav-card-body">
+        <div class="nav-card-title-row"><div class="nav-card-title">עמודי אינסטגרם / מתחרים לנתח</div></div>
+        <div class="nav-card-desc">כאן מכניסים עמודי אינסטגרם שתרצה שהסוכן ינתח בדוח מתחרים ויכתוב תוכן על סמך מה שוויראלי אצלם</div>
+      </div>
+      <div class="nav-card-arrow">‹</div>
+    </div>
+    <div class="nav-card purple" onclick="openCompetitorReports()">
+      <div class="nav-card-icon">📈</div>
+      <div class="nav-card-body">
+        <div class="nav-card-title-row"><div class="nav-card-title">דוחות ניתוח מתחרים שכבר בוצעו</div></div>
+        <div class="nav-card-desc">כל הדוחות מתחרים שבוצעו מדיי שבוע מאז שהצטרפת לסוכן</div>
+      </div>
+      <div class="nav-card-arrow">‹</div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-competitors-analyze">
+  <div class="screen-topbar">
+    <div class="screen-back" onclick="closeScreen('screen-competitors-analyze')">›</div>
+    <div class="screen-topbar-icon">📱</div>
+    <div class="screen-topbar-title">עמודי אינסטגרם לנתח</div>
+  </div>
+  <div class="screen-body" id="competitors-analyze-body">
+    <div class="screen-loading" id="competitors-analyze-loading">
+      <div class="spinner"></div>
+      <div>טוען...</div>
+    </div>
+  </div>
+  <div class="save-bar" id="competitors-analyze-save-bar" style="display:none">
+    <button class="save-btn" id="competitors-analyze-save-btn" onclick="saveCompetitorsAnalyze()">💾 שמור שינויים</button>
+  </div>
+</div>
+
+<div class="screen" id="screen-competitor-reports">
+  <div class="screen-topbar"><div class="screen-back" onclick="closeScreen('screen-competitor-reports')">›</div><div class="screen-topbar-icon">📈</div><div class="screen-topbar-title">דוחות ניתוח מתחרים</div></div>
   <div class="screen-body"><div class="coming-soon"><div class="coming-soon-icon">🚧</div><div class="coming-soon-title">בקרוב</div></div></div>
 </div>
 
@@ -3326,6 +3393,225 @@ var LV_DATA_START_ROW = 3;
 var longVideos   = [];
 var longVidsInitial = [];    // snapshot מהטעינה, לזיהוי מחיקות
 var lvDirty      = false;    // האם יש שינויים
+
+/* ════════════════════ עמודי אינסטגרם / מתחרים לנתח ════════════════════ */
+
+var CA_SHEET_NAME    = 'עמודים לנתח';
+var CA_DATA_START    = 2;             // שורה 2 ראשונה לנתונים (1 כותרות)
+var CA_MAX_COMPETITORS = 5;
+var caMyUsername       = '';
+var caCompetitors      = [];          // עד 5
+var caInitialMy        = '';
+var caInitialComps     = [];
+var caDirty            = false;
+
+function openCompetitorReports() {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  openScreen('screen-competitor-reports', '');
+}
+
+function openCompetitorsToAnalyze() {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  caMyUsername  = '';
+  caCompetitors = [];
+  caInitialMy   = '';
+  caInitialComps= [];
+  caDirty       = false;
+  openScreen('screen-competitors-analyze', '');
+  document.getElementById('competitors-analyze-loading').style.display = 'flex';
+  document.getElementById('competitors-analyze-save-bar').style.display = 'none';
+  fetchCompetitorsAnalyze();
+}
+
+function fetchCompetitorsAnalyze() {
+  var url = GET_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent(CA_SHEET_NAME)
+    + '&logSheetId=' + encodeURIComponent(logSheetId);
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(data){
+      caMyUsername  = (data && data.myUsername)  || '';
+      caCompetitors = (data && data.competitors) || [];
+      caInitialMy    = caMyUsername;
+      caInitialComps = caCompetitors.slice();
+      renderCompetitorsAnalyze();
+    })
+    .catch(function(err){
+      console.error('fetchCompetitorsAnalyze error:', err);
+      var body = document.getElementById('competitors-analyze-body');
+      body.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">שגיאה בטעינה</div><div class="empty-state-sub">נסה שוב מאוחר יותר</div></div>';
+    });
+}
+
+function renderCompetitorsAnalyze() {
+  var body = document.getElementById('competitors-analyze-body');
+
+  var html = '';
+
+  // ── הסבר ראשי ──
+  html += '<div class="ca-howto">';
+  html += '<div class="ca-howto-title">💡 איך זה עובד?</div>';
+  html += '<p>מלאו את <strong>שם המשתמש שלכם באינסטגרם</strong> בצד ימין, ועד <strong>5 שמות משתמש של מתחרים</strong> שתרצו שהסוכן ינתח, בצד שמאל.</p>';
+  html += '<p>הסוכן ירוץ <strong>מדיי שבוע</strong> על העמודים שתשימו כאן וייצור עבורכם דוח ניתוח מתחרים מפורט. תוכלו להחליף את המתחרים בכל זמן.</p>';
+
+  html += '<div class="ca-warn">';
+  html += '⚠️ <strong>חשוב מאוד:</strong> השם חייב להיות <strong>שם המשתמש המדויק</strong> כפי שהוא מופיע באינסטגרם — באנגלית, ללא <strong>שטרודל (@)</strong>, ללא רווחים, ללא עברית. דוגמה תקינה: <code style="background:rgba(0,0,0,.3);padding:2px 5px;border-radius:4px;direction:ltr;display:inline-block">zero_work_ai</code>';
+  html += '</div>';
+
+  html += '<p style="margin-top:6px"><strong>איפה למצוא את שם המשתמש?</strong> תיכנסו לפרופיל באינסטגרם, ותעתיקו את מה שמופיע מתחת לתמונת הפרופיל (אחרי ה-@). תכניסו פה רק את החלק שאחרי ה-@, השטרודל כבר נעול ולא ניתן לעריכה.</p>';
+  html += '</div>';
+
+  // ── 2 עמודות ──
+  html += '<div class="ca-grid">';
+
+  // צד ימין — שלי
+  html += '<div class="ca-col">';
+  html += '<div class="ca-col-header">';
+  html += '<div class="ca-col-icon">👤</div>';
+  html += '<div><div class="ca-col-title">האינסטגרם שלי</div><div class="ca-col-subtitle">שם המשתמש שלך</div></div>';
+  html += '</div>';
+  html += renderCaUsernameInput('my', 0, caMyUsername);
+  html += '</div>';
+
+  // צד שמאל — מתחרים
+  html += '<div class="ca-col">';
+  html += '<div class="ca-col-header">';
+  html += '<div class="ca-col-icon">📱</div>';
+  html += '<div><div class="ca-col-title">מתחרים לניתוח</div><div class="ca-col-subtitle">עד 5 עמודים</div></div>';
+  html += '</div>';
+  for (var i = 0; i < CA_MAX_COMPETITORS; i++) {
+    html += renderCaUsernameInput('comp', i, caCompetitors[i] || '');
+  }
+  html += '</div>';
+
+  html += '</div>'; // .ca-grid
+
+  body.innerHTML = html;
+  updateCaSaveBtn();
+}
+
+function renderCaUsernameInput(kind, idx, value) {
+  var inputId = 'ca_' + kind + '_' + idx;
+  var num     = idx + 1;
+  var invalid = value !== '' && !isValidIgUsername(value);
+  var wrapClass = 'ca-input-wrap' + (invalid ? ' ca-input-error' : '');
+  var emptyClass = (kind === 'comp' && value === '') ? ' ca-empty-slot' : '';
+
+  var html = '<div class="ca-input-row' + emptyClass + '">';
+  if (kind === 'comp') {
+    html += '<div class="ca-input-num">מתחרה ' + num + '</div>';
+  }
+  html += '<div class="' + wrapClass + '">';
+  html += '<div class="ca-input-prefix">@</div>';
+  html += '<input type="text" id="' + inputId + '" class="ca-input" autocomplete="off" autocapitalize="none" spellcheck="false" inputmode="latin" placeholder="username" value="' + escapeAttr(value) + '" oninput="onCaInput(\'' + kind + '\',' + idx + ',this.value)">';
+  html += '</div>';
+  if (invalid) {
+    html += '<div class="ca-error-msg">⚠️ רק אותיות באנגלית, מספרים, נקודות וקווים תחתונים</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+/* בודק אם שם משתמש תקין באינסטגרם — אנגלית/ספרות/נקודה/קו תחתון, ללא רווחים, ללא @ */
+function isValidIgUsername(str) {
+  if (!str) return true; // ריק זה תקין (אופציונלי)
+  return /^[A-Za-z0-9._]+$/.test(str);
+}
+
+/* מנקה ערך שהמשתמש הקליד/הדביק:
+   - מסיר @ בהתחלה
+   - מסיר רווחים
+   - מקבל רק תווים אנגליים/ספרות/נקודה/קו תחתון
+   - חותך כל URL ומחזיר רק את החלק האחרון (אם הדביקו URL) */
+function sanitizeIgUsername(value) {
+  if (!value) return '';
+  var v = String(value).trim();
+  // אם יש URL של אינסטגרם — חולצים את שם המשתמש
+  var urlMatch = v.match(/instagram\.com\/([A-Za-z0-9._]+)/i);
+  if (urlMatch) v = urlMatch[1];
+  // הסרת @ בתחילה
+  v = v.replace(/^@+/, '');
+  // הסרת רווחים
+  v = v.replace(/\s+/g, '');
+  // השארת רק תווים תקינים
+  v = v.replace(/[^A-Za-z0-9._]/g, '');
+  return v;
+}
+
+function onCaInput(kind, idx, value) {
+  // ניקוי בזמן אמת — אם המשתמש הדביק @, רווח, עברית וכו', זה נסגר אוטומטית
+  var clean = sanitizeIgUsername(value);
+  if (kind === 'my') {
+    caMyUsername = clean;
+  } else {
+    caCompetitors[idx] = clean;
+  }
+  // עדכון השדה אם השתנה (כדי לסלק תווים פסולים)
+  if (clean !== value) {
+    var input = document.getElementById('ca_' + kind + '_' + idx);
+    if (input) input.value = clean;
+  }
+  caDirty = true;
+  updateCaSaveBtn();
+}
+
+function updateCaSaveBtn() {
+  var bar = document.getElementById('competitors-analyze-save-bar');
+  if (!bar) return;
+  bar.style.display = caDirty ? 'block' : 'none';
+}
+
+function saveCompetitorsAnalyze() {
+  // ── validation ──
+  var allValues = [caMyUsername].concat(caCompetitors);
+  var hasInvalid = allValues.some(function(v){ return v !== '' && !isValidIgUsername(v); });
+  if (hasInvalid) {
+    if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+    showToast('⚠️ יש שם משתמש לא תקין', true);
+    return;
+  }
+
+  // בונים changes לפי השוואה למצב ההתחלתי
+  var changes = {};
+  // עמודה B שורה 2 — שם המשתמש שלי
+  if (caMyUsername !== caInitialMy) {
+    changes['B' + CA_DATA_START] = caMyUsername;
+  }
+  // עמודה A שורות 2–6 — מתחרים
+  for (var i = 0; i < CA_MAX_COMPETITORS; i++) {
+    var newVal     = caCompetitors[i] || '';
+    var initialVal = caInitialComps[i] || '';
+    if (newVal !== initialVal) {
+      changes['A' + (CA_DATA_START + i)] = newVal;
+    }
+  }
+
+  if (Object.keys(changes).length === 0) { caDirty = false; updateCaSaveBtn(); return; }
+
+  var btn = document.getElementById('competitors-analyze-save-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'שומר...'; }
+
+  sendSave(CA_SHEET_NAME, changes)
+    .then(function(){
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      showToast('✅ השינויים נשמרו בהצלחה!');
+      caInitialMy    = caMyUsername;
+      caInitialComps = caCompetitors.slice();
+      caDirty = false;
+      if (btn) { btn.disabled = false; btn.textContent = '💾 שמור שינויים'; }
+      updateCaSaveBtn();
+    })
+    .catch(function(err){
+      console.error('saveCompetitorsAnalyze error:', err);
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+      showToast('❌ שגיאה בשמירה, נסה שוב', true);
+      if (btn) { btn.disabled = false; btn.textContent = '💾 שמור שינויים'; }
+    });
+}
+
+/* ════════════════════ סוף עמודי אינסטגרם / מתחרים לנתח ════════════════════ */
 
 function openLongVideos() {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
