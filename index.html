@@ -1936,6 +1936,7 @@ function closeScreen(id) {
     if (spPollTimeout) { clearTimeout(spPollTimeout); spPollTimeout = null; }
     spPosts = [];
     spPollAttempts = 0;
+    spProfileUsername = '';
   }
 
   if (!document.querySelector('.screen.visible') && tg) tg.BackButton.hide();
@@ -4314,12 +4315,14 @@ var SCHEDULED_POSTS_DELETE_URL = 'https://aiagentsforsale.app.n8n.cloud/webhook/
 var spPosts = [];
 var spPollAttempts = 0;
 var spPollTimeout = null;
+var spProfileUsername = '';
 var SP_MAX_POLL_ATTEMPTS = 24;
 
 function openScheduledPosts() {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
   spPosts = [];
   spPollAttempts = 0;
+  spProfileUsername = '';
   if (spPollTimeout) { clearTimeout(spPollTimeout); spPollTimeout = null; }
 
   spShowState('sp-loading');
@@ -4334,7 +4337,27 @@ function openScheduledPosts() {
     tg.BackButton.onClick(function(){ closeScreen('screen-scheduled-posts'); });
   }
 
-  spPollForPosts();
+  // שלב 1: הבא את ה-profileUsername מהפלואו הראשי
+  spFetchProfileUsername();
+}
+
+function spFetchProfileUsername() {
+  var url = GET_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent('scheduled posts')
+    + '&logSheetId=' + encodeURIComponent(logSheetId);
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(data){
+      spProfileUsername = (data && data.profileUsername) || '';
+      // שלב 2: התחל polling לפלואו של פוסטים מתוזמנים
+      spPollForPosts();
+    })
+    .catch(function(err){
+      console.error('sp fetch profile username error:', err);
+      spShowState('sp-error');
+    });
 }
 
 function spShowState(stateId) {
@@ -4362,7 +4385,7 @@ function spHaptic(type) {
 
 function spPollForPosts() {
   spPollAttempts++;
-  var pollParams = { chatId: chatId, profileUsername: '' };
+  var pollParams = { chatId: chatId, profileUsername: spProfileUsername };
   var qs = Object.keys(pollParams).map(function(k){
     return encodeURIComponent(k) + '=' + encodeURIComponent(pollParams[k] == null ? '' : pollParams[k]);
   }).join('&');
