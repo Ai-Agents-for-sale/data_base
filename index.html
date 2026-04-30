@@ -650,6 +650,20 @@
   .caption-style-preview-btn:hover{border-color:var(--accent);color:var(--accent)}
   .caption-styles-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
+  /* ── No-Captions Button (above the grid) ── */
+  .no-captions-btn{display:flex;align-items:center;gap:12px;background:var(--bg2);border:1.5px dashed var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;cursor:pointer;-webkit-user-select:none;user-select:none;transition:border-color .15s,background .15s,transform .12s}
+  .no-captions-btn:active{transform:scale(.99)}
+  .no-captions-btn:hover{border-color:var(--text-dim)}
+  .no-captions-btn.active{border:2px solid var(--green);border-style:solid;background:rgba(22,163,74,0.08);box-shadow:0 0 0 3px rgba(22,163,74,0.15);cursor:default}
+  .no-captions-btn.active:active{transform:none}
+  .no-captions-btn.pending{opacity:.6;cursor:wait}
+  .no-captions-btn-icon{flex-shrink:0;width:42px;height:42px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px}
+  .no-captions-btn.active .no-captions-btn-icon{background:var(--green);border-color:var(--green);color:#fff;font-weight:900}
+  .no-captions-btn-text{flex:1;min-width:0}
+  .no-captions-btn-title{font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:2px}
+  .no-captions-btn.active .no-captions-btn-title{color:var(--green)}
+  .no-captions-btn-sub{font-size:11px;color:var(--text-dim);line-height:1.45}
+
   /* Dropbox folder video grid - reuses caption-style-card visuals */
   .db-folder-intro{background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.25);border-radius:var(--radius);padding:12px 14px;font-size:11px;line-height:1.7;color:var(--text-dim);margin-bottom:6px}
   .db-folder-intro strong{color:var(--text)}
@@ -3409,10 +3423,45 @@ function buildCaptionStylesBlock(includeIntro) {
     html += '</div>';
   }
 
+  // ── כפתור "בלי כתוביות בכלל" ──
+  html += renderNoCaptionsButton();
+
   html += '<div class="caption-styles-grid">';
   captionStyles.forEach(function(style){
     html += renderCaptionStyleCard(style);
   });
+  html += '</div>';
+  html += '</div>';
+  return html;
+}
+
+// מוצא את ה-row של "ללא כתוביות בכלל" בתוך captionStyles
+function findNoCaptionsRow() {
+  var found = null;
+  captionStyles.forEach(function(s){
+    var name = String(s.name || '').trim();
+    if (name === 'ללא כתוביות בכלל') found = s.row;
+  });
+  return found;
+}
+
+// בונה את כפתור "בלי כתוביות בכלל" - אותו אפקט כמו הסגנון
+function renderNoCaptionsButton() {
+  var noCapRow = findNoCaptionsRow();
+  if (noCapRow == null) return ''; // אם לא נמצא הסגנון בנתונים - לא מציגים את הכפתור
+
+  var isActive  = captionActiveRow === noCapRow;
+  var isPending = captionPendingActivation === noCapRow;
+
+  var html = '<div class="no-captions-btn' + (isActive ? ' active' : '') + (isPending ? ' pending' : '') + '"';
+  if (!isActive && !isPending) {
+    html += ' onclick="activateCaptionStyle(' + noCapRow + ')"';
+  }
+  html += '>';
+  html += '<div class="no-captions-btn-icon">' + (isActive ? '✓' : '🚫') + '</div>';
+  html += '<div class="no-captions-btn-text">';
+  html += '<div class="no-captions-btn-title">' + (isActive ? 'אין כתוביות בכלל - פעיל' : 'בלי כתוביות בכלל') + '</div>';
+  html += '<div class="no-captions-btn-sub">' + (isActive ? 'הסרטונים יערכו ללא הוספת כתוביות' : 'לחץ כדי לבטל לגמרי את הוספת הכתוביות לסרטונים') + '</div>';
   html += '</div>';
   html += '</div>';
   return html;
