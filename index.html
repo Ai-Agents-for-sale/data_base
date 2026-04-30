@@ -1855,8 +1855,30 @@ var clientName   = params.get('clientName') || '';
 var agentStatus  = params.get('agentStatus') || '';
 var modelName    = params.get('modelName') || '';
 var chatId       = params.get('chatId')    || '';
+var openParam    = params.get('open')      || '';
 /* dropboxUploadLink מגיע מ-n8n בתגובה של GET תיקיית raw */
 var dropboxUploadLink = '';
+
+// Deep linking - פתיחת מסך ספציפי לפי URL parameter
+function handleDeepLink() {
+  if (!openParam) return;
+  // המתן רגע כדי לוודא שהאפ נטען לגמרי
+  setTimeout(function(){
+    if (openParam === 'competitor-reports') {
+      // פותחים את המסך של דוחות ניתוח מתחרים שבוצעו
+      openCompetitorReports();
+    } else if (openParam === 'competitors-analyze') {
+      // פותחים את המסך של עמודי אינסטגרם לנתח
+      openCompetitorsToAnalyze();
+    } else if (openParam === 'analytics') {
+      // פותחים את מסך האנליטיקס
+      openAnalytics();
+    } else if (openParam === 'scheduled-posts') {
+      // פותחים את המסך של פוסטים מתוזמנים
+      openScheduledPosts();
+    }
+  }, 200);
+}
 
 (function initHeader(){
   if (clientName) {
@@ -1882,6 +1904,9 @@ var dropboxUploadLink = '';
     }
   }
 })();
+
+// Deep linking - אם יש פרמטר open, פתח את המסך המתאים
+handleDeepLink();
 
 var generalData    = null;
 var generalChanges = {};
