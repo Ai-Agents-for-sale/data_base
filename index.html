@@ -3344,6 +3344,9 @@ function renderVideoSettings() {
 
   html += '</div>';
 
+  // ── סגנון כתוביות (משותף, גם לקליפים) ──
+  html += buildCaptionStylesBlock(false);
+
   body.innerHTML = html;
   updateVsSaveBtn('video');
 }
@@ -3377,6 +3380,9 @@ function renderClipSettings() {
 
   html += '</div>';
 
+  // ── סגנון כתוביות (משותף, גם לסרטונים רגילים) ──
+  html += buildCaptionStylesBlock(false);
+
   body.innerHTML = html;
   updateVsSaveBtn('clip');
 }
@@ -3384,19 +3390,54 @@ function renderClipSettings() {
 /* ── Block 3: Caption Styles (rows 3-16, cols N-S) ── */
 function renderCaptionStyles() {
   var body = document.getElementById('caption-styles-body');
+  body.innerHTML = buildCaptionStylesBlock(true);
+}
 
-  var html = '';
-  html += '<div class="vs-intro">';
-  html += 'בחרו סגנון כתוביות אחד לסרטונים שלכם. הסגנון הנבחר יחול על עריכת סרטונים רגילים וגם על קליפים קצרים. <strong>רק סגנון אחד יכול להיות פעיל בכל פעם.</strong>';
-  html += '</div>';
+// בונה את ה-HTML של סקשן הכתוביות. מחזיר HTML שלם.
+// includeIntro=true להוסיף את הטקסט ההסברי (במסך העצמאי).
+// כשמוצמד למסכי עריכת סרטונים - includeIntro=false והטקסט קצר יותר.
+function buildCaptionStylesBlock(includeIntro) {
+  var html = '<div class="caption-styles-section" data-caption-section="1">';
+  if (includeIntro) {
+    html += '<div class="vs-intro">';
+    html += 'בחרו סגנון כתוביות אחד לסרטונים שלכם. הסגנון הנבחר יחול על עריכת סרטונים רגילים וגם על קליפים קצרים. <strong>רק סגנון אחד יכול להיות פעיל בכל פעם.</strong>';
+    html += '</div>';
+  } else {
+    html += '<div class="vs-section-header" style="margin-top:18px;padding-top:14px;border-top:1px solid var(--border)">';
+    html += '<div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:6px">🎨 סגנון כתוביות</div>';
+    html += '<div style="font-size:11.5px;color:var(--text-dim);line-height:1.55">בחירת סגנון כתוביות לסרטונים. הסגנון חל גם על סרטונים רגילים וגם על קליפים. רק סגנון אחד פעיל בכל פעם.</div>';
+    html += '</div>';
+  }
 
   html += '<div class="caption-styles-grid">';
   captionStyles.forEach(function(style){
     html += renderCaptionStyleCard(style);
   });
   html += '</div>';
+  html += '</div>';
+  return html;
+}
 
-  body.innerHTML = html;
+// מרענן את כל סקשני הכתוביות בכל המסכים שכרגע מוצגים
+function refreshAllCaptionSections() {
+  // המסך העצמאי
+  var standalone = document.getElementById('caption-styles-body');
+  if (standalone && document.getElementById('screen-caption-styles').classList.contains('visible')) {
+    standalone.innerHTML = buildCaptionStylesBlock(true);
+  }
+  // הסקשנים המוטמעים בעריכת סרטונים וקליפים
+  ['video-settings-body','clip-settings-body'].forEach(function(id){
+    var body = document.getElementById(id);
+    if (!body) return;
+    var section = body.querySelector('[data-caption-section="1"]');
+    if (section) {
+      // יוצר אלמנט חדש מה-HTML, מחליף את הסקשן הקיים
+      var temp = document.createElement('div');
+      temp.innerHTML = buildCaptionStylesBlock(false);
+      var newSection = temp.querySelector('[data-caption-section="1"]');
+      if (newSection) section.replaceWith(newSection);
+    }
+  });
 }
 
 function renderCaptionStyleCard(style) {
@@ -3479,7 +3520,7 @@ function toggleCaptionVideo(videoEl, e) {
 function activateCaptionStyle(newRow) {
   if (captionPendingActivation) return; // already saving
   captionPendingActivation = newRow;
-  renderCaptionStyles();
+  refreshAllCaptionSections();
 
   var oldRow = captionActiveRow;
   var changes = {};
@@ -3509,13 +3550,13 @@ function activateCaptionStyle(newRow) {
       captionActiveRow = newRow;
       captionPendingActivation = null;
       showToast('✅ הסגנון הופעל בהצלחה!');
-      renderCaptionStyles();
+      refreshAllCaptionSections();
     })
     .catch(function(err){
       console.error('activateCaptionStyle error:', err);
       captionPendingActivation = null;
       showToast('❌ שגיאה בהפעלת הסגנון', true);
-      renderCaptionStyles();
+      refreshAllCaptionSections();
     });
 }
 
@@ -4726,6 +4767,20 @@ function spOpenEditModal(idx) {
     spSendAction('edit', idx, { newScheduledAt: newScheduledAt });
     spCloseModal();
     showToast('התזמון עודכן');
+
+    // עדכון מקומי של הפוסט - שינוי השעה/תאריך יוצג מיד באפ
+    var post = spPosts.find(function(p){ return p._idx === idx; });
+    if (post) {
+      // original_scheduled_str בפורמט "YYYY-MM-DDTHH:MM" (ללא timezone)
+      post.original_scheduled_str = newDate + 'T' + newTime;
+      // scheduled_date בפורמט UTC
+      try {
+        post.scheduled_date = new Date(newScheduledAt).toISOString().replace(/\.\d{3}Z$/, '');
+      } catch(e) {
+        post.scheduled_date = newDate + 'T' + newTime + ':00';
+      }
+      spRenderPosts();
+    }
   });
 }
 
