@@ -4469,11 +4469,12 @@ function spPlatformKey(name) {
 }
 
 function spParseSchedule(post) {
-  // original_scheduled_str format: "2026-04-28T20:23"
-  // scheduled_date format (UTC): "2026-04-28T17:23:00"
-  var orig = post.original_scheduled_str || '';
+  // scheduled_date - הערך העדכני אחרי כל עריכה (פורמט: "2026-05-06T08:00:00")
+  // original_scheduled_str - הערך המקורי בעת התזמון הראשון (לא מתעדכן בעריכות)
+  // לכן מעדיפים את scheduled_date כדי לראות את התזמון הנוכחי
   var utc  = post.scheduled_date || '';
-  var dateStr = orig || utc;
+  var orig = post.original_scheduled_str || '';
+  var dateStr = utc || orig;
 
   if (!dateStr) {
     return { isScheduled:false, dateKey:'', date:'', time:'', label:'מיידי' };
@@ -4771,14 +4772,10 @@ function spOpenEditModal(idx) {
     // עדכון מקומי של הפוסט - שינוי השעה/תאריך יוצג מיד באפ
     var post = spPosts.find(function(p){ return p._idx === idx; });
     if (post) {
-      // original_scheduled_str בפורמט "YYYY-MM-DDTHH:MM" (ללא timezone)
+      // scheduled_date - הפלואו מחזיר אותו בזמן ישראלי (פורמט "YYYY-MM-DDTHH:MM:00")
+      // לכן שומרים אותו ישירות מהקלט של המשתמש ללא המרה
+      post.scheduled_date = newDate + 'T' + newTime + ':00';
       post.original_scheduled_str = newDate + 'T' + newTime;
-      // scheduled_date בפורמט UTC
-      try {
-        post.scheduled_date = new Date(newScheduledAt).toISOString().replace(/\.\d{3}Z$/, '');
-      } catch(e) {
-        post.scheduled_date = newDate + 'T' + newTime + ':00';
-      }
       spRenderPosts();
     }
   });
