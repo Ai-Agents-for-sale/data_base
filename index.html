@@ -982,6 +982,13 @@
       <div class="nav-card-arrow">‹</div>
     </div>
     <div class="divider"></div>
+    <div class="section-group-label">דוחות מתחרים וצמיחה</div>
+    <div class="nav-card pink" onclick="openScreen('screen-competitors','')">
+      <div class="nav-card-icon">📊</div>
+      <div class="nav-card-body"><div class="nav-card-title-row"><div class="nav-card-title">דוחות מתחרים וצמיחה</div></div><div class="nav-card-desc-compact">עמודים לניתוח, דוחות שבועיים, אנליטיקס</div></div>
+      <div class="nav-card-arrow">‹</div>
+    </div>
+    <div class="divider"></div>
     <div class="section-group-label">תוכן ופוסטים</div>
     <div class="nav-card purple" onclick="openScreen('screen-carousel','הגדרות לפוסט קרוסלה')">
       <div class="nav-card-icon">🎨</div>
@@ -1003,13 +1010,6 @@
     <div class="nav-card orange" onclick="openScreen('screen-videos','')">
       <div class="nav-card-icon">🎬</div>
       <div class="nav-card-body"><div class="nav-card-title-row"><div class="nav-card-title">סרטונים והגדרות עריכה</div></div><div class="nav-card-desc-compact">הגדרות לסגנון עריכה, תיקיות סרטונים, סרטונים לערוך לקליפים</div></div>
-      <div class="nav-card-arrow">‹</div>
-    </div>
-    <div class="divider"></div>
-    <div class="section-group-label">ניתוח ודוחות</div>
-    <div class="nav-card pink" onclick="openScreen('screen-competitors','')">
-      <div class="nav-card-icon">📊</div>
-      <div class="nav-card-body"><div class="nav-card-title-row"><div class="nav-card-title">מתחרים ודוחות</div></div><div class="nav-card-desc-compact">עמודים לניתוח, דוחות שבועיים</div></div>
       <div class="nav-card-arrow">‹</div>
     </div>
   </div>
@@ -1410,7 +1410,7 @@
   </div>
 </div>
 <div class="screen" id="screen-competitors">
-  <div class="screen-topbar"><div class="screen-back" onclick="closeScreen('screen-competitors')">›</div><div class="screen-topbar-icon">📊</div><div class="screen-topbar-title">מתחרים ודוחות</div></div>
+  <div class="screen-topbar"><div class="screen-back" onclick="closeScreen('screen-competitors')">›</div><div class="screen-topbar-icon">📊</div><div class="screen-topbar-title">דוחות מתחרים וצמיחה</div></div>
   <div class="screen-body">
     <div class="nav-card pink" onclick="openCompetitorsToAnalyze()">
       <div class="nav-card-icon">📱</div>
@@ -5076,34 +5076,49 @@ function anFetchProfile() {
     + '&sheet='      + encodeURIComponent('scheduled posts')
     + '&logSheetId=' + encodeURIComponent(logSheetId);
 
+  console.log('[ANALYTICS] Step 1 - Fetching profile from:', url);
+
   fetch(url)
-    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(r){
+      console.log('[ANALYTICS] Step 1 response status:', r.status);
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      return r.json();
+    })
     .then(function(data){
+      console.log('[ANALYTICS] Step 1 response data:', data);
       anProfile = (data && data.profileUsername) || '';
+      console.log('[ANALYTICS] Profile extracted:', anProfile);
       if (!anProfile) {
         anShowError('לא נמצא שם פרופיל');
         return;
       }
       // שלב 2: התחל polling לפלואו של אנליטיקס
+      console.log('[ANALYTICS] Step 2 - Starting polling to:', ANALYTICS_POLL_URL);
       anPollOnce();
     })
     .catch(function(err){
-      console.error('an fetch profile error:', err);
+      console.error('[ANALYTICS] Step 1 error:', err);
       anShowError('שגיאה בקבלת פרטי הפרופיל');
     });
 }
 
 function anPollOnce() {
   anPollCount++;
+  console.log('[ANALYTICS] Poll attempt', anPollCount, '/', AN_MAX_POLLS);
   if (anPollCount > AN_MAX_POLLS) {
     anShowError('זמן ההמתנה פג. נסה שוב מאוחר יותר.');
     return;
   }
   var url = ANALYTICS_POLL_URL + '?profile=' + encodeURIComponent(anProfile);
+  console.log('[ANALYTICS] Polling URL:', url);
 
   fetch(url, { method: 'GET', cache: 'no-store' })
-    .then(function(r){ return r.json(); })
+    .then(function(r){
+      console.log('[ANALYTICS] Poll response status:', r.status);
+      return r.json();
+    })
     .then(function(resp){
+      console.log('[ANALYTICS] Poll response:', resp);
       if (resp && resp.ready && resp.data) {
         anAllData = resp.data;
         anRender();
@@ -5112,7 +5127,7 @@ function anPollOnce() {
       }
     })
     .catch(function(err){
-      console.error('an polling error:', err);
+      console.error('[ANALYTICS] Poll error:', err);
       anPollTimeout = setTimeout(anPollOnce, 3000);
     });
 }
