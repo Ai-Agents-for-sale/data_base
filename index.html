@@ -1959,6 +1959,9 @@ function handleDeepLink() {
     } else if (openParam === 'long-videos') {
       // פותחים את המסך של סרטונים ארוכים לערוך לקליפים
       openLongVideos();
+    } else if (openParam === 'raw-takes') {
+      // פותחים את תיקיית סרטוני גלם טייק יחיד (Dropbox)
+      openDropboxFolder('raw');
     }
   }, 200);
 }
@@ -1975,9 +1978,14 @@ function handleDeepLink() {
   var chip = document.getElementById('agentStatusChip');
   var txt  = document.getElementById('agentStatusText');
   if (chip && txt) {
-    var isActive = agentStatus === 'פעיל' || (agentStatus && agentStatus.indexOf('פעיל') === 0 && agentStatus.indexOf('לא') !== 0);
-    if (isActive) { chip.classList.remove('inactive'); txt.textContent = 'הסוכן פעיל'; }
-    else          { chip.classList.add('inactive');    txt.textContent = 'הסוכן לא פעיל'; }
+    if (!agentStatus) {
+      // אם לא הועבר agentStatus כלל - הסתר את ה-chip
+      chip.style.display = 'none';
+    } else {
+      var isActive = agentStatus === 'פעיל' || (agentStatus && agentStatus.indexOf('פעיל') === 0 && agentStatus.indexOf('לא') !== 0);
+      if (isActive) { chip.classList.remove('inactive'); txt.textContent = 'הסוכן פעיל'; }
+      else          { chip.classList.add('inactive');    txt.textContent = 'הסוכן לא פעיל'; }
+    }
   }
   if (modelName) {
     var modelChip = document.getElementById('activeModelChip');
