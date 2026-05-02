@@ -773,8 +773,8 @@
   .sp2-folder-card-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}
   .sp2-folder-card-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#ec4899,#a855f7);display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;flex-shrink:0}
   .sp2-folder-card-title{font-size:14px;font-weight:800;color:var(--text);flex:1}
-  .sp2-folder-card-link{font-size:11px;color:var(--accent);text-decoration:none;font-weight:700;background:var(--accent-s);padding:5px 9px;border-radius:6px;border:1px solid var(--accent);cursor:pointer;-webkit-user-select:none;user-select:none}
-  .sp2-folder-card-link:active{opacity:.85}
+  .sp2-folder-card-link{font-size:11px;color:var(--accent);text-decoration:none;font-weight:700;background:var(--accent-s);padding:5px 9px;border-radius:6px;border:1px solid var(--accent);cursor:pointer;-webkit-user-select:none;user-select:none;font-family:'Heebo',sans-serif;display:inline-flex;align-items:center;gap:4px}
+  .sp2-folder-card-link:active{opacity:.85;transform:scale(.97)}
   .sp2-folder-field{margin-bottom:12px}
   .sp2-folder-field:last-child{margin-bottom:0}
   .sp2-folder-field-label{font-size:11.5px;font-weight:700;color:var(--text);margin-bottom:4px}
@@ -5868,7 +5868,7 @@ function sp2BuildFolderCard(cfg) {
   html += '<div class="sp2-folder-card-icon">⭐</div>';
   html += '<div class="sp2-folder-card-title">' + escapeHtml(cfg.topic) + '</div>';
   if (folderId) {
-    html += '<a class="sp2-folder-card-link" onclick="sp2OpenFolder(\'' + escapeAttr(folderId) + '\',\'' + escapeAttr(cfg.topic) + '\')">📂 פתח תיקייה</a>';
+    html += '<button type="button" class="sp2-folder-card-link" onclick="sp2OpenFolder(\'' + escapeAttr(folderId) + '\',\'' + escapeAttr(cfg.topic) + '\')">📂 פתח תיקייה</button>';
   }
   html += '</div>';
 
@@ -5953,6 +5953,14 @@ function sp2SaveGuidance(row) {
 }
 
 function sp2OpenFolder(folderId, displayTitle) {
+  console.log('[SP2] sp2OpenFolder called', { folderId: folderId, displayTitle: displayTitle });
+
+  if (!folderId) {
+    console.error('[SP2] No folderId!');
+    showToast('שגיאה: אין מזהה תיקייה');
+    return;
+  }
+
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 
   // נקה את ה-folderStack הקיים (אנחנו לא במסך materials)
@@ -5965,18 +5973,25 @@ function sp2OpenFolder(folderId, displayTitle) {
   }];
 
   var el = document.getElementById('screen-folder');
+  if (!el) {
+    console.error('[SP2] screen-folder element not found!');
+    return;
+  }
+  console.log('[SP2] screen-folder found, adding visible class');
   el.classList.add('visible');
   el.scrollTop = 0;
 
   selectMode = false;
   selectedFileIds = {};
 
-  document.getElementById('folder-title').textContent = displayTitle || 'תיקייה';
-  document.getElementById('folder-icon').textContent  = '⭐';
+  var titleEl = document.getElementById('folder-title');
+  var iconEl  = document.getElementById('folder-icon');
+  if (titleEl) titleEl.textContent = displayTitle || 'תיקייה';
+  if (iconEl)  iconEl.textContent  = '⭐';
   if (typeof updateFolderTopbar === 'function') updateFolderTopbar();
 
   var body = document.getElementById('folder-body');
-  body.innerHTML = '<div class="screen-loading" id="folder-loading"><div class="spinner"></div><div>טוען חומרים...</div></div>';
+  if (body) body.innerHTML = '<div class="screen-loading" id="folder-loading"><div class="spinner"></div><div>טוען חומרים...</div></div>';
 
   // Override של ה-back button - שיחזור למסך פינת הוכחות חברתיות
   if (tg) {
@@ -5987,6 +6002,7 @@ function sp2OpenFolder(folderId, displayTitle) {
     });
   }
 
+  console.log('[SP2] calling fetchFolderContents');
   fetchFolderContents('sub', folderId);
 }
 
