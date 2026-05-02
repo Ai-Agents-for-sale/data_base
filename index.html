@@ -728,6 +728,62 @@
   .social-proof-cta-sub{font-size:11.5px;color:var(--text-dim);line-height:1.45}
   .social-proof-cta-arrow{flex-shrink:0;font-size:18px;color:#ec4899;font-weight:700}
 
+  /* ── Social Proof Corner Screen ── */
+  .sp2-info-card{background:linear-gradient(135deg,rgba(236,72,153,0.08),rgba(168,85,247,0.08));border:1px solid rgba(236,72,153,0.3);border-radius:var(--radius);padding:14px 16px;margin-bottom:14px}
+  .sp2-info-title{font-size:14px;font-weight:800;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .sp2-info-body{font-size:12px;color:var(--text-dim);line-height:1.65}
+  .sp2-info-body strong{color:var(--text)}
+  .sp2-examples{display:flex;flex-direction:column;gap:14px;margin:14px 0}
+  .sp2-example{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+  .sp2-example-caption{padding:10px 12px;font-size:11.5px;color:var(--text-dim);line-height:1.5;border-bottom:1px solid var(--border);background:var(--bg3)}
+  .sp2-example-img{display:block;width:100%;max-height:280px;object-fit:cover;background:#000}
+
+  /* tabs */
+  .sp2-tabs{display:flex;gap:6px;margin-bottom:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px}
+  .sp2-tab{flex:1;background:transparent;color:var(--text-dim);border:none;padding:10px 8px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;border-radius:7px;cursor:pointer;-webkit-user-select:none;user-select:none;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:6px}
+  .sp2-tab:active{transform:scale(.98)}
+  .sp2-tab.active{background:var(--accent);color:#fff;box-shadow:0 2px 8px var(--accent-s)}
+
+  /* sections */
+  .sp2-section-intro{font-size:11.5px;color:var(--text-dim);line-height:1.6;padding:8px 4px 12px}
+
+  /* schedule rows */
+  .sp2-schedule-day{margin-bottom:10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+  .sp2-day-header{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--bg3);border-bottom:1px solid var(--border)}
+  .sp2-day-name{font-size:13px;font-weight:800;color:var(--text)}
+  .sp2-day-count{margin-inline-start:auto;font-size:11px;color:var(--text-dim);font-weight:600}
+  .sp2-row{padding:12px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .sp2-row:last-child{border-bottom:none}
+  .sp2-field{display:flex;flex-direction:column;gap:4px}
+  .sp2-field-label{font-size:10px;font-weight:700;color:var(--text-dimmer);letter-spacing:.5px}
+  .sp2-select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:9px 10px;font-family:'Heebo',sans-serif;font-size:12px;color:var(--text);outline:none;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 8px center;background-size:14px;padding-left:26px}
+  .sp2-select:focus{border-color:var(--accent)}
+  .sp2-select.status-active{background-color:rgba(34,197,94,0.12);border-color:rgba(34,197,94,0.45);color:#86efac;font-weight:700}
+  .sp2-select.status-inactive{background-color:rgba(239,68,68,0.10);border-color:rgba(239,68,68,0.35);color:#fca5a5}
+  .sp2-row-actions{display:flex;justify-content:flex-end;margin-top:6px}
+  .sp2-row-delete{background:transparent;border:none;color:var(--text-dimmer);font-size:11px;font-weight:600;cursor:pointer;padding:4px 8px}
+  .sp2-row-delete:active{color:var(--red)}
+  .sp2-day-add{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;font-size:12px;font-weight:700;color:var(--accent);background:var(--bg2);border:none;border-top:1px dashed var(--border);width:100%;cursor:pointer;font-family:'Heebo',sans-serif}
+  .sp2-day-add:active{background:var(--bg3)}
+
+  /* folder configs */
+  .sp2-folder-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px}
+  .sp2-folder-card-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+  .sp2-folder-card-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#ec4899,#a855f7);display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;flex-shrink:0}
+  .sp2-folder-card-title{font-size:14px;font-weight:800;color:var(--text);flex:1}
+  .sp2-folder-card-link{font-size:11px;color:var(--accent);text-decoration:none;font-weight:700;background:var(--accent-s);padding:5px 9px;border-radius:6px;border:1px solid var(--accent);cursor:pointer;-webkit-user-select:none;user-select:none}
+  .sp2-folder-card-link:active{opacity:.85}
+  .sp2-folder-field{margin-bottom:12px}
+  .sp2-folder-field:last-child{margin-bottom:0}
+  .sp2-folder-field-label{font-size:11.5px;font-weight:700;color:var(--text);margin-bottom:4px}
+  .sp2-folder-field-sub{font-size:10.5px;color:var(--text-dim);line-height:1.45;margin-bottom:6px}
+  .sp2-folder-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:9px 10px;font-family:'Heebo',sans-serif;font-size:12px;color:var(--text);outline:none;resize:vertical;min-height:60px;line-height:1.5;direction:rtl}
+  .sp2-folder-textarea:focus{border-color:var(--accent)}
+  .sp2-folder-save-btn{display:inline-flex;align-items:center;gap:5px;background:var(--accent);color:#fff;font-family:'Heebo',sans-serif;font-size:11.5px;font-weight:700;padding:7px 13px;border-radius:6px;border:none;cursor:pointer;margin-top:6px}
+  .sp2-folder-save-btn:active{transform:scale(.97)}
+  .sp2-folder-save-btn.saved{background:var(--green)}
+  .sp2-folder-save-btn:disabled{opacity:.5;cursor:wait}
+
   /* Dropbox folder video grid - reuses caption-style-card visuals */
   .db-folder-intro{background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.25);border-radius:var(--radius);padding:12px 14px;font-size:11px;line-height:1.7;color:var(--text-dim);margin-bottom:6px}
   .db-folder-intro strong{color:var(--text)}
@@ -1198,15 +1254,15 @@
       <div class="nav-card-arrow">‹</div>
     </div>
 
-    <div class="nav-card gray disabled">
+    <div class="nav-card pink" onclick="openSocialProofCorner()">
       <div class="nav-card-icon">⭐</div>
       <div class="nav-card-body">
         <div class="nav-card-title-row">
-          <div class="nav-card-title">פינת ביקורות/עדויות</div>
-          <div class="nav-card-badge">בבנייה</div>
+          <div class="nav-card-title">פינת הוכחות חברתיות</div>
         </div>
-        <div class="nav-card-desc">ניהול ביקורות ועדויות של לקוחות</div>
+        <div class="nav-card-desc">פרסום אוטומטי של עדויות, עבודות ותוצאות</div>
       </div>
+      <div class="nav-card-arrow">‹</div>
     </div>
   </div>
 </div>
@@ -1557,6 +1613,20 @@
     <div id="an-content" style="display:none">
       <div class="an-tabs" id="an-tabs"></div>
       <div id="an-platform-content"></div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-social-proof">
+  <div class="screen-topbar">
+    <div class="screen-back" onclick="closeScreen('screen-social-proof')">›</div>
+    <div class="screen-topbar-icon">⭐</div>
+    <div class="screen-topbar-title">פינת הוכחות חברתיות</div>
+  </div>
+  <div class="screen-body screen-body-no-save" id="social-proof-body">
+    <div class="screen-loading" id="sp2-loading">
+      <div class="spinner"></div>
+      <div>טוען נתונים...</div>
     </div>
   </div>
 </div>
@@ -2078,6 +2148,11 @@ function closeScreen(id) {
     anActivePlatform = null;
     anPollCount = 0;
     anProfile = '';
+  }
+  if (id === 'screen-social-proof') {
+    sp2Stories = {};
+    sp2FolderConfigs = [];
+    sp2ActiveTab = 'schedules';
   }
 
   if (!document.querySelector('.screen.visible') && tg) tg.BackButton.hide();
@@ -5370,11 +5445,434 @@ function anDrawChart(timeseries) {
 /* ════════════════════ סוף אנליטיקס ════════════════════ */
 
 /* ════════════════════ פינת הוכחות חברתיות ════════════════════ */
-// Placeholder - יוטמע בשלב 3
+
+var SP2_SHEET_NAME = 'פינת תמונות כתוכן';
+var SP2_DAYS = [
+  { key: 'sunday',    name: 'ראשון' },
+  { key: 'monday',    name: 'שני' },
+  { key: 'tuesday',   name: 'שלישי' },
+  { key: 'wednesday', name: 'רביעי' },
+  { key: 'thursday',  name: 'חמישי' },
+  { key: 'friday',    name: 'שישי' },
+  { key: 'saturday',  name: 'שבת' }
+];
+var SP2_DAY_KEY_TO_SHEET = {
+  sunday:'Sunday', monday:'Monday', tuesday:'Tuesday',
+  wednesday:'Wednesday', thursday:'Thursday', friday:'Friday', saturday:'Saturday'
+};
+
+// אופציות לdropdown של "סוג התיקייה"
+var SP2_FOLDER_OPTIONS = [
+  { value: '', label: '— בחר תיקייה —' },
+  { value: 'ביקורות / עידויות של לקוחות', label: 'עדויות / ביקורות' },
+  { value: 'עבודות / תוצאות',              label: 'עבודות / תוצאות' },
+  { value: 'מותאם אישית 1',                label: 'מותאם אישית 1' },
+  { value: 'מותאם אישית 2',                label: 'מותאם אישית 2' }
+];
+
+// שעות זמינות (בכל חצי שעה - אם יש לך תפריט מותאם בגיליון אפשר לשנות)
+var SP2_TIME_OPTIONS = (function(){
+  var arr = [{ value: '', label: '— בחר שעה —' }];
+  for (var h = 6; h <= 23; h++) {
+    for (var m = 0; m < 60; m += 15) {
+      var hh = (h < 10 ? '0' : '') + h;
+      var mm = (m < 10 ? '0' : '') + m;
+      var t  = hh + ':' + mm;
+      arr.push({ value: t, label: t });
+    }
+  }
+  return arr;
+})();
+
+var SP2_FORMAT_OPTIONS = [
+  { value: '', label: '—' },
+  { value: 'סטורי', label: 'סטורי' },
+  { value: 'פוסט',  label: 'פוסט' }
+];
+
+var SP2_STATUS_OPTIONS = [
+  { value: 'לא פעיל', label: 'לא פעיל' },
+  { value: 'פעיל',    label: 'פעיל' }
+];
+
+var SP2_WRITE_MODE_OPTIONS = [
+  { value: '', label: '— בחר —' },
+  { value: 'שאני אגיד לו מראש מה לרשום בהתאם לתמונה', label: 'אני אגיד לו מראש מה לרשום' },
+  { value: 'שירשום בעצמו וישלח לאישור',                 label: 'שירשום בעצמו וישלח לאישור' }
+];
+
+// תמונות דוגמה דרך Cloudinary
+var SP2_EXAMPLE_IMAGES = [
+  {
+    src: 'https://res.cloudinary.com/dpe5hzwcg/image/fetch/f_auto,q_auto,w_600/https%3A%2F%2Fdrive.google.com%2Fuc%3Fexport%3Dview%26id%3D1JbbRBjrPX3jPsE4y6dp8AAIgAi6Hn0r4',
+    caption: 'דוגמה לתמונה של תוצאות מקמפיין שהבאנו ללקוח. הסוכן לקח את התמונה מתיקיית "עבודות / תוצאות", ניתח אותה, רשם משפט שקשור אליה, והעלה לסטורי.'
+  },
+  {
+    src: 'https://res.cloudinary.com/dpe5hzwcg/image/fetch/f_auto,q_auto,w_600/https%3A%2F%2Fdrive.google.com%2Fuc%3Fexport%3Dview%26id%3D1PAhJAZImeJU5PEH5YvN72YaNrPJ-QDr_',
+    caption: 'דוגמה לתמונה של עדות וואטסאפ. הסוכן לקח את התמונה מתיקיית "עדויות", ניתח אותה ורשם משפט מתאים שמעצים אותה.'
+  }
+];
+
+// state
+var sp2Stories = {};            // לפי יום: arrays של פינות
+var sp2FolderConfigs = [];      // 4 הגדרות תיקיות
+var sp2ActiveTab = 'schedules';  // 'schedules' | 'configs'
+
 function openSocialProofCorner() {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-  showToast('פינה זו תהיה זמינה בקרוב');
+
+  var el = document.getElementById('screen-social-proof');
+  el.classList.add('visible');
+  el.scrollTop = 0;
+  if (tg) {
+    tg.BackButton.show();
+    tg.BackButton.offClick();
+    tg.BackButton.onClick(function(){ closeScreen('screen-social-proof'); });
+  }
+
+  sp2Stories = {};
+  sp2FolderConfigs = [];
+  sp2ActiveTab = 'schedules';
+
+  var body = document.getElementById('social-proof-body');
+  body.innerHTML = '<div class="screen-loading" id="sp2-loading"><div class="spinner"></div><div>טוען נתונים...</div></div>';
+
+  sp2FetchData();
 }
+
+function sp2FetchData() {
+  var url = GET_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent('פינות קבועות')
+    + '&logSheetId=' + encodeURIComponent(logSheetId)
+    + '&sheetName='  + encodeURIComponent(SP2_SHEET_NAME);
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(data){
+      sp2Stories = (data && data.stories) || {};
+      sp2FolderConfigs = (data && data.folderConfigs) || [];
+      sp2Render();
+    })
+    .catch(function(err){
+      console.error('sp2 fetch error:', err);
+      var body = document.getElementById('social-proof-body');
+      body.innerHTML =
+        '<div class="empty-state">' +
+          '<div class="empty-state-icon">⚠️</div>' +
+          '<div class="empty-state-text">שגיאה בטעינת הנתונים</div>' +
+          '<div class="empty-state-sub">נסה לרענן את האפליקציה</div>' +
+        '</div>';
+    });
+}
+
+function sp2Render() {
+  var body = document.getElementById('social-proof-body');
+  var html = '';
+
+  // ── Info card with explanation + examples ──
+  html += '<div class="sp2-info-card">';
+  html += '<div class="sp2-info-title">⭐ איך הפינה עובדת?</div>';
+  html += '<div class="sp2-info-body">';
+  html += 'פינה זו עוזרת לכם לפרסם תמונות של <strong>הוכחות חברתיות</strong> בקלות ובאופן קבוע (עדויות וואטסאפ, עבודות, תוצאות וכו\').<br><br>';
+  html += 'תוכלו להגדיר ימים ושעות שבהם הסוכן יגש לאחת מ-4 התיקיות (עדויות / עבודות / מותאם 1 / מותאם 2), יבחר תמונה רנדומלית, ינתח אותה, יכתוב משפט רלוונטי וישלח אליכם לאישור.<br><br>';
+  html += '<strong>חשוב:</strong> הפינה תפעל רק לאחר שהעליתם תמונות לפחות לתיקייה אחת.';
+  html += '</div>';
+  html += '</div>';
+
+  // ── Examples ──
+  html += '<div class="sp2-examples">';
+  SP2_EXAMPLE_IMAGES.forEach(function(ex){
+    html += '<div class="sp2-example">';
+    html += '<div class="sp2-example-caption">' + escapeHtml(ex.caption) + '</div>';
+    html += '<img class="sp2-example-img" src="' + escapeAttr(ex.src) + '" alt="" referrerpolicy="no-referrer" loading="lazy">';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // ── Tabs ──
+  html += '<div class="sp2-tabs">';
+  html += '<button class="sp2-tab' + (sp2ActiveTab === 'schedules' ? ' active' : '') + '" onclick="sp2SwitchTab(\'schedules\')">';
+  html += '<span>🕐</span><span>הגדרת תזמונים</span>';
+  html += '</button>';
+  html += '<button class="sp2-tab' + (sp2ActiveTab === 'configs' ? ' active' : '') + '" onclick="sp2SwitchTab(\'configs\')">';
+  html += '<span>⚙️</span><span>הגדרות תיקיות</span>';
+  html += '</button>';
+  html += '</div>';
+
+  // ── Tab content ──
+  if (sp2ActiveTab === 'schedules') {
+    html += sp2RenderSchedules();
+  } else {
+    html += sp2RenderConfigs();
+  }
+
+  body.innerHTML = html;
+}
+
+function sp2SwitchTab(tab) {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+  sp2ActiveTab = tab;
+  sp2Render();
+}
+
+// ─── Tab 1: Schedules ───
+function sp2RenderSchedules() {
+  var html = '';
+  html += '<div class="sp2-section-intro">';
+  html += 'בכל יום ניתן להגדיר עד 3 פינות. בחרו <strong>שעה</strong>, <strong>תיקייה</strong> שממנה הסוכן יבחר תמונה רנדומלית, <strong>פורמט</strong> (סטורי/פוסט) והעבירו את הסטטוס ל"פעיל".';
+  html += '</div>';
+
+  SP2_DAYS.forEach(function(day){
+    var rows = sp2Stories[day.key] || [];
+    var activeCount = rows.filter(function(r){ return r.status === 'פעיל'; }).length;
+
+    html += '<div class="sp2-schedule-day">';
+    html += '<div class="sp2-day-header">';
+    html += '<div class="sp2-day-name">' + escapeHtml(day.name) + '</div>';
+    html += '<div class="sp2-day-count">' + (activeCount > 0 ? activeCount + ' פעילות' : 'אין פעילות') + '</div>';
+    html += '</div>';
+
+    if (rows.length === 0) {
+      html += '<div style="padding:14px;text-align:center;font-size:12px;color:var(--text-dimmer)">אין פינות מוגדרות ביום זה</div>';
+    } else {
+      rows.forEach(function(row, idx){
+        html += sp2BuildScheduleRow(day.key, idx, row);
+      });
+    }
+
+    html += '</div>';
+  });
+
+  return html;
+}
+
+function sp2BuildScheduleRow(dayKey, idx, row) {
+  var html = '';
+  html += '<div class="sp2-row" data-day="' + escapeAttr(dayKey) + '" data-idx="' + idx + '">';
+
+  // שעה
+  html += '<div class="sp2-field">';
+  html += '<div class="sp2-field-label">שעה</div>';
+  html += sp2BuildSelect(SP2_TIME_OPTIONS, row.time, 'sp2UpdateRow(\'' + escapeAttr(dayKey) + '\',' + idx + ',\'time\',this.value)');
+  html += '</div>';
+
+  // סוג תיקייה
+  html += '<div class="sp2-field">';
+  html += '<div class="sp2-field-label">תיקייה</div>';
+  html += sp2BuildSelect(SP2_FOLDER_OPTIONS, row.folder, 'sp2UpdateRow(\'' + escapeAttr(dayKey) + '\',' + idx + ',\'folder\',this.value)');
+  html += '</div>';
+
+  // פורמט
+  html += '<div class="sp2-field">';
+  html += '<div class="sp2-field-label">פורמט</div>';
+  html += sp2BuildSelect(SP2_FORMAT_OPTIONS, row.format, 'sp2UpdateRow(\'' + escapeAttr(dayKey) + '\',' + idx + ',\'format\',this.value)');
+  html += '</div>';
+
+  // סטטוס
+  html += '<div class="sp2-field">';
+  html += '<div class="sp2-field-label">סטטוס</div>';
+  var statusClass = row.status === 'פעיל' ? 'status-active' : 'status-inactive';
+  html += sp2BuildSelect(SP2_STATUS_OPTIONS, row.status, 'sp2UpdateRow(\'' + escapeAttr(dayKey) + '\',' + idx + ',\'status\',this.value)', statusClass);
+  html += '</div>';
+
+  html += '</div>';
+  return html;
+}
+
+function sp2BuildSelect(options, currentValue, onchangeJs, extraClass) {
+  var cls = 'sp2-select' + (extraClass ? ' ' + extraClass : '');
+  var html = '<select class="' + cls + '" onchange="' + onchangeJs + '">';
+  options.forEach(function(opt){
+    var sel = String(opt.value) === String(currentValue || '') ? ' selected' : '';
+    html += '<option value="' + escapeAttr(opt.value) + '"' + sel + '>' + escapeHtml(opt.label) + '</option>';
+  });
+  html += '</select>';
+  return html;
+}
+
+function sp2UpdateRow(dayKey, idx, field, newValue) {
+  var rows = sp2Stories[dayKey] || [];
+  var row = rows[idx];
+  if (!row) return;
+
+  var oldValue = row[field];
+  row[field] = newValue;
+
+  // map field → column letter in sheet
+  // עמודות: A=יום, G=שעה, H=סוג, I=פורמט, J=סטטוס
+  var COL_MAP = { time: 'G', folder: 'H', format: 'I', status: 'J' };
+  var col = COL_MAP[field];
+  if (!col || !row.row) return;
+
+  var cell = col + row.row;
+  sp2SaveCells([{ cell: cell, value: newValue }], function(success){
+    if (!success) {
+      // rollback UI
+      row[field] = oldValue;
+      sp2Render();
+      showToast('❌ שגיאה בשמירה, נסה שוב', true);
+    } else {
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      // עדכון מקומי של ה-counter
+      sp2UpdateDayCounter(dayKey);
+    }
+  });
+}
+
+function sp2UpdateDayCounter(dayKey) {
+  var rows = sp2Stories[dayKey] || [];
+  var activeCount = rows.filter(function(r){ return r.status === 'פעיל'; }).length;
+  var dayContainer = document.querySelector('.sp2-schedule-day .sp2-day-name');
+  // פשוט יותר: רענון מלא של הטאב הנוכחי
+  // (לא מרענן אם הסטטוס לא השתנה)
+}
+
+// ─── Tab 2: Folder Configs ───
+function sp2RenderConfigs() {
+  var html = '';
+  html += '<div class="sp2-section-intro">';
+  html += 'הגדירו עבור כל תיקייה את <strong>אופן הכתיבה</strong> ואת <strong>הכוונת המשפטים</strong> שהסוכן ירשום. תוכלו גם להיכנס ישירות לתיקייה כדי להעלות תמונות.';
+  html += '</div>';
+
+  if (sp2FolderConfigs.length === 0) {
+    html += '<div class="empty-state">';
+    html += '<div class="empty-state-icon">📋</div>';
+    html += '<div class="empty-state-text">אין הגדרות תיקיות</div>';
+    html += '</div>';
+    return html;
+  }
+
+  sp2FolderConfigs.forEach(function(cfg){
+    html += sp2BuildFolderCard(cfg);
+  });
+
+  return html;
+}
+
+function sp2BuildFolderCard(cfg) {
+  var html = '';
+  html += '<div class="sp2-folder-card" data-row="' + cfg.row + '">';
+
+  // header
+  html += '<div class="sp2-folder-card-header">';
+  html += '<div class="sp2-folder-card-icon">⭐</div>';
+  html += '<div class="sp2-folder-card-title">' + escapeHtml(cfg.topic) + '</div>';
+  if (cfg.folderUrl) {
+    html += '<a class="sp2-folder-card-link" onclick="sp2OpenFolder(\'' + escapeAttr(cfg.folderUrl) + '\',\'' + escapeAttr(cfg.topic) + '\')">📂 פתח תיקייה</a>';
+  }
+  html += '</div>';
+
+  // writeMode dropdown
+  html += '<div class="sp2-folder-field">';
+  html += '<div class="sp2-folder-field-label">אופן הכתיבה</div>';
+  html += '<div class="sp2-folder-field-sub">האם הסוכן יכתוב מלל בעצמו וישלח לאישור, או שאתה תאמר לו מראש מה לכתוב בהתאם לתמונה?</div>';
+  html += sp2BuildSelect(SP2_WRITE_MODE_OPTIONS, cfg.writeMode, 'sp2UpdateFolderConfig(' + cfg.row + ',\'writeMode\',this.value)');
+  html += '</div>';
+
+  // guidance textarea
+  html += '<div class="sp2-folder-field">';
+  html += '<div class="sp2-folder-field-label">הכוונה לסוכן</div>';
+  html += '<div class="sp2-folder-field-sub">הוראה על סוג המשפטים שהסוכן ירשום בתמונות מהתיקייה הזו. למשל: "עוד לקוח מרוצה" / "ככה אנחנו מעצימים את הלקוחות שלנו"</div>';
+  html += '<textarea class="sp2-folder-textarea" id="sp2-guidance-' + cfg.row + '" placeholder="הזן הכוונה...">' + escapeHtml(cfg.guidance || '') + '</textarea>';
+  html += '<button class="sp2-folder-save-btn" id="sp2-guidance-save-' + cfg.row + '" onclick="sp2SaveGuidance(' + cfg.row + ')">💾 שמור הכוונה</button>';
+  html += '</div>';
+
+  html += '</div>';
+  return html;
+}
+
+function sp2UpdateFolderConfig(row, field, newValue) {
+  var cfg = sp2FolderConfigs.find(function(c){ return c.row === row; });
+  if (!cfg) return;
+
+  var oldValue = cfg[field];
+  cfg[field] = newValue;
+
+  // map to column (עמודות O-T בגיליון)
+  var COL_MAP = { writeMode: 'Q', guidance: 'R' };
+  var col = COL_MAP[field];
+  if (!col) return;
+
+  var cell = col + row;
+  sp2SaveCells([{ cell: cell, value: newValue }], function(success){
+    if (!success) {
+      cfg[field] = oldValue;
+      sp2Render();
+      showToast('❌ שגיאה בשמירה, נסה שוב', true);
+    } else {
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    }
+  });
+}
+
+function sp2SaveGuidance(row) {
+  var cfg = sp2FolderConfigs.find(function(c){ return c.row === row; });
+  if (!cfg) return;
+
+  var textarea = document.getElementById('sp2-guidance-' + row);
+  var btn = document.getElementById('sp2-guidance-save-' + row);
+  if (!textarea || !btn) return;
+
+  var newValue = textarea.value;
+  if (newValue === cfg.guidance) {
+    showToast('אין שינוי לשמירה');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '⏳ שומר...';
+
+  var cell = 'R' + row;
+  sp2SaveCells([{ cell: cell, value: newValue }], function(success){
+    if (success) {
+      cfg.guidance = newValue;
+      btn.classList.add('saved');
+      btn.innerHTML = '✓ נשמר';
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      setTimeout(function(){
+        btn.classList.remove('saved');
+        btn.innerHTML = '💾 שמור הכוונה';
+        btn.disabled = false;
+      }, 1800);
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = '💾 שמור הכוונה';
+      showToast('❌ שגיאה בשמירה', true);
+    }
+  });
+}
+
+function sp2OpenFolder(folderUrl, displayTitle) {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  // חילוץ folder ID מ-URL
+  var match = String(folderUrl).match(/\/folders\/([a-zA-Z0-9_-]+)/);
+  var folderId = match ? match[1] : folderUrl;
+
+  // סגירת המסך הנוכחי קודם, ואז פתיחת התיקייה
+  closeScreen('screen-social-proof');
+  setTimeout(function(){
+    openFolder('sub', folderId, '⭐', displayTitle);
+  }, 100);
+}
+
+// ─── Save helper ───
+function sp2SaveCells(changes, callback) {
+  var url = SAVE_URL
+    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
+    + '&sheet='      + encodeURIComponent(SP2_SHEET_NAME)
+    + '&logSheetId=' + encodeURIComponent(logSheetId)
+    + '&changes='    + encodeURIComponent(JSON.stringify(changes));
+
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json().catch(function(){ return {}; }); })
+    .then(function(){ if (callback) callback(true); })
+    .catch(function(err){
+      console.error('sp2 save error:', err);
+      if (callback) callback(false);
+    });
+}
+
 /* ════════════════════ סוף פינת הוכחות חברתיות ════════════════════ */
 
 function openCompetitorsToAnalyze() {
