@@ -5759,12 +5759,19 @@ function sp2BuildFolderCard(cfg) {
   var html = '';
   html += '<div class="sp2-folder-card" data-row="' + cfg.row + '">';
 
+  // חלץ folder ID מראש - להעביר ל-onclick רק string נקי בלי תווים מיוחדים
+  var folderId = '';
+  if (cfg.folderUrl) {
+    var match = String(cfg.folderUrl).match(/\/folders\/([a-zA-Z0-9_-]+)/);
+    folderId = match ? match[1] : String(cfg.folderUrl).trim();
+  }
+
   // header
   html += '<div class="sp2-folder-card-header">';
   html += '<div class="sp2-folder-card-icon">⭐</div>';
   html += '<div class="sp2-folder-card-title">' + escapeHtml(cfg.topic) + '</div>';
-  if (cfg.folderUrl) {
-    html += '<a class="sp2-folder-card-link" onclick="sp2OpenFolder(\'' + escapeAttr(cfg.folderUrl) + '\',\'' + escapeAttr(cfg.topic) + '\')">📂 פתח תיקייה</a>';
+  if (folderId) {
+    html += '<a class="sp2-folder-card-link" onclick="sp2OpenFolder(\'' + escapeAttr(folderId) + '\',\'' + escapeAttr(cfg.topic) + '\')">📂 פתח תיקייה</a>';
   }
   html += '</div>';
 
@@ -5848,14 +5855,10 @@ function sp2SaveGuidance(row) {
   });
 }
 
-function sp2OpenFolder(folderUrl, displayTitle) {
+function sp2OpenFolder(folderId, displayTitle) {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-  // חילוץ folder ID מ-URL
-  var match = String(folderUrl).match(/\/folders\/([a-zA-Z0-9_-]+)/);
-  var folderId = match ? match[1] : folderUrl;
-
-  // לא סוגר את המסך הנוכחי - openFolder פותח את screen-folder מעליו
-  // ככה כשלוחצים "חזור" מהתיקייה - חוזרים למסך פינת הוכחות חברתיות
+  // openFolder פותח את screen-folder מעל המסך הנוכחי
+  // כשלוחצים "חזור" מהתיקייה - חוזרים אוטומטית למסך פינת הוכחות חברתיות
   openFolder('sub', folderId, '⭐', displayTitle);
 }
 
