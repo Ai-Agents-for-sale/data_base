@@ -5960,6 +5960,10 @@ function sp2OpenFolder(folderId, displayTitle) {
 
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 
+  // הסתרת מסך פינת הוכחות חברתיות - אחרת הוא יסתיר את screen-folder (אותו z-index)
+  var spEl = document.getElementById('screen-social-proof');
+  if (spEl) spEl.classList.remove('visible');
+
   // הקמת folderStack כאילו פתחנו את התיקייה הראשית מ-screen-materials
   folderStack = [{
     source: 'main',
@@ -6000,11 +6004,15 @@ function sp2CloseFolderBack() {
   var folderEl = document.getElementById('screen-folder');
   if (folderEl) folderEl.classList.remove('visible');
 
-  // נקה state
+  // נקה state של תיקיות
   folderStack = [];
   currentFolderData = null;
   selectMode = false;
   selectedFileIds = {};
+
+  // החזר את screen-social-proof להיות visible
+  var spEl = document.getElementById('screen-social-proof');
+  if (spEl) spEl.classList.add('visible');
 
   // החזר את ה-back button למסך פינת הוכחות חברתיות
   if (tg) {
