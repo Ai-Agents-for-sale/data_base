@@ -7732,6 +7732,8 @@ function handleFolderBack() {
 }
 
 function fetchFolderContents(source, ref) {
+  console.log('[FETCH] fetchFolderContents called', { source: source, ref: ref });
+
   var url = GET_URL
     + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
     + '&sheet='      + encodeURIComponent('חומרים אישיים')
@@ -7743,21 +7745,33 @@ function fetchFolderContents(source, ref) {
     url += '&folderId=' + encodeURIComponent(ref);
   }
 
+  console.log('[FETCH] URL:', url);
+
   fetch(url)
-    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(r){
+      console.log('[FETCH] response status:', r.status);
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      return r.json();
+    })
     .then(function(data){
+      console.log('[FETCH] data received:', data);
       currentFolderData = data;
       // עדכון bgMode אם הגיע
       if (data && data.bgMode) {
         currentBgMode.value = data.bgMode.value || '';
         currentBgMode.cell  = data.bgMode.cell  || null;
       }
-      renderFolder(data);
+      try {
+        renderFolder(data);
+        console.log('[FETCH] renderFolder finished');
+      } catch (renderErr) {
+        console.error('[FETCH] renderFolder threw:', renderErr);
+      }
     })
     .catch(function(err){
-      console.error('fetchFolderContents error:', err);
+      console.error('[FETCH] fetchFolderContents error:', err);
       var body = document.getElementById('folder-body');
-      body.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">שגיאה בטעינת התיקייה</div><div class="empty-state-sub">נסה שוב מאוחר יותר</div></div>';
+      if (body) body.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">שגיאה בטעינת התיקייה</div><div class="empty-state-sub">נסה שוב מאוחר יותר</div></div>';
     });
 }
 
