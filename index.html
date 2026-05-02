@@ -733,10 +733,12 @@
   .sp2-info-title{font-size:14px;font-weight:800;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:6px}
   .sp2-info-body{font-size:12px;color:var(--text-dim);line-height:1.65}
   .sp2-info-body strong{color:var(--text)}
-  .sp2-examples{display:flex;flex-direction:column;gap:14px;margin:14px 0}
-  .sp2-example{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
-  .sp2-example-caption{padding:10px 12px;font-size:11.5px;color:var(--text-dim);line-height:1.5;border-bottom:1px solid var(--border);background:var(--bg3)}
-  .sp2-example-img{display:block;width:100%;max-height:280px;object-fit:cover;background:#000}
+  .sp2-examples{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+  .sp2-example{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;display:flex;flex-direction:column}
+  .sp2-example-img-wrap{width:100%;aspect-ratio:9/16;background:#000;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .sp2-example-img{display:block;width:100%;height:100%;object-fit:cover}
+  .sp2-example-caption{padding:10px;font-size:11px;color:var(--text-dim);line-height:1.5;background:var(--bg3);flex:1}
+  .sp2-example-caption-label{display:block;font-weight:800;color:var(--text);margin-bottom:4px;font-size:11.5px}
 
   /* tabs */
   .sp2-tabs{display:flex;gap:6px;margin-bottom:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px}
@@ -5584,8 +5586,13 @@ function sp2Render() {
   html += '<div class="sp2-examples">';
   SP2_EXAMPLE_IMAGES.forEach(function(ex){
     html += '<div class="sp2-example">';
-    html += '<div class="sp2-example-caption">' + escapeHtml(ex.caption) + '</div>';
+    html += '<div class="sp2-example-img-wrap">';
     html += '<img class="sp2-example-img" src="' + escapeAttr(ex.src) + '" alt="" referrerpolicy="no-referrer" loading="lazy">';
+    html += '</div>';
+    html += '<div class="sp2-example-caption">';
+    html += '<span class="sp2-example-caption-label">דוגמה</span>';
+    html += escapeHtml(ex.caption);
+    html += '</div>';
     html += '</div>';
   });
   html += '</div>';
