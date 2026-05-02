@@ -5956,6 +5956,7 @@ function sp2SaveGuidance(row) {
 
 function sp2OpenFolder(folderId, displayTitle) {
   console.log('[SP2] sp2OpenFolder called', { folderId: folderId, displayTitle: displayTitle });
+  console.log('[SP2] all sp2FolderConfigs:', JSON.stringify(sp2FolderConfigs));
 
   if (!folderId) {
     console.error('[SP2] No folderId!');
