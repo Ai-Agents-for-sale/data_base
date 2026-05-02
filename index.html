@@ -719,6 +719,15 @@
   .an-empty-text{font-size:13px;font-weight:700;color:var(--text)}
   .an-empty-sub{font-size:11px;color:var(--text-dim)}
 
+  /* ── Social Proof CTA ── */
+  .social-proof-cta{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(236,72,153,0.10),rgba(168,85,247,0.10));border:1.5px solid rgba(236,72,153,0.4);border-radius:var(--radius);padding:14px 16px;margin-bottom:14px;cursor:pointer;-webkit-user-select:none;user-select:none;transition:transform .12s,border-color .15s}
+  .social-proof-cta:active{transform:scale(.99);border-color:#ec4899}
+  .social-proof-cta-icon{flex-shrink:0;width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#ec4899,#a855f7);display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff}
+  .social-proof-cta-body{flex:1;min-width:0}
+  .social-proof-cta-title{font-size:14px;font-weight:800;color:var(--text);margin-bottom:2px}
+  .social-proof-cta-sub{font-size:11.5px;color:var(--text-dim);line-height:1.45}
+  .social-proof-cta-arrow{flex-shrink:0;font-size:18px;color:#ec4899;font-weight:700}
+
   /* Dropbox folder video grid - reuses caption-style-card visuals */
   .db-folder-intro{background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.25);border-radius:var(--radius);padding:12px 14px;font-size:11px;line-height:1.7;color:var(--text-dim);margin-bottom:6px}
   .db-folder-intro strong{color:var(--text)}
@@ -1838,10 +1847,10 @@ var MAIN_FOLDERS = [
   },
   {
     key: 'content',
-    name: 'עדויות/ביקורות/עבודות',
-    icon: '📸',
+    name: 'הוכחות חברתיות',
+    icon: '⭐',
     color: 'pink',
-    desc: 'תמונות של עבודות שעשית, ביקורות מלקוחות, עדויות'
+    desc: 'תמונות של עדויות לקוחות, עבודות שעשית, ביקורות, תוצאות'
   }
 ];
 
@@ -5360,6 +5369,14 @@ function anDrawChart(timeseries) {
 
 /* ════════════════════ סוף אנליטיקס ════════════════════ */
 
+/* ════════════════════ פינת הוכחות חברתיות ════════════════════ */
+// Placeholder - יוטמע בשלב 3
+function openSocialProofCorner() {
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  showToast('פינה זו תהיה זמינה בקרוב');
+}
+/* ════════════════════ סוף פינת הוכחות חברתיות ════════════════════ */
+
 function openCompetitorsToAnalyze() {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
   caMyUsername  = '';
@@ -7089,6 +7106,16 @@ function renderFolder(data) {
   var currentTop = folderStack[folderStack.length - 1];
   var isTopicsScreen = currentTop && currentTop.source === 'main' && currentTop.ref === 'תמונות רקע מחולקים לנושאים';
 
+  // Check if this is the "social proof" main folder OR one of its sub-folders
+  var isSocialProofMain = currentTop && currentTop.source === 'main' && currentTop.ref === 'הוכחות חברתיות';
+  var inSocialProofTree = false;
+  for (var i = 0; i < folderStack.length; i++) {
+    if (folderStack[i].source === 'main' && folderStack[i].ref === 'הוכחות חברתיות') {
+      inSocialProofTree = true;
+      break;
+    }
+  }
+
   var html = '';
 
   // If topics screen — add the explanation + bgMode toggle on top
@@ -7117,17 +7144,44 @@ function renderFolder(data) {
     html += '</div>';
   }
 
+  // Social proof main folder — explanation + button to corner
+  if (isSocialProofMain) {
+    html += '<div class="info-box">';
+    html += '<div class="info-box-title">⭐ פינת הוכחות חברתיות</div>';
+    html += '<div class="info-box-body">';
+    html += 'תיקייה זו מכילה <strong>4 תתי-תיקיות</strong> שנועדו להכיל תמונות שתרצו לפרסם בעמוד באופן קבוע (עדויות, עבודות, תוצאות, וכו\').<br><br>';
+    html += '4 התיקיות נועדו לשרת את <strong>פינת "הוכחות חברתיות"</strong> — פינה שעוזרת לכם לפרסם הוכחות חברתיות באופן אוטומטי וקבוע. תוכלו להעלות לכל תיקייה תמונות מסוג שונה:<br>';
+    html += '• <strong>עדויות</strong> — צילומי מסך של עדויות וואטסאפ ותגובות מלקוחות.<br>';
+    html += '• <strong>עבודות / תוצאות</strong> — תמונות של עבודות שעשיתם או תוצאות שהבאתם.<br>';
+    html += '• <strong>מותאם אישית 1+2</strong> — תמונות נוספות לפי בחירתכם (למשל: דירות למכירה / שנמכרו, תפריטים חדשים, וכו\').<br><br>';
+    html += 'לאחר העלאת תמונות, פעלו את הפינה והגדירו ימים ושעות בהן הסוכן יפרסם.';
+    html += '</div>';
+    html += '</div>';
+
+    // Button - go to corner
+    html += '<div class="social-proof-cta" onclick="openSocialProofCorner()">';
+    html += '<div class="social-proof-cta-icon">🕐</div>';
+    html += '<div class="social-proof-cta-body">';
+    html += '<div class="social-proof-cta-title">הגדרות פינת הוכחות חברתיות</div>';
+    html += '<div class="social-proof-cta-sub">הגדירו ימים, שעות ותיקיות שמהן הסוכן יבחר תמונות לפרסום</div>';
+    html += '</div>';
+    html += '<div class="social-proof-cta-arrow">‹</div>';
+    html += '</div>';
+  }
+
   // תת-תיקיות
   if (folders.length > 0) {
-    if (!isTopicsScreen) {
+    if (!isTopicsScreen && !isSocialProofMain) {
       html += '<div class="submenu-question">בחר תת-תיקייה</div>';
+    } else if (isSocialProofMain) {
+      html += '<div class="submenu-question">בחר תת-תיקייה כדי להעלות תמונות</div>';
     }
     folders.forEach(function(f) {
       html += buildFolderCardHtml(f);
     });
     body.insertAdjacentHTML('beforeend', html);
     html = ''; // reset
-  } else if (isTopicsScreen) {
+  } else if (isTopicsScreen || isSocialProofMain) {
     body.insertAdjacentHTML('beforeend', html);
     html = '';
   }
