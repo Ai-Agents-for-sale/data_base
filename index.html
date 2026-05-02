@@ -5854,11 +5854,9 @@ function sp2OpenFolder(folderUrl, displayTitle) {
   var match = String(folderUrl).match(/\/folders\/([a-zA-Z0-9_-]+)/);
   var folderId = match ? match[1] : folderUrl;
 
-  // סגירת המסך הנוכחי קודם, ואז פתיחת התיקייה
-  closeScreen('screen-social-proof');
-  setTimeout(function(){
-    openFolder('sub', folderId, '⭐', displayTitle);
-  }, 100);
+  // לא סוגר את המסך הנוכחי - openFolder פותח את screen-folder מעליו
+  // ככה כשלוחצים "חזור" מהתיקייה - חוזרים למסך פינת הוכחות חברתיות
+  openFolder('sub', folderId, '⭐', displayTitle);
 }
 
 // ─── Save helper ───
