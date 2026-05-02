@@ -5869,9 +5869,7 @@ function sp2BuildFolderCard(cfg) {
   html += '<div class="sp2-folder-card-header">';
   html += '<div class="sp2-folder-card-icon">⭐</div>';
   html += '<div class="sp2-folder-card-title">' + escapeHtml(cfg.topic) + '</div>';
-  if (folderId) {
-    html += '<button type="button" class="sp2-folder-card-link" onclick="sp2OpenFolder(\'' + escapeAttr(folderId) + '\',\'' + escapeAttr(cfg.topic) + '\')">📂 פתח תיקייה</button>';
-  }
+  html += '<button type="button" class="sp2-folder-card-link" onclick="sp2OpenFolder(\'\',\'\')">📂 לתיקיות</button>';
   html += '</div>';
 
   // writeMode dropdown
@@ -5955,18 +5953,19 @@ function sp2SaveGuidance(row) {
 }
 
 function sp2OpenFolder(folderId, displayTitle) {
-  // הפרמטר folderId כאן הוא בעצם שם התת-תיקייה (כי לא היה לנו ID אמיתי)
-  // זה לא משנה - אנחנו נמצא את ה-ID האמיתי דינמית
-  console.log('[SP2] sp2OpenFolder called for:', displayTitle);
+  // במקום לנסות לנווט ישירות לתת-תיקייה (מה שדורש להתאים שמות בין הגיליון לדרייב),
+  // אנחנו פשוט פותחים את התיקייה הראשית "הוכחות חברתיות" - ושם הלקוח רואה את כל
+  // 4 התת-תיקיות עם ההסבר ובוחר את הרצויה
+  console.log('[SP2] sp2OpenFolder - opening main folder for user to choose');
 
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 
-  // פתיחה מיידית של מסך הטעינה
+  // הקמת folderStack כאילו פתחנו את התיקייה הראשית מ-screen-materials
   folderStack = [{
-    source: 'sub',
-    ref: '',
-    title: displayTitle || 'תיקייה',
-    icon: '⭐'
+    source: 'main',
+    ref:    'הוכחות חברתיות',
+    title:  'הוכחות חברתיות',
+    icon:   '⭐'
   }];
 
   var el = document.getElementById('screen-folder');
@@ -5979,7 +5978,7 @@ function sp2OpenFolder(folderId, displayTitle) {
 
   var titleEl = document.getElementById('folder-title');
   var iconEl  = document.getElementById('folder-icon');
-  if (titleEl) titleEl.textContent = displayTitle || 'תיקייה';
+  if (titleEl) titleEl.textContent = 'הוכחות חברתיות';
   if (iconEl)  iconEl.textContent  = '⭐';
   if (typeof updateFolderTopbar === 'function') updateFolderTopbar();
 
@@ -5993,73 +5992,7 @@ function sp2OpenFolder(folderId, displayTitle) {
     tg.BackButton.onClick(function(){ sp2CloseFolderBack(); });
   }
 
-  // שלב 1: טעינת התיקייה הראשית "הוכחות חברתיות" - כדי לקבל את ה-IDs האמיתיים של התת-תיקיות
-  var mainUrl = GET_URL
-    + '?sheetsUrl='  + encodeURIComponent(sheetsUrl)
-    + '&sheet='      + encodeURIComponent('חומרים אישיים')
-    + '&logSheetId=' + encodeURIComponent(logSheetId)
-    + '&folderName=' + encodeURIComponent('הוכחות חברתיות');
-
-  console.log('[SP2] Step 1 - fetching main folder');
-
-  fetch(mainUrl)
-    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
-    .then(function(mainData){
-      console.log('[SP2] Step 1 result:', mainData);
-      var subFolders = (mainData && mainData.folders) || [];
-
-      // מצא את התת-תיקייה לפי השם
-      var target = null;
-      for (var i = 0; i < subFolders.length; i++) {
-        if (subFolders[i].name === displayTitle) {
-          target = subFolders[i];
-          break;
-        }
-      }
-
-      // אם לא מצא לפי שם מדויק - נסה לפי טקסט קרוב
-      if (!target && subFolders.length > 0) {
-        for (var j = 0; j < subFolders.length; j++) {
-          if (String(subFolders[j].name).indexOf(displayTitle) >= 0 ||
-              String(displayTitle).indexOf(subFolders[j].name) >= 0) {
-            target = subFolders[j];
-            break;
-          }
-        }
-      }
-
-      if (!target) {
-        console.error('[SP2] Sub-folder not found by name:', displayTitle, 'available:', subFolders);
-        if (body) body.innerHTML =
-          '<div class="empty-state">' +
-            '<div class="empty-state-icon">⚠️</div>' +
-            '<div class="empty-state-text">התיקייה לא נמצאה</div>' +
-            '<div class="empty-state-sub">ייתכן שצריך להעלות תמונות לתיקייה הזו תחילה ב"תמונות ואפיון עסק"</div>' +
-          '</div>';
-        return;
-      }
-
-      console.log('[SP2] Step 2 - found target sub-folder, fetching:', target);
-
-      // עדכון ה-stack עם ה-ID האמיתי
-      folderStack[0].ref = target.id;
-      folderStack[0].title = target.name;
-
-      var titleEl2 = document.getElementById('folder-title');
-      if (titleEl2) titleEl2.textContent = target.name;
-
-      // שלב 2: טעינת התת-תיקייה עם ה-ID האמיתי
-      fetchFolderContents('sub', target.id);
-    })
-    .catch(function(err){
-      console.error('[SP2] Error fetching main folder:', err);
-      if (body) body.innerHTML =
-        '<div class="empty-state">' +
-          '<div class="empty-state-icon">⚠️</div>' +
-          '<div class="empty-state-text">שגיאה בטעינת התיקייה</div>' +
-          '<div class="empty-state-sub">נסה לרענן את האפליקציה</div>' +
-        '</div>';
-    });
+  fetchFolderContents('main', 'הוכחות חברתיות');
 }
 
 function sp2CloseFolderBack() {
