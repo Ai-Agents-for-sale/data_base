@@ -2134,7 +2134,15 @@ function closeScreen(id) {
   if (id === 'screen-general')  resetGeneralScreen();
   if (id === 'screen-carousel') resetCarouselScreen();
   if (id === 'screen-prompt')   resetPromptScreen();
-  if (id === 'screen-folder')   handleFolderBack();
+  if (id === 'screen-folder') {
+    // אם הגענו דרך sp2 (פינת הוכחות חברתיות), נטפל בנפרד
+    var spOpen = document.getElementById('screen-social-proof');
+    if (spOpen && spOpen.classList.contains('visible')) {
+      sp2CloseFolderBack();
+    } else {
+      handleFolderBack();
+    }
+  }
   if (id === 'screen-materials') folderStack = [];
   if (id === 'screen-dropbox-folder') { dbCurrentFolder = null; dbCurrentSubPath = null; dbClips = []; dbSubfolders = []; }
   if (id === 'screen-scheduled-posts') {
@@ -5635,7 +5643,7 @@ function sp2RenderSchedules() {
     html += '<div class="sp2-schedule-day">';
     html += '<div class="sp2-day-header">';
     html += '<div class="sp2-day-name">' + escapeHtml(day.name) + '</div>';
-    html += '<div class="sp2-day-count">' + (activeCount > 0 ? activeCount + ' פעילות' : 'אין פעילות') + '</div>';
+    html += '<div class="sp2-day-count">' + (activeCount > 0 ? activeCount + ' פעילות' : (rows.length > 0 ? rows.length + ' פינות' : 'אין')) + '</div>';
     html += '</div>';
 
     if (rows.length === 0) {
@@ -5646,10 +5654,65 @@ function sp2RenderSchedules() {
       });
     }
 
+    // כפתור הוספת פינה חדשה
+    html += '<button class="sp2-day-add" onclick="sp2AddRow(\'' + escapeAttr(day.key) + '\')">+ הוסף פינה ל' + escapeHtml(day.name) + '</button>';
     html += '</div>';
   });
 
   return html;
+}
+
+// מצא שורה פנויה (4-24) שלא בשימוש באף יום
+function sp2FindFreeRow() {
+  var usedRows = {};
+  Object.keys(sp2Stories).forEach(function(dayKey){
+    (sp2Stories[dayKey] || []).forEach(function(r){
+      if (r.row) usedRows[r.row] = true;
+    });
+  });
+  for (var r = 4; r <= 24; r++) {
+    if (!usedRows[r]) return r;
+  }
+  return null;
+}
+
+function sp2AddRow(dayKey) {
+  var freeRow = sp2FindFreeRow();
+  if (freeRow === null) {
+    showToast('הגעת למקסימום של 21 פינות', true);
+    return;
+  }
+
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+
+  // הוספת שורה מקומית
+  if (!sp2Stories[dayKey]) sp2Stories[dayKey] = [];
+  sp2Stories[dayKey].push({
+    row:    freeRow,
+    time:   '',
+    folder: '',
+    format: 'סטורי',
+    status: 'לא פעיל'
+  });
+
+  // שמירה ל-Sheets - יום + פורמט ברירת מחדל (סטורי) + סטטוס
+  var sheetDay = SP2_DAY_KEY_TO_SHEET[dayKey] || dayKey;
+  sp2SaveCells([
+    { cell: 'A' + freeRow, value: sheetDay },
+    { cell: 'I' + freeRow, value: 'סטורי' },
+    { cell: 'J' + freeRow, value: 'לא פעיל' }
+  ], function(success){
+    if (!success) {
+      // rollback
+      var idx = sp2Stories[dayKey].findIndex(function(r){ return r.row === freeRow; });
+      if (idx >= 0) sp2Stories[dayKey].splice(idx, 1);
+      sp2Render();
+      showToast('❌ שגיאה בהוספת פינה', true);
+    } else {
+      sp2Render();
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    }
+  });
 }
 
 function sp2BuildScheduleRow(dayKey, idx, row) {
@@ -5681,8 +5744,42 @@ function sp2BuildScheduleRow(dayKey, idx, row) {
   html += sp2BuildSelect(SP2_STATUS_OPTIONS, row.status, 'sp2UpdateRow(\'' + escapeAttr(dayKey) + '\',' + idx + ',\'status\',this.value)', statusClass);
   html += '</div>';
 
+  // כפתור מחיקה
+  html += '<div class="sp2-row-actions" style="grid-column:span 2">';
+  html += '<button class="sp2-row-delete" onclick="sp2DeleteRow(\'' + escapeAttr(dayKey) + '\',' + idx + ')">🗑 מחק פינה</button>';
+  html += '</div>';
+
   html += '</div>';
   return html;
+}
+
+function sp2DeleteRow(dayKey, idx) {
+  var rows = sp2Stories[dayKey] || [];
+  var row = rows[idx];
+  if (!row || !row.row) return;
+
+  if (!confirm('למחוק את הפינה הזו?')) return;
+
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
+
+  var rowNum = row.row;
+  // ננקה את כל התאים הרלוונטיים בשורה (A=יום, G=שעה, H=סוג, I=פורמט, J=סטטוס)
+  sp2SaveCells([
+    { cell: 'A' + rowNum, value: '' },
+    { cell: 'G' + rowNum, value: '' },
+    { cell: 'H' + rowNum, value: '' },
+    { cell: 'I' + rowNum, value: '' },
+    { cell: 'J' + rowNum, value: '' }
+  ], function(success){
+    if (success) {
+      // הסרה מקומית
+      sp2Stories[dayKey].splice(idx, 1);
+      sp2Render();
+      showToast('✓ הפינה נמחקה');
+    } else {
+      showToast('❌ שגיאה במחיקה', true);
+    }
+  });
 }
 
 function sp2BuildSelect(options, currentValue, onchangeJs, extraClass) {
@@ -5857,9 +5954,58 @@ function sp2SaveGuidance(row) {
 
 function sp2OpenFolder(folderId, displayTitle) {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-  // openFolder פותח את screen-folder מעל המסך הנוכחי
-  // כשלוחצים "חזור" מהתיקייה - חוזרים אוטומטית למסך פינת הוכחות חברתיות
-  openFolder('sub', folderId, '⭐', displayTitle);
+
+  // נקה את ה-folderStack הקיים (אנחנו לא במסך materials)
+  // ופתח את screen-folder עם folder ID זה
+  folderStack = [{
+    source: 'sub',
+    ref: folderId,
+    title: displayTitle || 'תיקייה',
+    icon: '⭐'
+  }];
+
+  var el = document.getElementById('screen-folder');
+  el.classList.add('visible');
+  el.scrollTop = 0;
+
+  selectMode = false;
+  selectedFileIds = {};
+
+  document.getElementById('folder-title').textContent = displayTitle || 'תיקייה';
+  document.getElementById('folder-icon').textContent  = '⭐';
+  if (typeof updateFolderTopbar === 'function') updateFolderTopbar();
+
+  var body = document.getElementById('folder-body');
+  body.innerHTML = '<div class="screen-loading" id="folder-loading"><div class="spinner"></div><div>טוען חומרים...</div></div>';
+
+  // Override של ה-back button - שיחזור למסך פינת הוכחות חברתיות
+  if (tg) {
+    tg.BackButton.show();
+    tg.BackButton.offClick();
+    tg.BackButton.onClick(function(){
+      sp2CloseFolderBack();
+    });
+  }
+
+  fetchFolderContents('sub', folderId);
+}
+
+function sp2CloseFolderBack() {
+  // סגור את screen-folder
+  var folderEl = document.getElementById('screen-folder');
+  if (folderEl) folderEl.classList.remove('visible');
+
+  // נקה state
+  folderStack = [];
+  currentFolderData = null;
+  selectMode = false;
+  selectedFileIds = {};
+
+  // החזר את ה-back button למסך פינת הוכחות חברתיות
+  if (tg) {
+    tg.BackButton.offClick();
+    tg.BackButton.onClick(function(){ closeScreen('screen-social-proof'); });
+  }
 }
 
 // ─── Save helper ───
