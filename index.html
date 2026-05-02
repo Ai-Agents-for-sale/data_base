@@ -5859,8 +5859,10 @@ function sp2BuildFolderCard(cfg) {
   // חלץ folder ID מראש - להעביר ל-onclick רק string נקי בלי תווים מיוחדים
   var folderId = '';
   if (cfg.folderUrl) {
+    console.log('[SP2] folderUrl from n8n:', cfg.folderUrl);
     var match = String(cfg.folderUrl).match(/\/folders\/([a-zA-Z0-9_-]+)/);
     folderId = match ? match[1] : String(cfg.folderUrl).trim();
+    console.log('[SP2] extracted folderId:', folderId);
   }
 
   // header
