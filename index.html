@@ -1956,6 +1956,9 @@ function handleDeepLink() {
     } else if (openParam === 'scheduled-posts') {
       // פותחים את המסך של פוסטים מתוזמנים
       openScheduledPosts();
+    } else if (openParam === 'long-videos') {
+      // פותחים את המסך של סרטונים ארוכים לערוך לקליפים
+      openLongVideos();
     }
   }, 200);
 }
@@ -2136,8 +2139,7 @@ function closeScreen(id) {
   if (id === 'screen-prompt')   resetPromptScreen();
   if (id === 'screen-folder') {
     // אם הגענו דרך sp2 (פינת הוכחות חברתיות), נטפל בנפרד
-    var spOpen = document.getElementById('screen-social-proof');
-    if (spOpen && spOpen.classList.contains('visible')) {
+    if (sp2HiddenScreens && sp2HiddenScreens.length > 0) {
       sp2CloseFolderBack();
     } else {
       handleFolderBack();
@@ -5956,15 +5958,17 @@ function sp2SaveGuidance(row) {
 var sp2HiddenScreens = [];
 
 function sp2OpenFolder(folderId, displayTitle) {
-  console.log('[SP2] sp2OpenFolder - opening main folder for user to choose');
+  console.log('[SP2-V2] sp2OpenFolder STARTED');
 
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 
   // הסתרת *כל* המסכים הvisible - אחרת מסך אחר (כמו screen-scheduled) יסתיר את screen-folder
   sp2HiddenScreens = [];
   var allVisible = document.querySelectorAll('.screen.visible');
+  console.log('[SP2-V2] currently visible screens:', allVisible.length);
   allVisible.forEach(function(el){
     if (el.id !== 'screen-folder') {
+      console.log('[SP2-V2] hiding screen:', el.id);
       sp2HiddenScreens.push(el.id);
       el.classList.remove('visible');
     }
@@ -5979,9 +5983,13 @@ function sp2OpenFolder(folderId, displayTitle) {
   }];
 
   var el = document.getElementById('screen-folder');
-  if (!el) return;
+  if (!el) {
+    console.error('[SP2-V2] screen-folder not found!');
+    return;
+  }
   el.classList.add('visible');
   el.scrollTop = 0;
+  console.log('[SP2-V2] screen-folder is now visible');
 
   selectMode = false;
   selectedFileIds = {};
