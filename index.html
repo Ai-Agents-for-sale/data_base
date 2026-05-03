@@ -4042,16 +4042,23 @@ function renderCompetitorReports() {
   html += 'לחץ על דוח כדי לפתוח אותו.';
   html += '</div>';
 
-  if (crReports.length === 0) {
+  // סנן דוחות "פנטום" - דורשים id וגם תאריך יצירה (אחרת זה לא דוח אמיתי)
+  var realReports = (crReports || []).filter(function(r){
+    return r && r.id && r.createdAt;
+  });
+
+  if (realReports.length === 0) {
     html += '<div class="cr-empty">';
     html += '<div class="cr-empty-icon">📭</div>';
-    html += '<div class="cr-empty-title">אין עדיין דוחות</div>';
-    html += '<div class="cr-empty-sub">דוחות מתחרים נוצרים אוטומטית פעם בשבוע. ברגע שהדוח הראשון יוכן הוא יופיע כאן.</div>';
+    html += '<div class="cr-empty-title">נראה שעדיין לא בוצע לך דוח ניתוח מתחרים</div>';
+    html += '<div class="cr-empty-sub">כדי לבצע דוח ניתוח מתחרים יש להיכנס לצ\'אט עם הסוכן בטלגרם ⬅ תפריט ⬅ "דוח ניתוח מתחרים"</div>';
     html += '</div>';
   } else {
     html += '<div class="cr-list">';
-    crReports.forEach(function(report, idx){
-      html += renderCompetitorReportCard(report, idx);
+    realReports.forEach(function(report){
+      // מציאת ה-index המקורי ב-crReports כדי שהקליק יעבוד
+      var origIdx = crReports.indexOf(report);
+      html += renderCompetitorReportCard(report, origIdx);
     });
     html += '</div>';
   }
