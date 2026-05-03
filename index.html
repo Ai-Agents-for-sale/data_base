@@ -4017,9 +4017,9 @@ function renderCompetitorReports() {
   var body = document.getElementById('competitor-reports-body');
   var html = '';
 
-  // סנן דוחות "פנטום" - דורשים id וגם תאריך יצירה (אחרת זה לא דוח אמיתי)
+  // סנן דוחות "פנטום" - דורשים id (createdAt לא חובה כי לפעמים נייטן לא מחזיר אותו)
   var realReports = (crReports || []).filter(function(r){
-    return r && r.id && r.createdAt;
+    return r && r.id;
   });
 
   if (realReports.length === 0) {
