@@ -4017,7 +4017,24 @@ function renderCompetitorReports() {
   var body = document.getElementById('competitor-reports-body');
   var html = '';
 
-  // ── מסגרת חדשה: נתונים יבשים של רילסים השבוע ──
+  // סנן דוחות "פנטום" - דורשים id וגם תאריך יצירה (אחרת זה לא דוח אמיתי)
+  var realReports = (crReports || []).filter(function(r){
+    return r && r.id && r.createdAt;
+  });
+
+  if (realReports.length === 0) {
+    // אין דוחות אמיתיים - מציגים רק את ההודעה (בלי כפתורי הרילסים ובלי הסבר)
+    html += '<div class="cr-empty">';
+    html += '<div class="cr-empty-icon">📭</div>';
+    html += '<div class="cr-empty-title">נראה שעדיין לא בוצע לך דוח ניתוח מתחרים</div>';
+    html += '<div class="cr-empty-sub">כדי לבצע דוח ניתוח מתחרים יש להיכנס לצ\'אט עם הסוכן בטלגרם ⬅ תפריט ⬅ "דוח ניתוח מתחרים"</div>';
+    html += '</div>';
+    body.innerHTML = html;
+    return;
+  }
+
+  // יש דוחות - מציגים הכל: רילסים + הסבר + רשימת דוחות
+  // ── מסגרת: נתונים יבשים של רילסים השבוע ──
   html += '<div class="reels-frame">';
   html += '<div class="reels-frame-title">';
   html += '<span class="reels-frame-title-icon">📈</span>';
@@ -4042,26 +4059,13 @@ function renderCompetitorReports() {
   html += 'לחץ על דוח כדי לפתוח אותו.';
   html += '</div>';
 
-  // סנן דוחות "פנטום" - דורשים id וגם תאריך יצירה (אחרת זה לא דוח אמיתי)
-  var realReports = (crReports || []).filter(function(r){
-    return r && r.id && r.createdAt;
+  // רשימת הדוחות
+  html += '<div class="cr-list">';
+  realReports.forEach(function(report){
+    var origIdx = crReports.indexOf(report);
+    html += renderCompetitorReportCard(report, origIdx);
   });
-
-  if (realReports.length === 0) {
-    html += '<div class="cr-empty">';
-    html += '<div class="cr-empty-icon">📭</div>';
-    html += '<div class="cr-empty-title">נראה שעדיין לא בוצע לך דוח ניתוח מתחרים</div>';
-    html += '<div class="cr-empty-sub">כדי לבצע דוח ניתוח מתחרים יש להיכנס לצ\'אט עם הסוכן בטלגרם ⬅ תפריט ⬅ "דוח ניתוח מתחרים"</div>';
-    html += '</div>';
-  } else {
-    html += '<div class="cr-list">';
-    realReports.forEach(function(report){
-      // מציאת ה-index המקורי ב-crReports כדי שהקליק יעבוד
-      var origIdx = crReports.indexOf(report);
-      html += renderCompetitorReportCard(report, origIdx);
-    });
-    html += '</div>';
-  }
+  html += '</div>';
 
   body.innerHTML = html;
 }
